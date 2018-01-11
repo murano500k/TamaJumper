@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Game2D</string>
+    <string name="app_name">TamaJumper</string>
     <string name="connect_dialog_title">Select role</string>
     <string name="connect_dialog_message">You will be ...</string>
 </resources>
