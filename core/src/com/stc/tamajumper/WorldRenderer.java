@@ -3,17 +3,14 @@ package com.stc.tamajumper;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.stc.tamajumper.objects.Platform;
-import com.stc.tamajumper.objects.Tamada;
-import com.stc.tamajumper.utils.Animation;
-import com.stc.tamajumper.utils.Assets;
+
+import static com.stc.tamajumper.Config.*;
+import static com.stc.tamajumper.Config.PIXELS.*;
 
 /**
  * Created by artem on 1/11/18.
  */
 public class WorldRenderer {
-    static final int FRUSTUM_WIDTH = 10;
-    static final int FRUSTUM_HEIGHT = 15;
     World world;
     OrthographicCamera cam;
     SpriteBatch batch;
@@ -36,22 +33,29 @@ public class WorldRenderer {
 
 
     private void renderBackground() {
-        System.out.println("renderBg: cam.x="+cam.position.x+" cam.y="+cam.position.y);
-
         batch.disableBlending();
         batch.begin();
-        world.bg.draw(batch);
-        //batch.draw(Assets.background, 0, cam.position.y-FRUSTUM_HEIGHT/2, 0, 0, 700, 1000);
+        batch.draw(Assets.backgroundRegion, cam.position.x - FRUSTUM_WIDTH / 2, cam.position.y - FRUSTUM_HEIGHT / 2-PLATFORM_HEIGHT, FRUSTUM_WIDTH,
+                FRUSTUM_HEIGHT);
         batch.end();
+    }
+
+    private void renderBgObjects() {
+        int len = world.bgObjects.size();
+        for (int i = 0; i < len; i++) {
+            BgObject bgObject = world.bgObjects.get(i);
+
+            batch.draw(bgObject.texture, bgObject.position.x , bgObject.position.y , bgObject.bounds.width, bgObject.bounds.height);
+        }
     }
 
 
     public void renderObjects () {
         batch.enableBlending();
         batch.begin();
-        renderTamada();
+        renderBgObjects();
         renderPlatforms();
-
+        renderTamada();
         batch.end();
     }
 
@@ -60,7 +64,7 @@ public class WorldRenderer {
         for (int i = 0; i < len; i++) {
             Platform platform = world.platforms.get(i);
             TextureRegion keyFrame = Assets.platform;
-            if (platform.state == Platform.PLATFORM_STATE_PULVERIZING) {
+            if (platform.state == PLATFORM_STATE_PULVERIZING) {
                 keyFrame = Assets.brakingPlatform.getKeyFrame(platform.stateTime, Animation.ANIMATION_NONLOOPING);
             }
 
@@ -71,14 +75,14 @@ public class WorldRenderer {
     private void renderTamada() {
         TextureRegion keyFrame;
         switch (world.tamada.state) {
-            case Tamada.TAMADA_STATE_FALL:
+            case TAMADA_STATE_FALL:
                 keyFrame = Assets.tamadaFall.getKeyFrame(world.tamada.stateTime, Animation.ANIMATION_LOOPING);
                 break;
-            case Tamada.TAMADA_STATE_JUMP:
+            case TAMADA_STATE_JUMP:
                 keyFrame = Assets.tamadaJump.getKeyFrame(world.tamada.stateTime, Animation.ANIMATION_LOOPING);
                 break;
             case
-                    Tamada.TAMADA_STATE_HIT:
+                    TAMADA_STATE_HIT:
             default:
                 keyFrame = Assets.tamadaHit;
         }

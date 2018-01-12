@@ -1,4 +1,4 @@
-package com.stc.tamajumper.utils;
+package com.stc.tamajumper;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

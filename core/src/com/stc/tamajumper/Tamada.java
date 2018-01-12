@@ -1,19 +1,13 @@
-package com.stc.tamajumper.objects;
+package com.stc.tamajumper;
 
-import com.stc.tamajumper.World;
+import static com.stc.tamajumper.Config.*;
+import static com.stc.tamajumper.Config.PIXELS.*;
 
 /**
  * Created by artem on 1/11/18.
  */
 
 public class Tamada extends DynamicGameObject {
-    public static final int TAMADA_STATE_JUMP = 0;
-    public static final int TAMADA_STATE_FALL = 1;
-    public static final int TAMADA_STATE_HIT = 2;
-    public static final float TAMADA_JUMP_VELOCITY = 11;
-    public static final float TAMADA_MOVE_VELOCITY = 20;
-    public static final float TAMADA_WIDTH = 0.8f;
-    public static final float TAMADA_HEIGHT = 0.8f;
 
     public int state;
     public float stateTime;
@@ -45,8 +39,8 @@ public class Tamada extends DynamicGameObject {
             }
         }
 
-        if (position.x < 0) position.x = World.WORLD_WIDTH;
-        if (position.x > World.WORLD_WIDTH) position.x = 0;
+        if (position.x < 0) position.x = WORLD_WIDTH;
+        if (position.x > WORLD_WIDTH) position.x = 0;
 
         stateTime += deltaTime;
     }

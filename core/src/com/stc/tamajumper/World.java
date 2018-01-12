@@ -1,20 +1,14 @@
 package com.stc.tamajumper;
 
 import com.badlogic.gdx.math.Vector2;
-import com.stc.tamajumper.objects.Background;
-import com.stc.tamajumper.objects.ParallaxBackground;
-import com.stc.tamajumper.objects.ParallaxLayer;
-import com.stc.tamajumper.objects.Platform;
-import com.stc.tamajumper.objects.Tamada;
-import com.stc.tamajumper.utils.Assets;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static com.stc.tamajumper.WorldRenderer.FRUSTUM_HEIGHT;
-import static com.stc.tamajumper.WorldRenderer.FRUSTUM_WIDTH;
 
+import static com.stc.tamajumper.Config.*;
+import static com.stc.tamajumper.Config.PIXELS.*;
 
 /**
  * Created by artem on 1/11/18.
@@ -23,13 +17,6 @@ import static com.stc.tamajumper.WorldRenderer.FRUSTUM_WIDTH;
 public class World {
 
 
-    public static final float WORLD_WIDTH = FRUSTUM_WIDTH;
-    public static final float LEVEL_HEIGHT_SCREENS = 20;
-    public static final float WORLD_HEIGHT = FRUSTUM_HEIGHT * LEVEL_HEIGHT_SCREENS;
-
-    public static final int WORLD_STATE_RUNNING = 0;
-    public static final int WORLD_STATE_NEXT_LEVEL = 1;
-    public static final int WORLD_STATE_GAME_OVER = 2;
 
 
 
@@ -39,7 +26,8 @@ public class World {
 
     public final Tamada tamada;
     public final List<Platform> platforms;
-    public final Background bg;
+    public final List<BgObject> bgObjects;
+
     public final Random rand;
 
     public float heightSoFar;
@@ -64,7 +52,7 @@ public class World {
         this.listener = listener;
         this.tamada = new Tamada(5, 1);
         this.platforms = new ArrayList<Platform>();
-        bg=new Background();
+        this.bgObjects = new ArrayList<BgObject>();
         rand = new Random();
         generateLevel();
 
@@ -75,12 +63,46 @@ public class World {
 
     private void generateLevel() {
         System.out.println("generate level:");
-        float y = Platform.PLATFORM_HEIGHT / 2;
-        float maxJumpHeight = Tamada.TAMADA_JUMP_VELOCITY * Tamada.TAMADA_JUMP_VELOCITY / (2 * -gravity.y);
+        generatePlatforms();
+        generateBgObjects();
+    }
+
+    private void generateBgObjects() {
+        float y = PLATFORM_HEIGHT / 2;
+        float maxJumpHeight = FRUSTUM_HEIGHT/4;
 
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
-            int type = rand.nextFloat() > 0.8f ? Platform.PLATFORM_TYPE_MOVING : Platform.PLATFORM_TYPE_STATIC;
-            float x = rand.nextFloat() * (WORLD_WIDTH - Platform.PLATFORM_WIDTH) + Platform.PLATFORM_WIDTH / 2;
+
+            int type = rand.nextInt(BG_OBJECTS_TYPES_COUNT)+1;
+            float x = rand.nextFloat() * (WORLD_WIDTH - type) + type / 2;
+            BgObject bgObject = new BgObject(type, x, y, getRandomBgObjectVelocity());
+            bgObjects.add(bgObject);
+
+            y += (maxJumpHeight - 0.5f);
+            y -= rand.nextFloat() * (maxJumpHeight / 3);
+        }
+    }
+
+    private float getRandomBgObjectVelocity() {
+        int randomNumber=rand.nextInt(3);
+        switch (randomNumber){
+            case 0:
+                return  0;
+            case 1:
+                return BG_OBJECT_MOVE_VELOCITY;
+            case 2:
+                return -BG_OBJECT_MOVE_VELOCITY;
+        }
+        return 0;
+    }
+
+    private void generatePlatforms() {
+        float y = PLATFORM_HEIGHT / 2;
+        float maxJumpHeight = TAMADA_JUMP_VELOCITY * TAMADA_JUMP_VELOCITY / (2 * -gravity.y);
+
+        while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
+            int type = rand.nextFloat() > 0.8f ? PLATFORM_TYPE_MOVING : PLATFORM_TYPE_STATIC;
+            float x = rand.nextFloat() * (WORLD_WIDTH - PLATFORM_WIDTH) + PLATFORM_WIDTH / 2;
             System.out.println("add platform: x="+x+", y="+y);
             Platform platform = new Platform(type, x, y);
             platforms.add(platform);
@@ -91,15 +113,19 @@ public class World {
     }
 
     public void update (float deltaTime, float accelX) {
+        float lastH=heightSoFar;
         updateTama(deltaTime, accelX);
-        updateBg(heightSoFar);
+        float deltaH=heightSoFar-lastH;
+        updateBgObjects(deltaTime, accelX, deltaH);
         updatePlatforms(deltaTime);
-        if (tamada.state != Tamada.TAMADA_STATE_HIT) checkCollisions();
+        if (tamada.state != TAMADA_STATE_HIT) checkCollisions();
         checkGameOver();
     }
 
-    private void updateBg(float heightSoFar) {
-        bg.act(heightSoFar);
+    private void updateBgObjects(float deltaTime, float accelX, float deltaY) {
+        for (BgObject bgObject: bgObjects) {
+            bgObject.update(deltaTime, accelX, deltaY);
+        }
     }
 
     private void checkCollisions() {
@@ -107,18 +133,18 @@ public class World {
     }
 
     private void updateTama(float deltaTime, float accelX) {
-        if (tamada.state != Tamada.TAMADA_STATE_HIT && tamada.position.y <= 0.5f) tamada.hitPlatform();
-        if (tamada.state != Tamada.TAMADA_STATE_HIT) tamada.velocity.x = -accelX / 10 * Tamada.TAMADA_MOVE_VELOCITY;
+        if (tamada.state != TAMADA_STATE_HIT && tamada.position.y <= 0.5f) tamada.hitPlatform();
+        if (tamada.state != TAMADA_STATE_HIT) tamada.velocity.x = -accelX / 10 * TAMADA_MOVE_VELOCITY;
         tamada.update(deltaTime);
         heightSoFar = Math.max(tamada.position.y, heightSoFar);
     }
 
-    private void updatePlatforms (float deltaTime) {
+    private void updatePlatforms(float deltaTime) {
         int len = platforms.size();
         for (int i = 0; i < len; i++) {
             Platform platform = platforms.get(i);
             platform.update(deltaTime);
-            if (platform.state == Platform.PLATFORM_STATE_PULVERIZING && platform.stateTime > Platform.PLATFORM_PULVERIZE_TIME) {
+            if (platform.state == PLATFORM_STATE_PULVERIZING && platform.stateTime > PLATFORM_PULVERIZE_TIME) {
                 platforms.remove(platform);
                 len = platforms.size();
             }

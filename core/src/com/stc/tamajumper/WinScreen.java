@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Align;
-import com.stc.tamajumper.utils.Animation;
-import com.stc.tamajumper.utils.Assets;
 
 
 /**

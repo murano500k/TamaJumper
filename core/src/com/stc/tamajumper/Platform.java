@@ -1,20 +1,13 @@
-package com.stc.tamajumper.objects;
+package com.stc.tamajumper;
 
-import com.stc.tamajumper.World;
+import static com.stc.tamajumper.Config.*;
+import static com.stc.tamajumper.Config.PIXELS.*;
 
 /**
  * Created by artem on 1/11/18.
  */
 
 public class Platform extends DynamicGameObject {
-    public static final float PLATFORM_WIDTH = 2;
-    public static final float PLATFORM_HEIGHT = 0.5f;
-    public static final int PLATFORM_TYPE_STATIC = 0;
-    public static final int PLATFORM_TYPE_MOVING = 1;
-    public static final int PLATFORM_STATE_NORMAL = 0;
-    public static final int PLATFORM_STATE_PULVERIZING = 1;
-    public static final float PLATFORM_PULVERIZE_TIME = 0.2f * 4;
-    public static final float PLATFORM_VELOCITY = 2;
 
     public int type;
     public int state;
@@ -40,9 +33,9 @@ public class Platform extends DynamicGameObject {
                 velocity.x = -velocity.x;
                 position.x = PLATFORM_WIDTH / 2;
             }
-            if (position.x > World.WORLD_WIDTH - PLATFORM_WIDTH / 2) {
+            if (position.x > WORLD_WIDTH - PLATFORM_WIDTH / 2) {
                 velocity.x = -velocity.x;
-                position.x = World.WORLD_WIDTH - PLATFORM_WIDTH / 2;
+                position.x = WORLD_WIDTH - PLATFORM_WIDTH / 2;
             }
         }
 

@@ -10,11 +10,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.stc.tamajumper.utils.Assets;
-import com.stc.tamajumper.utils.Settings;
 
 import static com.stc.tamajumper.Config.VIEWPORT_HEIGHT;
 import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
+import static com.stc.tamajumper.Config.*;
 
 
 public class GameScreen extends ScreenAdapter {
@@ -70,9 +69,9 @@ public class GameScreen extends ScreenAdapter {
         };
         world = new World(worldListener);
         renderer = new WorldRenderer(game.batcher, world);
-        pauseBounds = new Rectangle(320 - 64, 480 - 64, 64, 64);
-        resumeBounds = new Rectangle(160 - 96, 240, 192, 36);
-        quitBounds = new Rectangle(160 - 96, 240 - 36, 192, 36);
+        pauseBounds = new Rectangle(VIEWPORT_WIDTH - 64, VIEWPORT_HEIGHT - 64, 64, 64);
+        resumeBounds = new Rectangle(VIEWPORT_WIDTH/2 - 96, VIEWPORT_WIDTH/2, 192, 36);
+        quitBounds = new Rectangle(VIEWPORT_WIDTH/2 - 96, VIEWPORT_WIDTH/2 - 36, 192, 36);
         lastScore = 0;
         scoreString = "SCORE: 0";
     }
@@ -125,10 +124,10 @@ public class GameScreen extends ScreenAdapter {
             lastScore = world.score;
             scoreString = "SCORE: " + lastScore;
         }
-        if (world.state == World.WORLD_STATE_NEXT_LEVEL) {
+        if (world.state == WORLD_STATE_NEXT_LEVEL) {
             game.setScreen(new WinScreen(game));
         }
-        if (world.state == World.WORLD_STATE_GAME_OVER) {
+        if (world.state == WORLD_STATE_GAME_OVER) {
             state = GAME_OVER;
             if (lastScore >= Settings.highscores[4])
                 scoreString = "NEW HIGHSCORE: " + lastScore;
@@ -147,16 +146,9 @@ public class GameScreen extends ScreenAdapter {
     private void updatePaused () {
         if (Gdx.input.justTouched()) {
             guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-
-            if (resumeBounds.contains(touchPoint.x, touchPoint.y)) {
+            if(state == GAME_PAUSED){
                 Assets.playSound(Assets.clickSound);
                 state = GAME_RUNNING;
-                return;
-            }
-
-            if (quitBounds.contains(touchPoint.x, touchPoint.y)) {
-                Assets.playSound(Assets.clickSound);
-                game.setScreen(new MainMenu(game));
                 return;
             }
         }
@@ -208,30 +200,30 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void presentReady () {
-        game.batcher.draw(Assets.ready, 160 - 192 / 2, 240 - 32 / 2, 192, 32);
+        game.batcher.draw(Assets.ready, VIEWPORT_WIDTH/2 - 192 / 2, VIEWPORT_HEIGHT/2 - 32 / 2, 192, 32);
     }
 
     private void presentRunning () {
-        game.batcher.draw(Assets.pause, 320 - 64, 480 - 64, 64, 64);
-        Assets.font.draw(game.batcher, scoreString, 16, 480 - 20);
+        game.batcher.draw(Assets.pause, Config.VIEWPORT_WIDTH - 64, Config.VIEWPORT_HEIGHT - 64, 64, 64);
+        Assets.font.draw(game.batcher, scoreString, 16, Config.VIEWPORT_HEIGHT - 20);
     }
 
     private void presentPaused () {
-        game.batcher.draw(Assets.pauseMenu, 160 - 192 / 2, 240 - 96 / 2, 192, 96);
-        Assets.font.draw(game.batcher, scoreString, 16, 480 - 20);
+        game.batcher.draw(Assets.pauseMenu, VIEWPORT_WIDTH/2 - 192 / 2, VIEWPORT_HEIGHT/2 - 32 / 2, 192, 48);
+        Assets.font.draw(game.batcher, scoreString, 16, Config.VIEWPORT_HEIGHT - 20);
     }
 
     private void presentLevelEnd () {
         glyphLayout.setText(Assets.font, "the princess is ...");
-        Assets.font.draw(game.batcher, glyphLayout, 160 - glyphLayout.width / 2, 480 - 40);
+        Assets.font.draw(game.batcher, glyphLayout, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, Config.VIEWPORT_HEIGHT - 40);
         glyphLayout.setText(Assets.font, "in another castle!");
-        Assets.font.draw(game.batcher, glyphLayout, 160 - glyphLayout.width / 2, 40);
+        Assets.font.draw(game.batcher, glyphLayout, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, 40);
     }
 
     private void presentGameOver () {
-        game.batcher.draw(Assets.gameOver, 160 - 160 / 2, 240 - 96 / 2, 160, 96);
+        game.batcher.draw(Assets.gameOver, VIEWPORT_WIDTH/2 - VIEWPORT_WIDTH/2 / 2, VIEWPORT_HEIGHT/2 - 96 / 2, 160, 96);
         glyphLayout.setText(Assets.font, scoreString);
-        Assets.font.draw(game.batcher, scoreString, 160 - glyphLayout.width / 2, 480 - 20);
+        Assets.font.draw(game.batcher, scoreString, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, Config.VIEWPORT_HEIGHT - 20);
     }
 
     @Override

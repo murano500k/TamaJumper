@@ -1,4 +1,4 @@
-package com.stc.tamajumper.objects;
+package com.stc.tamajumper;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;

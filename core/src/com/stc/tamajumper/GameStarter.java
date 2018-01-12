@@ -3,8 +3,6 @@ package com.stc.tamajumper;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.stc.tamajumper.utils.Assets;
-import com.stc.tamajumper.utils.Settings;
 
 
 public class GameStarter extends Game {

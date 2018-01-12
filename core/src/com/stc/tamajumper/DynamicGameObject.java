@@ -1,13 +1,12 @@
-package com.stc.tamajumper.objects;
+package com.stc.tamajumper;
 
 import com.badlogic.gdx.math.Vector2;
-import com.stc.tamajumper.objects.GameObject;
 
 /**
  * Created by artem on 1/11/18.
  */
 
-public class DynamicGameObject extends GameObject {
+public class DynamicGameObject extends com.stc.tamajumper.GameObject {
     public final Vector2 velocity;
     public final Vector2 accel;
 
