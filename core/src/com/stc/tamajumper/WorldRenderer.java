@@ -1,8 +1,11 @@
 package com.stc.tamajumper;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import java.util.Random;
 
 import static com.stc.tamajumper.Config.*;
 import static com.stc.tamajumper.Config.PIXELS.*;
@@ -14,13 +17,13 @@ public class WorldRenderer {
     World world;
     OrthographicCamera cam;
     SpriteBatch batch;
-
+    Random random;
     public WorldRenderer (SpriteBatch batch, World world) {
         this.world = world;
         this.cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
         this.cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
         this.batch = batch;
-
+        random=new Random();
     }
 
     public void render() {
@@ -44,8 +47,11 @@ public class WorldRenderer {
         int len = world.bgObjects.size();
         for (int i = 0; i < len; i++) {
             BgObject bgObject = world.bgObjects.get(i);
-
-            batch.draw(bgObject.texture, bgObject.position.x , bgObject.position.y , bgObject.bounds.width, bgObject.bounds.height);
+            Sprite sprite= new Sprite(bgObject.texture);
+            sprite.setAlpha(bgObject.alpha);
+            sprite.flip(bgObject.flipped,false);
+            sprite.setBounds(bgObject.position.x , bgObject.position.y , bgObject.bounds.width, bgObject.bounds.height);
+            sprite.draw(batch );
         }
     }
 

@@ -36,6 +36,7 @@ public class World {
 
 
     public interface WorldListener {
+
         public void jump ();
 
         public void highJump ();
@@ -74,8 +75,10 @@ public class World {
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
 
             int type = rand.nextInt(BG_OBJECTS_TYPES_COUNT)+1;
+            float size = type;
+            if(type==3) size=4;
             float x = rand.nextFloat() * (WORLD_WIDTH - type) + type / 2;
-            BgObject bgObject = new BgObject(type, x, y, getRandomBgObjectVelocity());
+            BgObject bgObject = new BgObject(size, x, y, getRandomBgObjectVelocity());
             bgObjects.add(bgObject);
 
             y += (maxJumpHeight - 0.5f);
@@ -100,6 +103,7 @@ public class World {
         float y = PLATFORM_HEIGHT / 2;
         float maxJumpHeight = TAMADA_JUMP_VELOCITY * TAMADA_JUMP_VELOCITY / (2 * -gravity.y);
 
+
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
             int type = rand.nextFloat() > 0.8f ? PLATFORM_TYPE_MOVING : PLATFORM_TYPE_STATIC;
             float x = rand.nextFloat() * (WORLD_WIDTH - PLATFORM_WIDTH) + PLATFORM_WIDTH / 2;
@@ -108,7 +112,7 @@ public class World {
             platforms.add(platform);
 
             y += (maxJumpHeight - 0.5f);
-            y -= rand.nextFloat() * (maxJumpHeight / 3);
+            y -= rand.nextFloat() * (maxJumpHeight);
         }
     }
 
@@ -116,6 +120,7 @@ public class World {
         float lastH=heightSoFar;
         updateTama(deltaTime, accelX);
         float deltaH=heightSoFar-lastH;
+        if(heightSoFar<FRUSTUM_HEIGHT/2) deltaH=0;
         updateBgObjects(deltaTime, accelX, deltaH);
         updatePlatforms(deltaTime);
         if (tamada.state != TAMADA_STATE_HIT) checkCollisions();

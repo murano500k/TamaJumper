@@ -221,7 +221,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void presentGameOver () {
-        game.batcher.draw(Assets.gameOver, VIEWPORT_WIDTH/2 - VIEWPORT_WIDTH/2 / 2, VIEWPORT_HEIGHT/2 - 96 / 2, 160, 96);
+        game.batcher.draw(Assets.gameOver, VIEWPORT_WIDTH/2 - 160 / 2, VIEWPORT_HEIGHT/2 - 96 / 2, 160, 96);
         glyphLayout.setText(Assets.font, scoreString);
         Assets.font.draw(game.batcher, scoreString, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, Config.VIEWPORT_HEIGHT - 20);
     }

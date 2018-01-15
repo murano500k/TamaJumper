@@ -2,24 +2,32 @@ package com.stc.tamajumper;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import static com.stc.tamajumper.Config.*;
-import static com.stc.tamajumper.Config.PIXELS.*;
+import java.util.Random;
+
+import static com.stc.tamajumper.Config.BG_OBJECT_MOVE_RATIO;
+import static com.stc.tamajumper.Config.BG_OBJECT_MOVE_VELOCITY;
+import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
+import static com.stc.tamajumper.Config.PLATFORM_HEIGHT;
+import static com.stc.tamajumper.Config.PLATFORM_WIDTH;
 
 
 public class BgObject extends DynamicGameObject {
     private final float movingSpeed;
     public final float size;
     public final TextureRegion texture;
-    public float jumpRatio;
-
-
+    public float alpha;
+    public boolean flipped;
 
 
     public BgObject(float size, float x, float y, float movingSpeed) {
         super(x, y, size,size);
         this.size = size;
+        if(size==1)alpha=0.1f;
+        else if(size==2)alpha=0.2f;
+        else alpha=0.3f;
         this.movingSpeed=movingSpeed;
         this.texture=Assets.getBgObjectTexture(size);
+        this.flipped=new Random().nextBoolean();
     }
 
     public void update(float deltaTime, float accelX, float deltaY) {

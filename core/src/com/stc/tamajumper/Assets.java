@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -47,6 +46,7 @@ public class Assets {
     private static TextureRegion bgObjectSmall;
     private static ArrayList<TextureRegion> bgObjectsMedium;
     private static ArrayList<TextureRegion> bgObjectsLarge;
+    public static TextureRegion backgroundRegionMenu;
 
     public static Texture loadTexture (String file) {
         return new Texture(Gdx.files.internal(file));
@@ -62,17 +62,18 @@ public class Assets {
             int rnd = new Random().nextInt(LARGE_BG_OBJECTS_COUNT);
             return bgObjectsLarge.get(rnd);
         }
+
     }
     public static void load () {
         background = loadTexture("data/bg.png");
-        background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
-
+        backgroundRegionMenu = new TextureRegion(background, 0, 0, 650,1067);
         backgroundRegion = new TextureRegion(background, 0, 0,100,100);
 
         bgObjectsMedium= new ArrayList<>();
         bgObjectsLarge= new ArrayList<>();
 
         Texture bgObjTexture = loadTexture("data/bg_object_small.png");
+
         bgObjectSmall=new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN);
 
         bgObjTexture = loadTexture("data/bg_object_medium0.png");
@@ -83,19 +84,19 @@ public class Assets {
 
 
         bgObjTexture = loadTexture("data/bg_object_large0.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*3, Config.PIXELS.PLAYER_DIMEN*3));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
 
 
         bgObjTexture = loadTexture("data/bg_object_large1.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*3, Config.PIXELS.PLAYER_DIMEN*3));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
 
 
         bgObjTexture = loadTexture("data/bg_object_large2.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*3, Config.PIXELS.PLAYER_DIMEN*3));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
 
 
         bgObjTexture = loadTexture("data/bg_object_large3.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*3, Config.PIXELS.PLAYER_DIMEN*3));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
 
 
         items = loadTexture("data/items.png");
