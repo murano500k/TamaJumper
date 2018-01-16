@@ -43,6 +43,11 @@ public class Config {
     public static final float MEDIUM_BG_OBJECT_DIMEN = 2;
     public static final float LARGE_BG_OBJECT_DIMEN = 3;
 
+    public static final float COIN_WIDTH = 0.5f;
+    public static final float COIN_HEIGHT = 0.8f;
+    public static final int COIN_SCORE = 10;
+    public static final float VOLUME_MUSIC = 0.3f;
+
 
     public class PIXELS {
         public static final int PLAYER_DIMEN = 32;

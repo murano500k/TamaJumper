@@ -24,7 +24,7 @@ public class World {
     public final WorldListener listener;
     public static final Vector2 gravity = new Vector2(0, -12);
 
-    public final Tamada tamada;
+    public final Tamada tama;
     public final List<Platform> platforms;
     public final List<BgObject> bgObjects;
 
@@ -33,6 +33,10 @@ public class World {
     public float heightSoFar;
     public int score;
     public int state;
+    public Castle castle;
+    public List<Coin> coins;
+    public List<Spring> springs;
+    public List<Squirrel> squirrels;
 
 
     public interface WorldListener {
@@ -51,9 +55,12 @@ public class World {
 
     public World (WorldListener listener) {
         this.listener = listener;
-        this.tamada = new Tamada(5, 1);
+        this.tama = new Tamada(5, 1);
         this.platforms = new ArrayList<Platform>();
         this.bgObjects = new ArrayList<BgObject>();
+        this.coins = new ArrayList<>();
+        this.springs = new ArrayList<>();
+        this.squirrels = new ArrayList<>();
         rand = new Random();
         generateLevel();
 
@@ -84,6 +91,8 @@ public class World {
             y += (maxJumpHeight - 0.5f);
             y -= rand.nextFloat() * (maxJumpHeight / 3);
         }
+        castle = new Castle(WORLD_WIDTH / 2, y);
+
     }
 
     private float getRandomBgObjectVelocity() {
@@ -111,6 +120,25 @@ public class World {
             Platform platform = new Platform(type, x, y);
             platforms.add(platform);
 
+            if (y > WORLD_HEIGHT / 3 && rand.nextFloat() > 0.8f) {
+                Squirrel squirrel = new Squirrel(platform.position.x + rand.nextFloat(), platform.position.y
+                        + Squirrel.SQUIRREL_HEIGHT + rand.nextFloat() * 2);
+                squirrels.add(squirrel);
+            }
+
+
+            if (rand.nextFloat() > 0.9f && type != Config.PLATFORM_TYPE_MOVING) {
+                Spring spring = new Spring(platform.position.x, platform.position.y + Config.PLATFORM_HEIGHT / 2
+                        + Spring.SPRING_HEIGHT / 2);
+                springs.add(spring);
+            }
+
+            if (rand.nextFloat() > 0.8f) {
+                Coin coin = new Coin(platform.position.x + rand.nextFloat(), platform.position.y + COIN_HEIGHT
+                        + rand.nextFloat() * 3);
+                coins.add(coin);
+            }
+
             y += (maxJumpHeight - 0.5f);
             y -= rand.nextFloat() * (maxJumpHeight);
         }
@@ -123,8 +151,29 @@ public class World {
         if(heightSoFar<FRUSTUM_HEIGHT/2) deltaH=0;
         updateBgObjects(deltaTime, accelX, deltaH);
         updatePlatforms(deltaTime);
-        if (tamada.state != TAMADA_STATE_HIT) checkCollisions();
+        updateCoins(deltaTime);
+        updateSquirrels(deltaTime);
+
+        if (tama.state != TAMADA_STATE_HIT) checkCollisions();
         checkGameOver();
+    }
+
+    private void updateSquirrels(float deltaTime) {
+        int len = squirrels.size();
+        for (int i = 0; i < len; i++) {
+            Squirrel squirrel = squirrels.get(i);
+            squirrel.update(deltaTime);
+        }
+
+    }
+
+
+    private void updateCoins(float deltaTime) {
+        int len = coins.size();
+        for (int i = 0; i < len; i++) {
+            Coin coin = coins.get(i);
+            coin.update(deltaTime);
+        }
     }
 
     private void updateBgObjects(float deltaTime, float accelX, float deltaY) {
@@ -134,14 +183,83 @@ public class World {
     }
 
     private void checkCollisions() {
+        checkSquirrelCollisions();
         checkPlatformCollisions();
+        checkCastleCollisions();
+        checkItemCollisions ();
+
     }
 
+    private void checkSquirrelCollisions() {
+        int len = squirrels.size();
+        for (int i = 0; i < len; i++) {
+            Squirrel squirrel = squirrels.get(i);
+            if (squirrel.bounds.overlaps(tama.bounds)) {
+                tama.hitSquirrel();
+                state = WORLD_STATE_GAME_OVER;
+            }
+        }
+    }
+
+    private void checkCastleCollisions() {
+        if (castle.bounds.overlaps(tama.bounds)) {
+            state = WORLD_STATE_NEXT_LEVEL;
+        }
+    }
+
+    private void checkPlatformCollisions () {
+        if (tama.velocity.y > 0) return;
+
+        int len = platforms.size();
+        for (int i = 0; i < len; i++) {
+            Platform platform = platforms.get(i);
+            if (tama.position.y > platform.position.y) {
+                if (tama.bounds.overlaps(platform.bounds)) {
+                    score += Config.PLATFORM_SCORE;
+                    tama.hitPlatform();
+                    listener.jump();
+                    if (rand.nextFloat() > 0.5f) {
+                        platform.pulverize();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    private void checkItemCollisions () {
+        int len = coins.size();
+        for (int i = 0; i < len; i++) {
+            Coin coin = coins.get(i);
+            if (tama.bounds.overlaps(coin.bounds)) {
+                coins.remove(coin);
+                len = coins.size();
+                listener.coin();
+                score += Config.COIN_SCORE;
+            }
+
+        }
+
+        if (tama.velocity.y > 0) return;
+
+        len = springs.size();
+        for (int i = 0; i < len; i++) {
+            Spring spring = springs.get(i);
+            if (tama.position.y > spring.position.y) {
+                if (tama.bounds.overlaps(spring.bounds)) {
+                    tama.hitSpring();
+                    listener.highJump();
+                }
+            }
+        }
+
+    }
+
+
     private void updateTama(float deltaTime, float accelX) {
-        if (tamada.state != TAMADA_STATE_HIT && tamada.position.y <= 0.5f) tamada.hitPlatform();
-        if (tamada.state != TAMADA_STATE_HIT) tamada.velocity.x = -accelX / 10 * TAMADA_MOVE_VELOCITY;
-        tamada.update(deltaTime);
-        heightSoFar = Math.max(tamada.position.y, heightSoFar);
+        if (tama.state != TAMADA_STATE_HIT && tama.position.y <= 0.5f) tama.hitPlatform();
+        if (tama.state != TAMADA_STATE_HIT) tama.velocity.x = -accelX / 10 * TAMADA_MOVE_VELOCITY;
+        tama.update(deltaTime);
+        heightSoFar = Math.max(tama.position.y, heightSoFar);
     }
 
     private void updatePlatforms(float deltaTime) {
@@ -157,27 +275,8 @@ public class World {
     }
 
     private void checkGameOver () {
-        if (heightSoFar - 7.5f > tamada.position.y) {
+        if (heightSoFar - 7.5f > tama.position.y) {
             state = WORLD_STATE_GAME_OVER;
-        }
-    }
-    private void checkPlatformCollisions () {
-        if (tamada.velocity.y > 0) return;
-
-        int len = platforms.size();
-        for (int i = 0; i < len; i++) {
-            Platform platform = platforms.get(i);
-            if (tamada.position.y > platform.position.y) {
-                if (tamada.bounds.overlaps(platform.bounds)) {
-                    score += Config.PLATFORM_SCORE;
-                    tamada.hitPlatform();
-                    listener.jump();
-                    if (rand.nextFloat() > 0.5f) {
-                        platform.pulverize();
-                    }
-                    break;
-                }
-            }
         }
     }
 

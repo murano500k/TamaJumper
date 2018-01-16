@@ -1,12 +1,15 @@
 package com.stc.tamajumper;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -37,16 +40,21 @@ public class Assets {
     public static TextureRegion platform;
     public static Animation brakingPlatform;
     public static BitmapFont font;
+    public static Music music;
 
-    public static Sound jumpSound;
     public static Sound highJumpSound;
     public static Sound hitSound;
-    public static Sound coinSound;
     public static Sound clickSound;
+    public static List<Sound> jumpSounds;
+    public static Sound coinSound;
+
     private static TextureRegion bgObjectSmall;
     private static ArrayList<TextureRegion> bgObjectsMedium;
     private static ArrayList<TextureRegion> bgObjectsLarge;
     public static TextureRegion backgroundRegionMenu;
+    private static Random random=new Random();
+    private static ArrayList<Music> musicSounds;
+    private static TextureAtlas bgObjectsAtlas;
 
     public static Texture loadTexture (String file) {
         return new Texture(Gdx.files.internal(file));
@@ -155,14 +163,70 @@ public class Assets {
 
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
 
-        jumpSound = Gdx.audio.newSound(Gdx.files.internal("data/jump.wav"));
-        highJumpSound = Gdx.audio.newSound(Gdx.files.internal("data/highjump.wav"));
-        hitSound = Gdx.audio.newSound(Gdx.files.internal("data/hit.wav"));
-        coinSound = Gdx.audio.newSound(Gdx.files.internal("data/coin.wav"));
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("data/click.wav"));
+        loadSounds();
+    }
+
+
+    static void loadSounds(){
+        jumpSounds=new ArrayList<>();
+        musicSounds=new ArrayList<>();
+        for (int i = 0; i <= 9; i++) {
+            jumpSounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/jump_0"+i+".wav")));
+        }
+        highJumpSound = Gdx.audio.newSound(Gdx.files.internal("sound/highjump.wav"));
+        hitSound = Gdx.audio.newSound(Gdx.files.internal("sound/game_over.wav"));
+        coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/coin_00.wav"));
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("sound/click.wav"));
+
+
+        addMusic("sound/music.mp3");
+        addMusic("sound/jumpshot.mp3");
+        addMusic("sound/hhavok_main.mp3");
+        addMusic("sound/resistors.mp3");
+        addMusic("sound/dizzy_spells.mp3");
+        if (Settings.soundEnabled) musicSounds.get(random.nextInt(musicSounds.size())).play();
+    }
+
+
+    public static void playMusic(){
+        stopMusic();
+        if(Settings.soundEnabled) {
+            musicSounds.get(random.nextInt(musicSounds.size())).play();
+        }
+    }
+    public static void stopMusic(){
+        for (int i = 0; i < musicSounds.size(); i++) {
+            if(musicSounds.get(i).isPlaying())
+                musicSounds.get(i).stop();
+        }
+    }
+
+    private static Music addMusic(String path) {
+        Music music=Gdx.audio.newMusic(Gdx.files.internal(path));
+        music.setLooping(false);
+        music.setVolume(Config.VOLUME_MUSIC);
+        music.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                musicSounds.get(random.nextInt(musicSounds.size())).play();
+            }
+        });
+        musicSounds.add(music);
+        return music;
+    }
+
+    public static void playJumpSound(){
+        playSound(jumpSounds.get(random.nextInt(jumpSounds.size())));
     }
 
     public static void playSound (Sound sound) {
         if (Settings.soundEnabled) sound.play(1);
+    }
+
+
+    private static void loadAtlas(){
+        bgObjectsAtlas= new TextureAtlas("atlas/bgObjects.pack");
+
+
     }
 }

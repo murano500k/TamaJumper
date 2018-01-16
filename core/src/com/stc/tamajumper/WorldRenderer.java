@@ -27,7 +27,7 @@ public class WorldRenderer {
     }
 
     public void render() {
-        if (world.tamada.position.y > cam.position.y) cam.position.y = world.tamada.position.y;
+        if (world.tama.position.y > cam.position.y) cam.position.y = world.tama.position.y;
         cam.update();
         batch.setProjectionMatrix(cam.combined);
         renderBackground();
@@ -61,8 +61,16 @@ public class WorldRenderer {
         batch.begin();
         renderBgObjects();
         renderPlatforms();
+        renderItems ();
+        renderSquirrels();
         renderTamada();
+        renderCastle();
         batch.end();
+    }
+
+    private void renderCastle() {
+        Castle castle = world.castle;
+        batch.draw(Assets.castle, castle.position.x - 1, castle.position.y - 1, 2, 2);
     }
 
     private void renderPlatforms() {
@@ -80,12 +88,12 @@ public class WorldRenderer {
 
     private void renderTamada() {
         TextureRegion keyFrame;
-        switch (world.tamada.state) {
+        switch (world.tama.state) {
             case TAMADA_STATE_FALL:
-                keyFrame = Assets.tamadaFall.getKeyFrame(world.tamada.stateTime, Animation.ANIMATION_LOOPING);
+                keyFrame = Assets.tamadaFall.getKeyFrame(world.tama.stateTime, Animation.ANIMATION_LOOPING);
                 break;
             case TAMADA_STATE_JUMP:
-                keyFrame = Assets.tamadaJump.getKeyFrame(world.tamada.stateTime, Animation.ANIMATION_LOOPING);
+                keyFrame = Assets.tamadaJump.getKeyFrame(world.tama.stateTime, Animation.ANIMATION_LOOPING);
                 break;
             case
                     TAMADA_STATE_HIT:
@@ -93,10 +101,38 @@ public class WorldRenderer {
                 keyFrame = Assets.tamadaHit;
         }
 
-        float side = world.tamada.velocity.x < 0 ? -1 : 1;
+        float side = world.tama.velocity.x < 0 ? -1 : 1;
         if (side < 0)
-            batch.draw(keyFrame, world.tamada.position.x + 0.5f, world.tamada.position.y - 0.5f, side * 1, 1);
+            batch.draw(keyFrame, world.tama.position.x + 0.5f, world.tama.position.y - 0.5f, side * 1, 1);
         else
-            batch.draw(keyFrame, world.tamada.position.x - 0.5f, world.tamada.position.y - 0.5f, side * 1, 1);
+            batch.draw(keyFrame, world.tama.position.x - 0.5f, world.tama.position.y - 0.5f, side * 1, 1);
+    }
+
+    private void renderItems () {
+        int len = world.springs.size();
+        for (int i = 0; i < len; i++) {
+            Spring spring = world.springs.get(i);
+            batch.draw(Assets.spring, spring.position.x - 0.5f, spring.position.y - 0.5f, 1, 1);
+        }
+
+        len = world.coins.size();
+        for (int i = 0; i < len; i++) {
+            Coin coin = world.coins.get(i);
+            TextureRegion keyFrame = Assets.coinAnim.getKeyFrame(coin.stateTime, Animation.ANIMATION_LOOPING);
+            batch.draw(keyFrame, coin.position.x - 0.5f, coin.position.y - 0.5f, 1, 1);
+        }
+    }
+
+    private void renderSquirrels () {
+        int len = world.squirrels.size();
+        for (int i = 0; i < len; i++) {
+            Squirrel squirrel = world.squirrels.get(i);
+            TextureRegion keyFrame = Assets.squirrelFly.getKeyFrame(squirrel.stateTime, Animation.ANIMATION_LOOPING);
+            float side = squirrel.velocity.x < 0 ? -1 : 1;
+            if (side < 0)
+                batch.draw(keyFrame, squirrel.position.x + 0.5f, squirrel.position.y - 0.5f, side * 1, 1);
+            else
+                batch.draw(keyFrame, squirrel.position.x - 0.5f, squirrel.position.y - 0.5f, side * 1, 1);
+        }
     }
 }

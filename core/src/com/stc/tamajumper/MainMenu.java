@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector3;
  */
 
 public class MainMenu extends ScreenAdapter {
-    GameStarter game;
+    TamaJumperGame game;
     OrthographicCamera guiCam;
     Rectangle soundBounds;
     Rectangle playBounds;
@@ -21,7 +21,7 @@ public class MainMenu extends ScreenAdapter {
     Rectangle helpBounds;
     Vector3 touchPoint;
 
-    public MainMenu (GameStarter game) {
+    public MainMenu (TamaJumperGame game) {
         this.game = game;
 
         guiCam = new OrthographicCamera(320, 480);
@@ -31,6 +31,7 @@ public class MainMenu extends ScreenAdapter {
         highscoresBounds = new Rectangle(160 - 150, 200 - 18, 300, 36);
         helpBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
         touchPoint = new Vector3();
+        Assets.playMusic();
     }
 
     public void update () {
@@ -56,8 +57,11 @@ public class MainMenu extends ScreenAdapter {
                 return;
             }
             if (soundBounds.contains(touchPoint.x, touchPoint.y)) {
-                Assets.playSound(Assets.clickSound);
                 Settings.soundEnabled = !Settings.soundEnabled;
+                Settings.save();
+                Assets.playSound(Assets.clickSound);
+                Assets.playMusic();
+
             }
         }
     }

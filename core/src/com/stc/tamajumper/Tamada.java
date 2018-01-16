@@ -45,8 +45,22 @@ public class Tamada extends DynamicGameObject {
         stateTime += deltaTime;
     }
 
+
+    public void hitSquirrel () {
+        velocity.set(0, 0);
+        state = TAMADA_STATE_HIT;
+        stateTime = 0;
+    }
+
     public void hitPlatform () {
         velocity.y = TAMADA_JUMP_VELOCITY;
+        state = TAMADA_STATE_JUMP;
+        stateTime = 0;
+    }
+
+
+    public void hitSpring () {
+        velocity.y = TAMADA_JUMP_VELOCITY * 1.5f;
         state = TAMADA_STATE_JUMP;
         stateTime = 0;
     }

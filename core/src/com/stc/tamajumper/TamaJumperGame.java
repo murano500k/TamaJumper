@@ -5,7 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
-public class GameStarter extends Game {
+public class TamaJumperGame extends com.badlogic.gdx.Game {
 
 	public SpriteBatch batcher;
 	@Override

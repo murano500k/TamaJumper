@@ -19,7 +19,8 @@ public class Settings {
             String[] strings = filehandle.readString().split("\n");
 
             soundEnabled = Boolean.parseBoolean(strings[0]);
-            for (int i = 0; i < 5; i++) {
+            System.out.println("load: soundEnabled="+soundEnabled);
+            for (int i = 1; i <= 5; i++) {
                 highscores[i] = Integer.parseInt(strings[i+1]);
             }
         } catch (Throwable e) {
@@ -32,7 +33,9 @@ public class Settings {
             FileHandle filehandle = Gdx.files.external(file);
 
             filehandle.writeString(Boolean.toString(soundEnabled)+"\n", false);
-            for (int i = 0; i < 5; i++) {
+            System.out.println("load: soundEnabled="+soundEnabled);
+
+            for (int i = 1; i <= 5; i++) {
                 filehandle.writeString(Integer.toString(highscores[i])+"\n", true);
             }
         } catch (Throwable e) {

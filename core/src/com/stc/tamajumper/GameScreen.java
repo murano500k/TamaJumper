@@ -23,7 +23,7 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_LEVEL_END = 3;
     static final int GAME_OVER = 4;
 
-    GameStarter game;
+    TamaJumperGame game;
 
     int state;
     OrthographicCamera guiCam;
@@ -39,7 +39,7 @@ public class GameScreen extends ScreenAdapter {
 
     GlyphLayout glyphLayout = new GlyphLayout();
 
-    public GameScreen(GameStarter game) {
+    public GameScreen(TamaJumperGame game) {
         this.game = game;
 
         state = GAME_READY;
@@ -49,7 +49,7 @@ public class GameScreen extends ScreenAdapter {
         worldListener = new World.WorldListener() {
             @Override
             public void jump() {
-                Assets.playSound(Assets.jumpSound);
+                Assets.playJumpSound();
             }
 
             @Override
@@ -59,6 +59,7 @@ public class GameScreen extends ScreenAdapter {
 
             @Override
             public void hit() {
+                Assets.stopMusic();
                 Assets.playSound(Assets.hitSound);
             }
 
@@ -135,6 +136,8 @@ public class GameScreen extends ScreenAdapter {
                 scoreString = "SCORE: " + lastScore;
             Settings.addScore(lastScore);
             Settings.save();
+            Assets.stopMusic();
+            Assets.playSound(Assets.hitSound);
         }
     }
 

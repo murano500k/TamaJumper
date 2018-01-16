@@ -1,0 +1,55 @@
+
+bgObjects.png
+size: 1024,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg_object_large0
+  rotate: false
+  xy: 2, 102
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+bg_object_large1
+  rotate: false
+  xy: 132, 102
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+bg_object_large2
+  rotate: false
+  xy: 262, 102
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+bg_object_large3
+  rotate: false
+  xy: 392, 102
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+bg_object_medium0
+  rotate: false
+  xy: 2, 36
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+bg_object_medium1
+  rotate: false
+  xy: 522, 166
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+bg_object_small
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
