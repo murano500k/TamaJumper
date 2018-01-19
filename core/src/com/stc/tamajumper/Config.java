@@ -70,4 +70,10 @@ public class Config {
         public static final float LEVEL_HEIGHT_SCREENS = 20;
         public static final float WORLD_HEIGHT = FRUSTUM_HEIGHT * LEVEL_HEIGHT_SCREENS;
     }
+
+    public class AccelerometerValues{
+        public static final float MIN_VALUE_SENSITIVITY = 0.5f;
+        public static final float MAX_VALUE_SENSITIVITY = 4f;
+        public static final float DEFAULT_VALUE_SENSITIVITY = 1.5f;
+    }
 }

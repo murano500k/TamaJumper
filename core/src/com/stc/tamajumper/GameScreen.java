@@ -39,7 +39,7 @@ public class GameScreen extends ScreenAdapter {
 
     GlyphLayout glyphLayout = new GlyphLayout();
 
-    public GameScreen(TamaJumperGame game) {
+    public GameScreen(final TamaJumperGame game) {
         this.game = game;
 
         state = GAME_READY;
@@ -51,27 +51,27 @@ public class GameScreen extends ScreenAdapter {
 
             @Override
             public void jump(Platform platform) {
-                Assets.playJumpSound(platform);
+                game.getAssets().playJumpSound(platform);
             }
 
             @Override
             public void highJump() {
-                Assets.playHighJumpSound();
+                game.getAssets().playHighJumpSound();
 
             }
 
             @Override
             public void hit() {
-                Assets.stopMusic();
-                Assets.playSound(Assets.gameOverSound);
+                game.getAssets().stopMusic();
+                game.getAssets().playSound(game.getAssets().gameOverSound);
             }
 
             @Override
             public void coin() {
-                Assets.playSound(Assets.coinSound);
+                game.getAssets().playSound(game.getAssets().coinSound);
             }
         };
-        world = new World(worldListener);
+        world = new World(worldListener,game);
         renderer = new WorldRenderer(game.batcher, world);
         pauseBounds = new Rectangle(VIEWPORT_WIDTH - 64, VIEWPORT_HEIGHT - 64, 64, 64);
         resumeBounds = new Rectangle(VIEWPORT_WIDTH/2 - 96, VIEWPORT_WIDTH/2, 192, 36);
@@ -106,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
             guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
             if (pauseBounds.contains(touchPoint.x, touchPoint.y)) {
-                Assets.playSound(Assets.clickSound);
+                game.getAssets().playSound(Assets.clickSound);
                 state = GAME_PAUSED;
                 return;
             }
@@ -133,14 +133,9 @@ public class GameScreen extends ScreenAdapter {
         }
         if (world.state == WORLD_STATE_GAME_OVER) {
             state = GAME_OVER;
-            if (lastScore >= Settings.highscores[4])
-                scoreString = "NEW HIGHSCORE: " + lastScore;
-            else
-                scoreString = "SCORE: " + lastScore;
-            Settings.addScore(lastScore);
-            Settings.save();
-            Assets.stopMusic();
-            Assets.playSound(Assets.gameOverSound);
+            scoreString = "SCORE: " + lastScore;
+            game.getAssets().stopMusic();
+            game.getAssets().playSound(Assets.gameOverSound);
         }
     }
 
@@ -153,7 +148,7 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.justTouched()) {
             guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             if(state == GAME_PAUSED){
-                Assets.playSound(Assets.clickSound);
+                game.getAssets().playSound(Assets.clickSound);
                 state = GAME_RUNNING;
                 return;
             }
@@ -162,7 +157,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateLevelEnd () {
         if (Gdx.input.justTouched()) {
-            world = new World(worldListener);
+            world = new World(worldListener, game);
             renderer = new WorldRenderer(game.batcher, world);
             world.score = lastScore;
             state = GAME_READY;
@@ -211,25 +206,25 @@ public class GameScreen extends ScreenAdapter {
 
     private void presentRunning () {
         game.batcher.draw(Assets.pause, Config.VIEWPORT_WIDTH - 64, Config.VIEWPORT_HEIGHT - 64, 64, 64);
-        Assets.font.draw(game.batcher, scoreString, 16, Config.VIEWPORT_HEIGHT - 20);
+        game.getAssets().font.draw(game.batcher, scoreString, 16, Config.VIEWPORT_HEIGHT - 20);
     }
 
     private void presentPaused () {
         game.batcher.draw(Assets.pauseMenu, VIEWPORT_WIDTH/2 - 192 / 2, VIEWPORT_HEIGHT/2 - 32 / 2, 192, 48);
-        Assets.font.draw(game.batcher, scoreString, 16, Config.VIEWPORT_HEIGHT - 20);
+        game.getAssets().font.draw(game.batcher, scoreString, 16, Config.VIEWPORT_HEIGHT - 20);
     }
 
     private void presentLevelEnd () {
         glyphLayout.setText(Assets.font, "the princess is ...");
-        Assets.font.draw(game.batcher, glyphLayout, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, Config.VIEWPORT_HEIGHT - 40);
+        game.getAssets().font.draw(game.batcher, glyphLayout, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, Config.VIEWPORT_HEIGHT - 40);
         glyphLayout.setText(Assets.font, "in another castle!");
-        Assets.font.draw(game.batcher, glyphLayout, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, 40);
+        game.getAssets().font.draw(game.batcher, glyphLayout, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, 40);
     }
 
     private void presentGameOver () {
         game.batcher.draw(Assets.gameOver, VIEWPORT_WIDTH/2 - 160 / 2, VIEWPORT_HEIGHT/2 - 96 / 2, 160, 96);
         glyphLayout.setText(Assets.font, scoreString);
-        Assets.font.draw(game.batcher, scoreString, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, Config.VIEWPORT_HEIGHT - 20);
+        game.getAssets().font.draw(game.batcher, scoreString, VIEWPORT_WIDTH/2 - glyphLayout.width / 2, Config.VIEWPORT_HEIGHT - 20);
     }
 
     @Override

@@ -55,13 +55,19 @@ public class Assets {
     private static Random random=new Random();
     private static ArrayList<Music> musicSounds;
     private static TextureAtlas atlas;
+    private final TamaJumperGame parent;
+
+    public Assets(TamaJumperGame tamaJumperGame) {
+        this.parent=tamaJumperGame;
+        load();
+    }
 
     public static Texture loadTexture (String file) {
         return new Texture(Gdx.files.internal(file));
     }
 
 
-    public static TextureRegion getBgObjectTexture(float id){
+    public TextureRegion getBgObjectTexture(float id){
         if(id==1)return bgObjectSmall;
         else if(id==2){
             int rnd = new Random().nextInt(MEDIUM_BG_OBJECTS_COUNT);
@@ -72,7 +78,7 @@ public class Assets {
         }
 
     }
-    public static void load () {
+    public void load () {
         loadSounds();
         background = loadTexture("data/bg.png");
         backgroundRegionMenu = new TextureRegion(background, 0, 0, 650,1067);
@@ -171,20 +177,23 @@ public class Assets {
 
 
 
-    public static void playMusic(){
+    public void playMusic(){
         stopMusic();
-        if(Settings.soundEnabled) {
-            musicSounds.get(random.nextInt(musicSounds.size())).play();
+        if (parent.getPreferences().isSoundEffectsEnabled()) {
+            int index=0;
+            //index=random.nextInt(musicSounds.size());
+            musicSounds.get(1).play();
+
         }
     }
-    public static void stopMusic(){
+    public void stopMusic(){
         for (int i = 0; i < musicSounds.size(); i++) {
             if(musicSounds.get(i).isPlaying())
                 musicSounds.get(i).stop();
         }
     }
 
-    private static Music addMusic(String path) {
+    private Music addMusic(String path) {
         Music music=Gdx.audio.newMusic(Gdx.files.internal(path));
         music.setLooping(false);
         music.setVolume(Config.VOLUME_MUSIC);
@@ -198,7 +207,7 @@ public class Assets {
         return music;
     }
 
-    public static void playJumpSound(Platform platform){
+    public void playJumpSound(Platform platform){
         int index;
 
         //index=random.nextInt(jumpSounds.size());
@@ -207,22 +216,25 @@ public class Assets {
         else if(platform.type==Config.PLATFORM_TYPE_MOVING){
             index=Config.JUMP_SOUND_INDEX_MOVING;
         }
-        playSound(jumpSounds.get(index));
+        if (parent.getPreferences().isSoundEffectsEnabled())
+            playSound(jumpSounds.get(index));
     }
 
 
 
-    public static void playHighJumpSound() {
-        playSound(jumpSounds.get(Config.JUMP_SOUND_INDEX_HIGH));
+    public void playHighJumpSound() {
+        if (parent.getPreferences().isSoundEffectsEnabled()){
+            playSound(jumpSounds.get(Config.JUMP_SOUND_INDEX_HIGH));
+        }
     }
 
 
-    public static void playSound (Sound sound) {
-        if (Settings.soundEnabled) sound.play(1);
+    public void playSound (Sound sound) {
+        if (parent.getPreferences().isSoundEffectsEnabled()) sound.play(1);
     }
 
 
-    private static void loadAtlas(){
+    private void loadAtlas(){
         atlas = new TextureAtlas(AssetNames.Files.ALL_OBJECTS_ATLAS);
 
         mainMenu = new TextureRegion(items, 0, 224, 300, 110);
@@ -278,7 +290,7 @@ public class Assets {
 
         loadSounds();
     }
-    private static void loadSounds(){
+    private void loadSounds(){
         highJumpSound = Gdx.audio.newSound(Gdx.files.internal(AssetNames.Sounds.HIGHJUMP));
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal(AssetNames.Sounds.GAME_OVER));
         coinSound = Gdx.audio.newSound(Gdx.files.internal(AssetNames.Sounds.COIN));
@@ -298,7 +310,7 @@ public class Assets {
             addMusic(file);
         }
 
-        if (Settings.soundEnabled) musicSounds.get(random.nextInt(musicSounds.size())).play();
+        if (parent.getPreferences().isSoundEffectsEnabled()) musicSounds.get(random.nextInt(musicSounds.size())).play();
     }
 
     static class AssetNames {

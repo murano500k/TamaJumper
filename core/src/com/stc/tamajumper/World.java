@@ -44,6 +44,7 @@ public class World {
     public final List<BgObject> bgObjects;
 
     public final Random rand;
+    private TamaJumperGame game;
 
     public float heightSoFar;
     public int score;
@@ -69,7 +70,8 @@ public class World {
 
 
 
-    public World (WorldListener listener) {
+    public World (WorldListener listener, TamaJumperGame game) {
+        this.game = game;
         this.listener = listener;
         this.tama = new Tamada(5, 1);
         this.platforms = new ArrayList<Platform>();
@@ -101,7 +103,7 @@ public class World {
             float size = type;
             if(type==3) size=4;
             float x = rand.nextFloat() * (WORLD_WIDTH - type) + type / 2;
-            BgObject bgObject = new BgObject(size, x, y, getRandomBgObjectVelocity());
+            BgObject bgObject = new BgObject(size, x, y, getRandomBgObjectVelocity(), game.getAssets().getBgObjectTexture(size));
             bgObjects.add(bgObject);
 
             y += (maxJumpHeight - 0.5f);
@@ -188,7 +190,7 @@ public class World {
     }
 
     private float updateAccelValue(float accelX) {
-        accelX*=Settings.getAccelMultiplier();
+        accelX*=game.getPreferences().getAccelSensitivity();
         return accelX;
     }
 

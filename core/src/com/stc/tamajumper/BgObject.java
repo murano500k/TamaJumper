@@ -19,14 +19,14 @@ public class BgObject extends DynamicGameObject {
     public boolean flipped;
 
 
-    public BgObject(float size, float x, float y, float movingSpeed) {
+    public BgObject(float size, float x, float y, float movingSpeed, TextureRegion textureRegion) {
         super(x, y, size,size);
         this.size = size;
         if(size==1)alpha=0.1f;
         else if(size==2)alpha=0.2f;
         else alpha=0.3f;
         this.movingSpeed=movingSpeed;
-        this.texture=Assets.getBgObjectTexture(size);
+        this.texture=textureRegion;
         this.flipped=new Random().nextBoolean();
     }
 

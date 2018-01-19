@@ -16,13 +16,14 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	private GameScreen gameScreen;
 	private Screen preferencesScreen;
 	private AppPreferences prefs;
+	private Assets assets;
 
 	@Override
 	public void create () {
 		batcher = new SpriteBatch();
-		Settings.load();
-		Assets.load();
+
 		prefs=new AppPreferences();
+		assets=new Assets(this);
 		setScreen(getStartScreen());
 	}
 	public AppPreferences getPreferences(){
@@ -60,4 +61,7 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	}
 
 
+	public Assets getAssets() {
+		return assets;
+	}
 }
