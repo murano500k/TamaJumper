@@ -6,9 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
-import static com.stc.tamajumper.Config.*;
-import static com.stc.tamajumper.Config.PIXELS.*;
+import static com.stc.tamajumper.Config.BG_OBJECTS_TYPES_COUNT;
+import static com.stc.tamajumper.Config.BG_OBJECT_MOVE_VELOCITY;
+import static com.stc.tamajumper.Config.COIN_HEIGHT;
+import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_HEIGHT;
+import static com.stc.tamajumper.Config.PIXELS.WORLD_HEIGHT;
+import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
+import static com.stc.tamajumper.Config.PLATFORM_HEIGHT;
+import static com.stc.tamajumper.Config.PLATFORM_PULVERIZE_TIME;
+import static com.stc.tamajumper.Config.PLATFORM_STATE_PULVERIZING;
+import static com.stc.tamajumper.Config.PLATFORM_TYPE_MOVING;
+import static com.stc.tamajumper.Config.PLATFORM_TYPE_STATIC;
+import static com.stc.tamajumper.Config.PLATFORM_WIDTH;
+import static com.stc.tamajumper.Config.TAMADA_JUMP_VELOCITY;
+import static com.stc.tamajumper.Config.TAMADA_MOVE_VELOCITY;
+import static com.stc.tamajumper.Config.TAMADA_STATE_HIT;
+import static com.stc.tamajumper.Config.WORLD_STATE_GAME_OVER;
+import static com.stc.tamajumper.Config.WORLD_STATE_NEXT_LEVEL;
+import static com.stc.tamajumper.Config.WORLD_STATE_RUNNING;
 
 /**
  * Created by artem on 1/11/18.
@@ -67,7 +82,7 @@ public class World {
         this.heightSoFar = 0;
         this.score = 0;
         this.state = WORLD_STATE_RUNNING;
-    }
+        }
 
     private void generateLevel() {
         System.out.println("generate level:");
@@ -111,7 +126,7 @@ public class World {
     private void generatePlatforms() {
         float y = PLATFORM_HEIGHT / 2;
         float maxJumpHeight = TAMADA_JUMP_VELOCITY * TAMADA_JUMP_VELOCITY / (2 * -gravity.y);
-
+ 
 
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
             int type = rand.nextFloat() > 0.8f ? PLATFORM_TYPE_MOVING : PLATFORM_TYPE_STATIC;
@@ -145,6 +160,7 @@ public class World {
     }
 
     public void update (float deltaTime, float accelX) {
+        accelX = updateAccelValue(accelX);
         float lastH=heightSoFar;
         updateTama(deltaTime, accelX);
         float deltaH=heightSoFar-lastH;
@@ -156,6 +172,11 @@ public class World {
 
         if (tama.state != TAMADA_STATE_HIT) checkCollisions();
         checkGameOver();
+    }
+
+    private float updateAccelValue(float accelX) {
+        accelX*=Settings.getAccelMultiplier();
+        return accelX;
     }
 
     private void updateSquirrels(float deltaTime) {

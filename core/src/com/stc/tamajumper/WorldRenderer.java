@@ -7,8 +7,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Random;
 
-import static com.stc.tamajumper.Config.*;
-import static com.stc.tamajumper.Config.PIXELS.*;
+import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_HEIGHT;
+import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_WIDTH;
+import static com.stc.tamajumper.Config.PLATFORM_HEIGHT;
+import static com.stc.tamajumper.Config.PLATFORM_STATE_PULVERIZING;
+import static com.stc.tamajumper.Config.TAMADA_STATE_FALL;
+import static com.stc.tamajumper.Config.TAMADA_STATE_HIT;
+import static com.stc.tamajumper.Config.TAMADA_STATE_JUMP;
 
 /**
  * Created by artem on 1/11/18.
@@ -23,6 +28,8 @@ public class WorldRenderer {
         this.cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
         this.cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
         this.batch = batch;
+
+
         random=new Random();
     }
 
@@ -106,6 +113,9 @@ public class WorldRenderer {
             batch.draw(keyFrame, world.tama.position.x + 0.5f, world.tama.position.y - 0.5f, side * 1, 1);
         else
             batch.draw(keyFrame, world.tama.position.x - 0.5f, world.tama.position.y - 0.5f, side * 1, 1);
+
+
+
     }
 
     private void renderItems () {
@@ -135,4 +145,5 @@ public class WorldRenderer {
                 batch.draw(keyFrame, squirrel.position.x - 0.5f, squirrel.position.y - 0.5f, side * 1, 1);
         }
     }
+
 }
