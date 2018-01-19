@@ -54,9 +54,10 @@ public class World {
     public List<Squirrel> squirrels;
 
 
+
     public interface WorldListener {
 
-        public void jump ();
+        public void jump (Platform platform);
 
         public void highJump ();
 
@@ -129,33 +130,45 @@ public class World {
  
 
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
-            int type = rand.nextFloat() > 0.8f ? PLATFORM_TYPE_MOVING : PLATFORM_TYPE_STATIC;
+            int type = rand.nextFloat() > Config.PLATFORM_RATIO_MOVING_TO_STATIC ? PLATFORM_TYPE_MOVING : PLATFORM_TYPE_STATIC;
             float x = rand.nextFloat() * (WORLD_WIDTH - PLATFORM_WIDTH) + PLATFORM_WIDTH / 2;
-            System.out.println("add platform: x="+x+", y="+y);
-            Platform platform = new Platform(type, x, y);
-            platforms.add(platform);
+            boolean breakable = rand.nextBoolean();
+            //System.out.println("add platform: x="+x+", y="+y);
+            Platform platform = new Platform(breakable, type, x, y);
 
-            if (y > WORLD_HEIGHT / 3 && rand.nextFloat() > 0.8f) {
+
+            if (y > WORLD_HEIGHT / 5 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
                 Squirrel squirrel = new Squirrel(platform.position.x + rand.nextFloat(), platform.position.y
                         + Squirrel.SQUIRREL_HEIGHT + rand.nextFloat() * 2);
                 squirrels.add(squirrel);
             }
 
 
-            if (rand.nextFloat() > 0.9f && type != Config.PLATFORM_TYPE_MOVING) {
+            if (rand.nextFloat() > (1-Config.SPRING_GENERATION_PROBABILITY) && type != Config.PLATFORM_TYPE_MOVING
+                    && !breakable) {
                 Spring spring = new Spring(platform.position.x, platform.position.y + Config.PLATFORM_HEIGHT / 2
                         + Spring.SPRING_HEIGHT / 2);
                 springs.add(spring);
+                platform.setSpring(spring);
             }
 
-            if (rand.nextFloat() > 0.8f) {
+            platforms.add(platform);
+
+            if (rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
                 Coin coin = new Coin(platform.position.x + rand.nextFloat(), platform.position.y + COIN_HEIGHT
                         + rand.nextFloat() * 3);
                 coins.add(coin);
             }
 
-            y += (maxJumpHeight - 0.5f);
-            y -= rand.nextFloat() * (maxJumpHeight);
+            y += (maxJumpHeight*0.9f - 0.5f);
+            float levelProgressDifficulty=(WORLD_HEIGHT-y)/WORLD_HEIGHT;
+            System.out.println("levelProgressDifficulty="+levelProgressDifficulty);
+            float randomSeed= rand.nextFloat();
+
+            if(randomSeed<0.5f) randomSeed*=2;
+            else if(randomSeed<0.75f)randomSeed/=1.2f;
+            else randomSeed/=2;
+            y -= (randomSeed) * maxJumpHeight*levelProgressDifficulty;
         }
     }
 
@@ -216,7 +229,7 @@ public class World {
         for (int i = 0; i < len; i++) {
             Squirrel squirrel = squirrels.get(i);
             if (squirrel.bounds.overlaps(tama.bounds)) {
-                tama.hitSquirrel();
+                tama.hitEnemy();
                 state = WORLD_STATE_GAME_OVER;
             }
         }
@@ -238,8 +251,10 @@ public class World {
                 if (tama.bounds.overlaps(platform.bounds)) {
                     score += Config.PLATFORM_SCORE;
                     tama.hitPlatform();
-                    listener.jump();
-                    if (rand.nextFloat() > 0.5f) {
+                    if(platform.getSpring()==null){
+                        listener.jump(platform);
+                    }
+                    if (platform.canBreak) {
                         platform.pulverize();
                     }
                     break;

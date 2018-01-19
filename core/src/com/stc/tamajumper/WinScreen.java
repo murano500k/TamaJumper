@@ -19,11 +19,11 @@ public class WinScreen extends ScreenAdapter {
     OrthographicCamera cam;
     TextureRegion princess;
     String[] messages;
-    String[] messagesFinal = { "Princess: Oh dear!\n What have you done?",
+    String[] messagesFinal = { "PRINCESS: Oh dear!\n What have you done?",
             "Tama: I came to \nrescue you!",
-            "Princess: you are\n mistaken\nI need no rescueing",
+            "PRINCESS: you are\n mistaken\nI need no rescueing",
             "Tama: So all this \nwork for nothing?",
-            "Princess: I have \ncake and tea!\nWould you like some?",
+            "PRINCESS: I have \ncake and tea!\nWould you like some?",
             "Tama: I'd be my \npleasure!",
             "And they ate cake\nand drank tea\nhappily ever \nafter\n\n\n\n\n\n\nKära Emma!\nDu är fantastisk!\nDu blev ferdig\n med spelet!"
     };

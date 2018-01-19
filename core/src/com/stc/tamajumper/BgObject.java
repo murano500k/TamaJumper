@@ -30,6 +30,11 @@ public class BgObject extends DynamicGameObject {
         this.flipped=new Random().nextBoolean();
     }
 
+    @Override
+    void update(float deltaTime) {
+
+    }
+
     public void update(float deltaTime, float accelX, float deltaY) {
 
         velocity.x=-accelX / 10 * BG_OBJECT_MOVE_VELOCITY+movingSpeed*size*BG_OBJECT_MOVE_RATIO;

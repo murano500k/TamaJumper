@@ -11,6 +11,7 @@ public class Tamada extends DynamicGameObject {
 
     public int state;
     public float stateTime;
+    public boolean hasShield;
 
 
 
@@ -46,7 +47,11 @@ public class Tamada extends DynamicGameObject {
     }
 
 
-    public void hitSquirrel () {
+    public void hitEnemy() {
+        if(hasShield){
+            hasShield=false;
+            return;
+        }
         velocity.set(0, 0);
         state = TAMADA_STATE_HIT;
         stateTime = 0;
@@ -63,6 +68,14 @@ public class Tamada extends DynamicGameObject {
         velocity.y = TAMADA_JUMP_VELOCITY * 1.5f;
         state = TAMADA_STATE_JUMP;
         stateTime = 0;
+    }
+
+    public boolean hitShield () {
+        if(hasShield) return false;
+        else {
+            hasShield=true;
+            return true;
+        }
     }
 
 }

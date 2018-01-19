@@ -43,7 +43,7 @@ public class Assets {
     public static Music music;
 
     public static Sound highJumpSound;
-    public static Sound hitSound;
+    public static Sound gameOverSound;
     public static Sound clickSound;
     public static List<Sound> jumpSounds;
     public static Sound coinSound;
@@ -54,7 +54,7 @@ public class Assets {
     public static TextureRegion backgroundRegionMenu;
     private static Random random=new Random();
     private static ArrayList<Music> musicSounds;
-    private static TextureAtlas bgObjectsAtlas;
+    private static TextureAtlas atlas;
 
     public static Texture loadTexture (String file) {
         return new Texture(Gdx.files.internal(file));
@@ -73,6 +73,7 @@ public class Assets {
 
     }
     public static void load () {
+        loadSounds();
         background = loadTexture("data/bg.png");
         backgroundRegionMenu = new TextureRegion(background, 0, 0, 650,1067);
         backgroundRegion = new TextureRegion(background, 0, 0,100,100);
@@ -167,25 +168,7 @@ public class Assets {
     }
 
 
-    static void loadSounds(){
-        jumpSounds=new ArrayList<>();
-        musicSounds=new ArrayList<>();
-        for (int i = 0; i <= 9; i++) {
-            jumpSounds.add(Gdx.audio.newSound(Gdx.files.internal("sound/jump_0"+i+".wav")));
-        }
-        highJumpSound = Gdx.audio.newSound(Gdx.files.internal("sound/highjump.wav"));
-        hitSound = Gdx.audio.newSound(Gdx.files.internal("sound/game_over.wav"));
-        coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/coin_00.wav"));
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("sound/click.wav"));
 
-
-        addMusic("sound/music.mp3");
-        addMusic("sound/jumpshot.mp3");
-        addMusic("sound/hhavok_main.mp3");
-        addMusic("sound/resistors.mp3");
-        addMusic("sound/dizzy_spells.mp3");
-        if (Settings.soundEnabled) musicSounds.get(random.nextInt(musicSounds.size())).play();
-    }
 
 
     public static void playMusic(){
@@ -215,9 +198,24 @@ public class Assets {
         return music;
     }
 
-    public static void playJumpSound(){
-        playSound(jumpSounds.get(random.nextInt(jumpSounds.size())));
+    public static void playJumpSound(Platform platform){
+        int index;
+
+        //index=random.nextInt(jumpSounds.size());
+        index=Config.JUMP_SOUND_INDEX_DEFAULT;
+        if(platform.canBreak)index=Config.JUMP_SOUND_INDEX_BREAK;
+        else if(platform.type==Config.PLATFORM_TYPE_MOVING){
+            index=Config.JUMP_SOUND_INDEX_MOVING;
+        }
+        playSound(jumpSounds.get(index));
     }
+
+
+
+    public static void playHighJumpSound() {
+        playSound(jumpSounds.get(Config.JUMP_SOUND_INDEX_HIGH));
+    }
+
 
     public static void playSound (Sound sound) {
         if (Settings.soundEnabled) sound.play(1);
@@ -225,8 +223,181 @@ public class Assets {
 
 
     private static void loadAtlas(){
-        bgObjectsAtlas= new TextureAtlas("atlas/bgObjects.pack");
+        atlas = new TextureAtlas(AssetNames.Files.ALL_OBJECTS_ATLAS);
+
+        mainMenu = new TextureRegion(items, 0, 224, 300, 110);
+        pauseMenu = new TextureRegion(items, 224, 128, 192, 48);
+
+        highScoresRegion = new TextureRegion(Assets.items, 0, 257, 300, 110 / 3);
+
+        ready  = atlas.createSprite(AssetNames.MenuObjects.Labels.READY);
+        gameOver  = atlas.createSprite(AssetNames.MenuObjects.Labels.GAME_OVER);
+        logo = atlas.createSprite(AssetNames.MenuObjects.LOGO);
+        soundOff = atlas.createSprite(AssetNames.MenuObjects.Buttons.VOL_DISABLED);
+        soundOn = atlas.createSprite(AssetNames.MenuObjects.Buttons.VOL_ENABLED);
+        pause = atlas.createSprite(AssetNames.MenuObjects.Buttons.PAUSE);
+
+        spring = atlas.createSprite(AssetNames.Upgrades.SPRING);
+        castle = atlas.createSprite(AssetNames.CASTLE);
+
+        coinAnim = new Animation(0.2f,
+                atlas.createSprite(AssetNames.Rewards.COIN[0]),
+                atlas.createSprite(AssetNames.Rewards.COIN[1]),
+                atlas.createSprite(AssetNames.Rewards.COIN[2]),
+                atlas.createSprite(AssetNames.Rewards.COIN[3]));
+
+        tamadaJump = new Animation(0.2f,
+                atlas.createSprite(AssetNames.Tama.JUMP[0]),
+                atlas.createSprite(AssetNames.Tama.JUMP[1])
+                );
+
+        tamadaFall = new Animation(0.2f,
+                atlas.createSprite(AssetNames.Tama.FALL[0]),
+                atlas.createSprite(AssetNames.Tama.FALL[1])
+                );
+
+        tamadaHit = atlas.createSprite(AssetNames.Tama.HIT[0]);
 
 
+        squirrelFly = new Animation(0.2f,
+                atlas.createSprite(AssetNames.Enemies.SQUIRREL[0]),
+                atlas.createSprite(AssetNames.Enemies.SQUIRREL[1])
+        );
+
+        platform = atlas.createSprite(AssetNames.Platforms.PLATFORM_0[0]);
+
+        brakingPlatform = new Animation(0.2f,
+                atlas.createSprite(AssetNames.Platforms.PLATFORM_0[1]),
+                atlas.createSprite(AssetNames.Platforms.PLATFORM_0[2]),
+                atlas.createSprite(AssetNames.Platforms.PLATFORM_0[3]),
+                atlas.createSprite(AssetNames.Platforms.PLATFORM_0[4])
+        );
+
+
+        font = new BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
+
+        loadSounds();
+    }
+    private static void loadSounds(){
+        highJumpSound = Gdx.audio.newSound(Gdx.files.internal(AssetNames.Sounds.HIGHJUMP));
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal(AssetNames.Sounds.GAME_OVER));
+        coinSound = Gdx.audio.newSound(Gdx.files.internal(AssetNames.Sounds.COIN));
+        clickSound = Gdx.audio.newSound(Gdx.files.internal(AssetNames.Sounds.CLICK));
+        jumpSounds=new ArrayList<>();
+        musicSounds=new ArrayList<>();
+
+        for (int i = 0; i < AssetNames.Sounds.JUMP_SOUNDS_NUMBER; i++) {
+            jumpSounds.add(Gdx.audio.newSound(
+                    Gdx.files.internal(
+                            AssetNames.Sounds.JUMP_PREFIX+i+
+                                    AssetNames.Sounds.JUMP_POSTFIX)));
+        }
+
+        for (String file :
+                AssetNames.Sounds.MUSIC) {
+            addMusic(file);
+        }
+
+        if (Settings.soundEnabled) musicSounds.get(random.nextInt(musicSounds.size())).play();
+    }
+
+    static class AssetNames {
+
+        static class Files {
+
+            public static final String ALL_OBJECTS_ATLAS = "all.pack";
+        }
+        static class Sounds {
+            public static final String HIGHJUMP = "audio/highjump.wav";
+            public static final String COIN = "audio/coin_00.wav";
+            public static final String GAME_OVER = "audio/game_over.wav";
+            public static final String CLICK = "audio/click.wav";
+
+            public static final String JUMP_PREFIX = "audio/jump_0";
+            public static final String JUMP_POSTFIX = ".wav";
+            public static final int JUMP_SOUNDS_NUMBER=10;
+
+            public static final String[] MUSIC = {
+                    "audio/music.mp3",
+                    "audio/hhavok_main.mp3",
+                    "audio/jumpshot.mp3",
+                    "audio/resistors.mp3",
+                    "audio/dizzy_spells.mp3",
+            };
+        }
+
+        public static final String CASTLE = "castle";
+        public static final String PRINCESS = "princess";
+
+        static class MenuObjects {
+            class Buttons {
+                public static final String PAUSE = "btn_pause";
+                public static final String VOL_ENABLED = "btn_vol_enabled";
+                public static final String VOL_DISABLED = "btn_vol_disabled";
+            }
+            class Labels {
+                public static final String PLAY = "label_play";
+                public static final String RESUME = "label_resume";
+                public static final String QUIT = "label_quit";
+                public static final String READY = "label_ready";
+                public static final String GAME_OVER = "label_game_over";
+            }
+            public static final String LOGO = "logo";
+
+        }
+
+        static class BackgroundObjects {
+            public static final String [] SMALL = {
+                    "bg_object_small"
+            };
+            public static final String [] MEDIUM = {
+                    "bg_object_medium0",
+                    "bg_object_medium1",
+            };
+            public static final String [] LARGE = {
+                    "bg_object_large0",
+                    "bg_object_large1",
+                    "bg_object_large2",
+                    "bg_object_large3",
+            };
+        }
+        static class Tama {
+            public static final String [] JUMP = {
+                    "tama_jump0",
+                    "tama_jump1",
+            };
+            public static final String [] FALL = {
+                    "tama_fall0",
+                    "tama_fall1",
+            };
+            public static final String [] HIT = {
+                    "tama_hit",
+            };
+        }
+        static class Platforms {
+            public static final String [] PLATFORM_0 = {
+                    "platform0_normal",
+                    "platform0_pulv0",
+                    "platform0_pulv1",
+                    "platform0_pulv2",
+            };
+        }
+
+        static class Enemies {
+            public static final String [] SQUIRREL = {
+                "squirrel0",
+                "squirrel1"
+            };
+        }
+        static class Rewards {
+            public static final String [] COIN = {
+                    "coin0",
+                    "coin1",
+                    "coin2"
+            };
+        }
+        static class Upgrades {
+            public static final String SPRING = "spring";
+        }
     }
 }

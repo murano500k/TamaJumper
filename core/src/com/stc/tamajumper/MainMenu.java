@@ -1,9 +1,12 @@
 package com.stc.tamajumper;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
@@ -16,6 +19,8 @@ public class MainMenu extends ScreenAdapter {
     TamaJumperGame game;
     OrthographicCamera guiCam;
     Rectangle soundBounds;
+    Rectangle settingsBounds;
+
     Rectangle playBounds;
     Rectangle highscoresBounds;
     Rectangle helpBounds;
@@ -26,7 +31,8 @@ public class MainMenu extends ScreenAdapter {
 
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
-        soundBounds = new Rectangle(0, 0, 64, 64);
+        soundBounds = new Rectangle(0, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
+        settingsBounds = new Rectangle(guiCam.viewportWidth-Config.PIXELS.DOUBLE_DIMEN, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
         playBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
         highscoresBounds = new Rectangle(160 - 150, 200 - 18, 300, 36);
         helpBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
@@ -40,7 +46,7 @@ public class MainMenu extends ScreenAdapter {
 
             if (playBounds.contains(touchPoint.x, touchPoint.y)) {
                 Assets.playSound(Assets.clickSound);
-                game.setScreen(new GameScreen(game));
+                game.changeScreen(TamaJumperGame.GAME);
 
                 return;
             }
@@ -61,7 +67,13 @@ public class MainMenu extends ScreenAdapter {
                 Settings.save();
                 Assets.playSound(Assets.clickSound);
                 Assets.playMusic();
+                return;
 
+
+            }
+            if (settingsBounds.contains(touchPoint.x, touchPoint.y)) {
+                game.changeScreen(TamaJumperGame.PREFERENCES);
+                return;
             }
         }
     }
@@ -83,6 +95,10 @@ public class MainMenu extends ScreenAdapter {
         game.batcher.draw(Assets.logo, 160 - 274 / 2, 480 - 10 - 142, 274, 142);
         game.batcher.draw(Assets.mainMenu, 10, 200 - 110 / 2, 300, 110);
         game.batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 64, 64);
+        Sprite sprite = new Sprite(Assets.pause);
+        sprite.setBounds(guiCam.viewportWidth-Config.PIXELS.DOUBLE_DIMEN,0,Config.PIXELS.DOUBLE_DIMEN,Config.PIXELS.DOUBLE_DIMEN);
+        sprite.setRotation(90);
+        sprite.draw(game.batcher);
         game.batcher.end();
     }
 

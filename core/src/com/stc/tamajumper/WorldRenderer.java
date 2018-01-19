@@ -69,7 +69,7 @@ public class WorldRenderer {
         renderBgObjects();
         renderPlatforms();
         renderItems ();
-        renderSquirrels();
+        renderEnemies();
         renderTamada();
         renderCastle();
         batch.end();
@@ -88,8 +88,14 @@ public class WorldRenderer {
             if (platform.state == PLATFORM_STATE_PULVERIZING) {
                 keyFrame = Assets.brakingPlatform.getKeyFrame(platform.stateTime, Animation.ANIMATION_NONLOOPING);
             }
+            Sprite sprite= new Sprite(keyFrame);
+            if(platform.canBreak) sprite.setAlpha(0.2f);
+            else sprite.setAlpha(1.0f);
 
-            batch.draw(keyFrame, platform.position.x - 1, platform.position.y - 0.25f, 2, 0.5f);
+            sprite.setBounds(platform.position.x - 1, platform.position.y - 0.25f, 2, 0.5f);
+
+
+            sprite.draw(batch);
         }
     }
 
@@ -133,16 +139,22 @@ public class WorldRenderer {
         }
     }
 
-    private void renderSquirrels () {
+    private void renderEnemies() {
         int len = world.squirrels.size();
         for (int i = 0; i < len; i++) {
-            Squirrel squirrel = world.squirrels.get(i);
-            TextureRegion keyFrame = Assets.squirrelFly.getKeyFrame(squirrel.stateTime, Animation.ANIMATION_LOOPING);
-            float side = squirrel.velocity.x < 0 ? -1 : 1;
-            if (side < 0)
-                batch.draw(keyFrame, squirrel.position.x + 0.5f, squirrel.position.y - 0.5f, side * 1, 1);
-            else
-                batch.draw(keyFrame, squirrel.position.x - 0.5f, squirrel.position.y - 0.5f, side * 1, 1);
+            DynamicGameObject enemy = world.squirrels.get(i);
+            if(enemy instanceof Squirrel){
+                Squirrel squirrel = (Squirrel) enemy;
+                TextureRegion keyFrame = Assets.squirrelFly.getKeyFrame(squirrel.stateTime, Animation.ANIMATION_LOOPING);
+                float side = squirrel.velocity.x < 0 ? -1 : 1;
+                if (side < 0)
+                    batch.draw(keyFrame, squirrel.position.x + 0.5f, squirrel.position.y - 0.5f, side * 1, 1);
+                else
+                    batch.draw(keyFrame, squirrel.position.x - 0.5f, squirrel.position.y - 0.5f, side * 1, 1);
+            }else {
+                System.err.println("Not implemented");
+            }
+
         }
     }
 

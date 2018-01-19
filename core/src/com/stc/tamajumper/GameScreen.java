@@ -47,20 +47,23 @@ public class GameScreen extends ScreenAdapter {
         guiCam.position.set(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 0);
         touchPoint = new Vector3();
         worldListener = new World.WorldListener() {
+
+
             @Override
-            public void jump() {
-                Assets.playJumpSound();
+            public void jump(Platform platform) {
+                Assets.playJumpSound(platform);
             }
 
             @Override
             public void highJump() {
-                Assets.playSound(Assets.highJumpSound);
+                Assets.playHighJumpSound();
+
             }
 
             @Override
             public void hit() {
                 Assets.stopMusic();
-                Assets.playSound(Assets.hitSound);
+                Assets.playSound(Assets.gameOverSound);
             }
 
             @Override
@@ -137,7 +140,7 @@ public class GameScreen extends ScreenAdapter {
             Settings.addScore(lastScore);
             Settings.save();
             Assets.stopMusic();
-            Assets.playSound(Assets.hitSound);
+            Assets.playSound(Assets.gameOverSound);
         }
     }
 

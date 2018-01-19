@@ -1,5 +1,7 @@
 package com.stc.tamajumper;
 
+import java.util.Random;
+
 import static com.stc.tamajumper.Config.*;
 import static com.stc.tamajumper.Config.PIXELS.*;
 
@@ -9,11 +11,13 @@ import static com.stc.tamajumper.Config.PIXELS.*;
 
 public class Platform extends DynamicGameObject {
 
-    public int type;
+    public final boolean canBreak;
+    public final int type;
     public int state;
     public float stateTime;
+    private Spring spring;
 
-    public Platform (int type, float x, float y) {
+    public Platform (boolean breakable, int type, float x, float y) {
         super(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT);
         this.type = type;
         this.state = PLATFORM_STATE_NORMAL;
@@ -21,6 +25,7 @@ public class Platform extends DynamicGameObject {
         if (type == PLATFORM_TYPE_MOVING) {
             velocity.x = PLATFORM_VELOCITY;
         }
+        canBreak = breakable;
     }
 
     public void update (float deltaTime) {
@@ -46,5 +51,23 @@ public class Platform extends DynamicGameObject {
         state = PLATFORM_STATE_PULVERIZING;
         stateTime = 0;
         velocity.x = 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Platform{" +
+                "canBreak=" + canBreak +
+                ", type=" + type +
+                ", state=" + state +
+                ", stateTime=" + stateTime +
+                '}';
+    }
+
+    public void setSpring(Spring spring) {
+        this.spring = spring;
+    }
+
+    public Spring getSpring() {
+        return spring;
     }
 }

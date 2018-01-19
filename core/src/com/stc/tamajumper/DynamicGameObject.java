@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by artem on 1/11/18.
  */
 
-public class DynamicGameObject extends com.stc.tamajumper.GameObject {
+public abstract class DynamicGameObject extends com.stc.tamajumper.GameObject {
     public final Vector2 velocity;
     public final Vector2 accel;
 
@@ -15,4 +15,8 @@ public class DynamicGameObject extends com.stc.tamajumper.GameObject {
         velocity = new Vector2();
         accel = new Vector2();
     }
+
+    abstract void update(float deltaTime);
+
+
 }
