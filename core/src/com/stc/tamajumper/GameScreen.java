@@ -4,6 +4,7 @@ package com.stc.tamajumper;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,7 +17,7 @@ import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
 import static com.stc.tamajumper.Config.*;
 
 
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter implements InputProcessor {
     static final int GAME_READY = 0;
     static final int GAME_RUNNING = 1;
     static final int GAME_PAUSED = 2;
@@ -46,6 +47,9 @@ public class GameScreen extends ScreenAdapter {
         guiCam = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         guiCam.position.set(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 0);
         touchPoint = new Vector3();
+        Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
+
         worldListener = new World.WorldListener() {
 
 
@@ -236,5 +240,49 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void pause () {
         if (state == GAME_RUNNING) state = GAME_PAUSED;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if(keycode == Input.Keys.BACK){
+            game.changeScreen(TamaJumperGame.MENU);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

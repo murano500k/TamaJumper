@@ -17,6 +17,7 @@ public class MainMenu extends ScreenAdapter {
     TamaJumperGame parent;
     OrthographicCamera guiCam;
     Rectangle soundBounds;
+    Rectangle musicBounds;
     Rectangle settingsBounds;
 
     Rectangle playBounds;
@@ -30,6 +31,7 @@ public class MainMenu extends ScreenAdapter {
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
         soundBounds = new Rectangle(0, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
+        musicBounds = new Rectangle(0, 64, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
         settingsBounds = new Rectangle(guiCam.viewportWidth-Config.PIXELS.DOUBLE_DIMEN, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
         playBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
         highscoresBounds = new Rectangle(160 - 150, 200 - 18, 300, 36);
@@ -63,11 +65,19 @@ public class MainMenu extends ScreenAdapter {
                 return;
             }
             if (soundBounds.contains(touchPoint.x, touchPoint.y)) {
-                boolean lastValue = parent.getPreferences().isSoundEffectsEnabled();
-                parent.getPreferences().setSoundEffectsEnabled(!lastValue);
-                if(lastValue) parent.getAssets().stopMusic();
-                else {
+                AppPreferences.toggleSoundEnabled();
+                if(AppPreferences.isSoundEffectsEnabled()) {
                     parent.getAssets().playSound(Assets.clickSound);
+                }
+                return;
+            }
+            if (musicBounds.contains(touchPoint.x, touchPoint.y)) {
+                AppPreferences.toggleMusicEnabled();
+                if(!AppPreferences.isMusicEnabled()) {
+                    parent.getAssets().stopMusic();
+                } else {
+                    parent.getAssets().playSound(Assets.clickSound);
+                    parent.getAssets().playMusic();
                 }
                 return;
             }
@@ -95,8 +105,10 @@ public class MainMenu extends ScreenAdapter {
         parent.batcher.begin();
         parent.batcher.draw(Assets.logo, 160 - 274 / 2, 480 - 10 - 142, 274, 142);
         parent.batcher.draw(Assets.mainMenu, 10, 200 - 110 / 2, 300, 110);
-        parent.batcher.draw(parent.getPreferences().isSoundEffectsEnabled() ? Assets.soundOn : Assets.soundOff,
+        parent.batcher.draw(AppPreferences.isSoundEffectsEnabled() ? Assets.soundOn : Assets.soundOff,
                 soundBounds.x, soundBounds.y, soundBounds.width, soundBounds.height);
+        parent.batcher.draw(AppPreferences.isMusicEnabled() ? Assets.soundOn : Assets.soundOff,
+                musicBounds.x, musicBounds.y, musicBounds.width, musicBounds.height);
         Sprite sprite = new Sprite(Assets.pause);
         sprite.setRotation(90);
         sprite.setBounds(settingsBounds.x, settingsBounds.y,settingsBounds.width,settingsBounds.height);

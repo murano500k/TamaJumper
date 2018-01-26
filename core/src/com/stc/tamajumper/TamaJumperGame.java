@@ -5,6 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import static com.stc.tamajumper.GameScreen.GAME_LEVEL_END;
+import static com.stc.tamajumper.GameScreen.GAME_OVER;
+
 
 public class TamaJumperGame extends com.badlogic.gdx.Game {
 
@@ -44,8 +47,10 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 				this.setScreen(preferencesScreen);
 				break;
 			case GAME:
-				//if(gameScreen == null)
+				if(gameScreen == null || gameScreen.state==GAME_OVER
+						|| gameScreen.state==GAME_LEVEL_END){
 					gameScreen= new GameScreen(this);
+				}
 				this.setScreen(gameScreen);
 				break;
 		}

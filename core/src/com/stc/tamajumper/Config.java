@@ -55,6 +55,7 @@ public class Config {
     public static final float ENEMY_GENERATION_PROBABILITY = 0.1f;
     public static final float SPRING_GENERATION_PROBABILITY = 0.3f;
     public static final float COIN_GENERATION_PROBABILITY = 0.4f;
+    public static final int MUSIC_SOUND_INDEX = 1;
 
 
     public class PIXELS {

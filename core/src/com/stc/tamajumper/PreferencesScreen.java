@@ -59,11 +59,11 @@ class PreferencesScreen implements Screen {
                 0.1f,
                 false,
                 skin);
-        accelSensitivitySlider.setValue(parent.getPreferences().getAccelSensitivity());
+        accelSensitivitySlider.setValue(AppPreferences.getAccelSensitivity());
         accelSensitivitySlider.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                parent.getPreferences().setAccelSensitivity(accelSensitivitySlider.getValue());
+                AppPreferences.setAccelSensitivity(accelSensitivitySlider.getValue());
                 sliderValue.setText(String.valueOf(accelSensitivitySlider.getValue()));
                 return false;
             }

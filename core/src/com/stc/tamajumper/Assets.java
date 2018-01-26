@@ -179,18 +179,19 @@ public class Assets {
 
     public void playMusic(){
         stopMusic();
-        if (parent.getPreferences().isSoundEffectsEnabled()) {
-            int index=0;
+        if (AppPreferences.isMusicEnabled()) {
+            int index=1;
             //index=random.nextInt(musicSounds.size());
-            musicSounds.get(1).play();
+            musicSounds.get(Config.MUSIC_SOUND_INDEX).play();
 
         }
     }
     public void stopMusic(){
-        for (int i = 0; i < musicSounds.size(); i++) {
+        musicSounds.get(Config.MUSIC_SOUND_INDEX).stop();
+        /*for (int i = 0; i < musicSounds.size(); i++) {
             if(musicSounds.get(i).isPlaying())
                 musicSounds.get(i).stop();
-        }
+        }*/
     }
 
     private Music addMusic(String path) {
@@ -216,21 +217,21 @@ public class Assets {
         else if(platform.type==Config.PLATFORM_TYPE_MOVING){
             index=Config.JUMP_SOUND_INDEX_MOVING;
         }
-        if (parent.getPreferences().isSoundEffectsEnabled())
+        if (AppPreferences.isSoundEffectsEnabled())
             playSound(jumpSounds.get(index));
     }
 
 
 
     public void playHighJumpSound() {
-        if (parent.getPreferences().isSoundEffectsEnabled()){
+        if (AppPreferences.isSoundEffectsEnabled()){
             playSound(jumpSounds.get(Config.JUMP_SOUND_INDEX_HIGH));
         }
     }
 
 
     public void playSound (Sound sound) {
-        if (parent.getPreferences().isSoundEffectsEnabled()) sound.play(1);
+        if (AppPreferences.isSoundEffectsEnabled()) sound.play(1);
     }
 
 
@@ -310,7 +311,6 @@ public class Assets {
             addMusic(file);
         }
 
-        if (parent.getPreferences().isSoundEffectsEnabled()) musicSounds.get(random.nextInt(musicSounds.size())).play();
     }
 
     static class AssetNames {
