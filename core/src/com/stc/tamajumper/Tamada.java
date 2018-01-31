@@ -9,6 +9,8 @@ import static com.stc.tamajumper.Config.PIXELS.*;
 
 public class Tamada extends DynamicGameObject {
 
+
+
     public int state;
     public float stateTime;
     public boolean hasShield;

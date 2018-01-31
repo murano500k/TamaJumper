@@ -74,5 +74,9 @@ public class AppPreferences {
         getPrefs().flush();
     }
 
+    static public float getNormalizedAcelX(float accelX){
+        return accelX*getAccelSensitivity();
+    }
+
 
 }

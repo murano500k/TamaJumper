@@ -1,6 +1,5 @@
 package com.stc.tamajumper;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -57,7 +56,7 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	}
 
 	public ScreenAdapter getStartScreen(){
-		return new MainMenu(this);
+		return new DemoScreen(this);
 	}
 
 	@Override

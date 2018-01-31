@@ -2,7 +2,7 @@ package com.stc.tamajumper;
 
 
 
-public class Castle extends GameObject {
+public class Castle extends DynamicGameObject {
     public static float CASTLE_WIDTH = 1.7f;
     public static float CASTLE_HEIGHT = 1.7f;
 
@@ -10,4 +10,8 @@ public class Castle extends GameObject {
         super(x, y, CASTLE_WIDTH, CASTLE_HEIGHT);
     }
 
+    @Override
+    void update(float deltaTime) {
+
+    }
 }
