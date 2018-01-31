@@ -1,14 +1,12 @@
 package com.stc.tamajumper;
 
-import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import static com.stc.tamajumper.Config.BG_OBJECTS_TYPES_COUNT;
 import static com.stc.tamajumper.Config.BG_OBJECT_MOVE_VELOCITY;
-import static com.stc.tamajumper.Config.COIN_HEIGHT;
+import static com.stc.tamajumper.CoinActor.HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
@@ -18,8 +16,8 @@ import static com.stc.tamajumper.Config.PLATFORM_STATE_PULVERIZING;
 import static com.stc.tamajumper.Config.PLATFORM_TYPE_MOVING;
 import static com.stc.tamajumper.Config.PLATFORM_TYPE_STATIC;
 import static com.stc.tamajumper.Config.PLATFORM_WIDTH;
-import static com.stc.tamajumper.Config.TAMADA_JUMP_VELOCITY;
-import static com.stc.tamajumper.Config.TAMADA_MOVE_VELOCITY;
+import static com.stc.tamajumper.TamaActor.JUMP_VELOCITY;
+import static com.stc.tamajumper.TamaActor.MOVE_VELOCITY;
 import static com.stc.tamajumper.Config.TAMADA_STATE_HIT;
 import static com.stc.tamajumper.Config.WORLD_STATE_GAME_OVER;
 import static com.stc.tamajumper.Config.WORLD_STATE_NEXT_LEVEL;
@@ -37,7 +35,6 @@ public class World {
 
 
     public final WorldListener listener;
-    public static final Vector2 gravity = new Vector2(0, -12);
 
     public final Tamada tama;
     public final List<Platform> platforms;
@@ -128,7 +125,7 @@ public class World {
 
     private void generatePlatforms() {
         float y = PLATFORM_HEIGHT / 2;
-        float maxJumpHeight = TAMADA_JUMP_VELOCITY * TAMADA_JUMP_VELOCITY / (2 * -gravity.y);
+        float maxJumpHeight = JUMP_VELOCITY * JUMP_VELOCITY / (2 * -Config.gravity.y);
  
 
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
@@ -157,7 +154,7 @@ public class World {
             platforms.add(platform);
 
             if (rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
-                Coin coin = new Coin(platform.position.x + rand.nextFloat(), platform.position.y + COIN_HEIGHT
+                Coin coin = new Coin(platform.position.x + rand.nextFloat(), platform.position.y + HEIGHT
                         + rand.nextFloat() * 3);
                 coins.add(coin);
             }
@@ -272,7 +269,7 @@ public class World {
                 coins.remove(coin);
                 len = coins.size();
                 listener.coin();
-                score += Config.COIN_SCORE;
+                score += CoinActor.COIN_SCORE;
             }
 
         }
@@ -295,7 +292,7 @@ public class World {
 
     private void updateTama(float deltaTime, float accelX) {
         if (tama.state != TAMADA_STATE_HIT && tama.position.y <= 0.5f) tama.hitPlatform();
-        if (tama.state != TAMADA_STATE_HIT) tama.velocity.x = -accelX / 10 * TAMADA_MOVE_VELOCITY;
+        if (tama.state != TAMADA_STATE_HIT) tama.velocity.x = -accelX / 10 * MOVE_VELOCITY;
         tama.update(deltaTime);
         heightSoFar = Math.max(tama.position.y, heightSoFar);
     }

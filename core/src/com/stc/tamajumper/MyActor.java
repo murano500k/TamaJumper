@@ -11,8 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public abstract class MyActor extends Actor {
 
+    public enum ObjectState{
+        EXIST,
+        DESTROY
+    }
     protected TextureRegion texture;
     protected float stateTime;
+    protected ObjectState objectState;
     public final Vector2 velocity;
     public final Vector2 accel;
 
@@ -22,6 +27,7 @@ public abstract class MyActor extends Actor {
         stateTime = 0;
         velocity = new Vector2();
         accel = new Vector2();
+        objectState=ObjectState.EXIST;
     }
 
     @Override
@@ -33,7 +39,7 @@ public abstract class MyActor extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        batch.draw(texture, getX(), getY(), getWidth(), getHeight());
+        batch.draw(getTexture(), getX(), getY(), getWidth(), getHeight());
     }
 
     public TextureRegion getTexture() {

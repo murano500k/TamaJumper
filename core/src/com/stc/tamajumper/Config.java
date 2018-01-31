@@ -1,6 +1,7 @@
 package com.stc.tamajumper;
 
 
+import com.badlogic.gdx.math.Vector2;
 
 public class Config {
 
@@ -18,10 +19,6 @@ public class Config {
     public static final int TAMADA_STATE_JUMP = 0;
     public static final int TAMADA_STATE_FALL = 1;
     public static final int TAMADA_STATE_HIT = 2;
-    public static final float TAMADA_JUMP_VELOCITY = 11;
-    public static final float TAMADA_MOVE_VELOCITY = 20;
-    public static final float TAMADA_WIDTH = 0.8f;
-    public static final float TAMADA_HEIGHT = 0.8f;
 
 
     public static final float PLATFORM_WIDTH = 2;
@@ -43,9 +40,6 @@ public class Config {
     public static final float MEDIUM_BG_OBJECT_DIMEN = 2;
     public static final float LARGE_BG_OBJECT_DIMEN = 3;
 
-    public static final float COIN_WIDTH = 0.5f;
-    public static final float COIN_HEIGHT = 0.8f;
-    public static final int COIN_SCORE = 10;
     public static final float VOLUME_MUSIC = 0.3f;
     public static final int JUMP_SOUND_INDEX_DEFAULT = 2;
     public static final int JUMP_SOUND_INDEX_BREAK = 9;
@@ -56,6 +50,7 @@ public class Config {
     public static final float SPRING_GENERATION_PROBABILITY = 0.3f;
     public static final float COIN_GENERATION_PROBABILITY = 0.4f;
     public static final int MUSIC_SOUND_INDEX = 1;
+    public static final Vector2 gravity = new Vector2(0, -12);
 
 
     public class PIXELS {

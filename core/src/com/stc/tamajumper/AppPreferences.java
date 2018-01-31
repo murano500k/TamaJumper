@@ -3,6 +3,8 @@ package com.stc.tamajumper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import static com.stc.tamajumper.TamaActor.MOVE_VELOCITY;
+
 public class AppPreferences {
     private static final String PREF_MUSIC_VOLUME = "volume";
     private static final String PREF_MUSIC_ENABLED = "music.enabled";
@@ -76,6 +78,9 @@ public class AppPreferences {
 
     static public float getNormalizedAcelX(float accelX){
         return accelX*getAccelSensitivity();
+    }
+    static public float getNormalizedAcelX2(float accelX){
+        return -accelX*getAccelSensitivity() / 10 * MOVE_VELOCITY;
     }
 
 

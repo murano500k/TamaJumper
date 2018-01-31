@@ -1,17 +1,15 @@
 package com.stc.tamajumper;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
+
+import java.util.Random;
 
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
-import static com.stc.tamajumper.Config.TAMADA_JUMP_VELOCITY;
-import static com.stc.tamajumper.Config.TAMADA_MOVE_VELOCITY;
 import static com.stc.tamajumper.PlatformActor.Type.BREAKABLE;
 import static com.stc.tamajumper.PlatformActor.Type.BROKEN;
-import static com.stc.tamajumper.PlatformActor.Type.NORMAL;
 
 
 /**
@@ -19,70 +17,79 @@ import static com.stc.tamajumper.PlatformActor.Type.NORMAL;
  */
 
 public class TamaActor extends MyActor {
-    public enum State{
+    public static final float JUMP_VELOCITY = 11;
+    public static final float HIGH_JUMP_VELOCITY = 17;
+    public static final float MOVE_VELOCITY = 20;
+    public static final float WIDTH = 0.8f;
+    public static final float HEIGHT = 0.8f;
+    private boolean hasShield=false;
+    private MoveByAction currentAction;
+
+
+    public enum TamaState {
         JUMP,
+        HIGHJUMP,
         FALL,
         HIT
     }
-    public State state;
+    public TamaState tamaState;
+
+
+
+
     public TamaActor(float x, float y) {
         super(x, y);
-        setWidth(Config.TAMADA_WIDTH);
-        setHeight(Config.TAMADA_HEIGHT);
-        state = State.FALL;
+        setWidth(WIDTH);
+        setHeight(HEIGHT);
+        tamaState = TamaState.FALL;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        switch (state) {
-            case FALL:
-                texture = Assets.tamadaFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                break;
-            case JUMP:
-                texture = Assets.tamadaJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                break;
-            case HIT:
-            default:
-                texture = Assets.tamadaHit;
-        }
-        Sprite sprite =new Sprite(texture);
+        Sprite sprite =new Sprite(getTexture());
         sprite.setBounds(getX(),getY(),getWidth(),getHeight());
         sprite.flip(velocity.x<0,false);
         sprite.draw(batch);
     }
 
     @Override
+    public TextureRegion getTexture() {
+        switch (tamaState) {
+            case FALL:
+                return Assets.tamadaFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+            case JUMP:
+                return Assets.tamadaJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+            case HIGHJUMP:
+                return Assets.tamadaJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+            case HIT:
+            default:
+                return Assets.tamadaHit;
+        }
+    }
+
+    @Override
     public void act(float deltaTime) {
         super.act(deltaTime);
-        float rawAccelX = 0;
+        float normalizedAccelX=Controller.getAccelX();
+        if (tamaState != TamaState.HIT && getY() <= 0.5f) hitPlatform(PlatformActor.generatePlatform(0,new Random()));
+        if (tamaState != TamaState.HIT) velocity.x = -normalizedAccelX / 10 * MOVE_VELOCITY;
 
-        if (Gdx.app.getType() == Application.ApplicationType.Android ||
-                Gdx.app.getType() == Application.ApplicationType.iOS) {
-            rawAccelX= Gdx.input.getAccelerometerX();
-        } else {
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) rawAccelX = 5f;
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) rawAccelX = -5f;
-        }
-        float normalizedAccelX=AppPreferences.getNormalizedAcelX(rawAccelX);
+        velocity.add(Config.gravity.x * deltaTime, Config.gravity.y * deltaTime);
+        currentAction = new MoveByAction();
+        currentAction.setDuration(deltaTime);
+        currentAction.setAmount(velocity.x * deltaTime,velocity.y * deltaTime);
+        addAction(currentAction);
 
-        stateTime+=deltaTime;
-        if (state != State.HIT && getY() <= 0.5f) hitPlatform(null);
-        if (state != State.HIT) velocity.x = -normalizedAccelX / 10 * TAMADA_MOVE_VELOCITY;
-
-        velocity.add(World.gravity.x * deltaTime, World.gravity.y * deltaTime);
-        setPosition(getX()+velocity.x * deltaTime, getY()+velocity.y * deltaTime);
-
-
-        if (velocity.y > 0 && state != State.HIT) {
-            if (state != State.JUMP) {
-                state = State.JUMP;
+        if (velocity.y > 0 && tamaState != TamaState.HIT) {
+            if (tamaState == TamaState.FALL) {
+                tamaState = TamaState.JUMP;
                 stateTime = 0;
             }
         }
 
-        if (velocity.y < 0 && state != State.HIT) {
-            if (state != State.FALL) {
-                state = State.FALL;
+        if (velocity.y < 0 && tamaState != TamaState.HIT) {
+            if (tamaState != TamaState.FALL) {
+                tamaState = TamaState.FALL;
                 stateTime = 0;
             }
         }
@@ -92,17 +99,34 @@ public class TamaActor extends MyActor {
     }
 
     public void hitPlatform(PlatformActor platform) {
-        PlatformActor.Type type = NORMAL;
-        if(platform!=null){
-            type=platform.getType();
-            if(type==BREAKABLE || type==BROKEN) platform.setState(PlatformActor.State.DESTROY);
-        }
-        if(type!=BROKEN) {
-            velocity.y = TAMADA_JUMP_VELOCITY;
-            state = State.JUMP;
+        if(tamaState == TamaState.FALL) {
+            if(platform.getType()==BREAKABLE || platform.getType()==BROKEN) {
+                    platform.pulverize();
+            }
+            if(platform.getType()== PlatformActor.Type.SPRING){
+                velocity.y = HIGH_JUMP_VELOCITY;
+                tamaState = TamaState.HIGHJUMP;
+            }else {
+                velocity.y = JUMP_VELOCITY;
+                tamaState = TamaState.JUMP;
+                Assets.playSound(platform.getJumpSound());
+            }
             stateTime = 0;
         }
 
     }
 
+    public boolean hitEnemy(EnemyActor enemy) {
+        if(hasShield){
+            hasShield=false;
+            return true;
+        }
+        if(currentAction!=null){
+            removeAction(currentAction);
+        }
+
+        tamaState = TamaState.HIT;
+        stateTime = 0;
+        return false;
+    }
 }

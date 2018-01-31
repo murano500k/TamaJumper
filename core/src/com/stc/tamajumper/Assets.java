@@ -230,7 +230,7 @@ public class Assets {
     }
 
 
-    public void playSound (Sound sound) {
+    public static void playSound (Sound sound) {
         if (AppPreferences.isSoundEffectsEnabled()) sound.play(1);
     }
 

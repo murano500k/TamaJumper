@@ -1,14 +1,12 @@
 package com.stc.tamajumper;
 
-import static com.stc.tamajumper.Config.*;
-
 public class Coin extends GameObject {
 
 
     float stateTime;
 
     public Coin (float x, float y) {
-        super(x, y, COIN_WIDTH, COIN_HEIGHT);
+        super(x, y, CoinActor.WIDTH, CoinActor.HEIGHT);
         stateTime = 0;
     }
 

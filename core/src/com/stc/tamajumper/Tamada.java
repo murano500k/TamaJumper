@@ -18,12 +18,12 @@ public class Tamada extends DynamicGameObject {
 
 
     public Tamada(float x, float y) {
-        super(x, y, TAMADA_WIDTH, TAMADA_HEIGHT);
+        super(x, y, TamaActor.WIDTH, TamaActor.HEIGHT);
         state = TAMADA_STATE_FALL;
         stateTime = 0;
     }
     public void update (float deltaTime) {
-        velocity.add(World.gravity.x * deltaTime, World.gravity.y * deltaTime);
+        velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
         position.add(velocity.x * deltaTime, velocity.y * deltaTime);
         bounds.x = position.x - bounds.width / 2;
         bounds.y = position.y - bounds.height / 2;
@@ -60,14 +60,14 @@ public class Tamada extends DynamicGameObject {
     }
 
     public void hitPlatform () {
-        velocity.y = TAMADA_JUMP_VELOCITY;
+        velocity.y = TamaActor.JUMP_VELOCITY;
         state = TAMADA_STATE_JUMP;
         stateTime = 0;
     }
 
 
     public void hitSpring () {
-        velocity.y = TAMADA_JUMP_VELOCITY * 1.5f;
+        velocity.y = TamaActor.JUMP_VELOCITY * 1.5f;
         state = TAMADA_STATE_JUMP;
         stateTime = 0;
     }
