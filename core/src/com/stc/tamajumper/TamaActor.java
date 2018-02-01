@@ -17,11 +17,12 @@ import static com.stc.tamajumper.PlatformActor.Type.BROKEN;
  */
 
 public class TamaActor extends MyActor {
-    public static final float JUMP_VELOCITY = 11;
-    public static final float HIGH_JUMP_VELOCITY = 17;
-    public static final float MOVE_VELOCITY = 20;
-    public static final float WIDTH = 0.8f;
-    public static final float HEIGHT = 0.8f;
+    public static final float JUMP_VELOCITY = Config.PIXELS.PLAYER_DIMEN *15;
+    public static final float HIGH_JUMP_VELOCITY = JUMP_VELOCITY *1.5f;
+    public static final float MOVE_VELOCITY = Config.PIXELS.PLAYER_DIMEN *20;
+    public static final float WIDTH = Config.PIXELS.PLAYER_DIMEN ;
+    public static final float HEIGHT = Config.PIXELS.PLAYER_DIMEN;
+    private int score;
     private boolean hasShield=false;
     private MoveByAction currentAction;
 
@@ -41,6 +42,7 @@ public class TamaActor extends MyActor {
         super(x, y);
         setWidth(WIDTH);
         setHeight(HEIGHT);
+        score=0;
         tamaState = TamaState.FALL;
     }
 
@@ -74,7 +76,7 @@ public class TamaActor extends MyActor {
         if (tamaState != TamaState.HIT && getY() <= 0.5f) hitPlatform(PlatformActor.generatePlatform(0,new Random()));
         if (tamaState != TamaState.HIT) velocity.x = -normalizedAccelX / 10 * MOVE_VELOCITY;
 
-        velocity.add(Config.gravity.x * deltaTime, Config.gravity.y * deltaTime);
+        velocity.add(Config.GRAVITY.x * deltaTime, Config.GRAVITY.y * deltaTime);
         currentAction = new MoveByAction();
         currentAction.setDuration(deltaTime);
         currentAction.setAmount(velocity.x * deltaTime,velocity.y * deltaTime);
@@ -112,8 +114,15 @@ public class TamaActor extends MyActor {
                 Assets.playSound(platform.getJumpSound());
             }
             stateTime = 0;
+            score++;
         }
+    }
+    public void hitCoin(CoinActor coin){
+        score+=coin.getValue();
+    }
 
+    public int getScore() {
+        return score;
     }
 
     public boolean hitEnemy(EnemyActor enemy) {

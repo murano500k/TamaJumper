@@ -7,8 +7,6 @@ import java.util.Random;
 import static com.stc.tamajumper.Config.BG_OBJECT_MOVE_RATIO;
 import static com.stc.tamajumper.Config.BG_OBJECT_MOVE_VELOCITY;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
-import static com.stc.tamajumper.Config.PLATFORM_HEIGHT;
-import static com.stc.tamajumper.Config.PLATFORM_WIDTH;
 
 
 public class BgObject extends DynamicGameObject {
@@ -47,8 +45,8 @@ public class BgObject extends DynamicGameObject {
 
 
             position.add(velocity.x * deltaTime, 0);
-            bounds.x = position.x - PLATFORM_WIDTH / 2;
-            bounds.y = position.y - PLATFORM_HEIGHT / 2;
+            bounds.x = position.x - bounds.width / 2;
+            bounds.y = position.y - bounds.height / 2;
 
         if (position.x < -size) position.x = WORLD_WIDTH+WORLD_WIDTH+size;
         if (position.x > WORLD_WIDTH+size) position.x = -size;

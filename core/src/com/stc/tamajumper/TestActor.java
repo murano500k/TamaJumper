@@ -12,8 +12,8 @@ public class TestActor extends Actor {
     public TestActor(float x,float y) {
         setX(x);
         setY(y);
-        setWidth(Config.PLATFORM_WIDTH);
-        setHeight(Config.PLATFORM_HEIGHT);
+        setWidth(PlatformActor.HEIGHT);
+        setHeight(PlatformActor.HEIGHT);
     }
 
     @Override

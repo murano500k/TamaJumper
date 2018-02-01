@@ -8,7 +8,6 @@ import java.util.Random;
 
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
 import static com.stc.tamajumper.Config.PLATFORM_PULVERIZE_TIME;
-import static com.stc.tamajumper.Config.PLATFORM_WIDTH;
 
 /**
  * Created by artem on 1/30/18.
@@ -20,6 +19,8 @@ public class PlatformActor extends MyActor {
 
 
     private static final float PLATFORM_MOVING_SPEED = 2;
+    public static final float WIDTH = Config.PIXELS.DOUBLE_DIMEN;
+    public static final float HEIGHT = Config.PIXELS.HALF_DIMEN;
     public enum Type{
         NORMAL,
         MOVING,
@@ -36,8 +37,8 @@ public class PlatformActor extends MyActor {
 
     public PlatformActor(float x, float y,Type type) {
         super(x,y);
-        setWidth(Config.PLATFORM_WIDTH);
-        setHeight(Config.PLATFORM_HEIGHT);
+        setWidth(WIDTH);
+        setHeight(HEIGHT);
         this.type=type;
         moveAction=ActionManager.initMoveAction(new Random().nextBoolean(), PLATFORM_MOVING_SPEED);
         if(type==Type.MOVING){
@@ -66,7 +67,7 @@ public class PlatformActor extends MyActor {
     }
 
     public static PlatformActor generatePlatform(float y, Random random){
-        float x = random.nextFloat() * (WORLD_WIDTH - PLATFORM_WIDTH);
+        float x = random.nextFloat() * (WORLD_WIDTH - PlatformActor.WIDTH*2);
         int seed = random.nextInt(10);
         Type type;
         if(seed==0){

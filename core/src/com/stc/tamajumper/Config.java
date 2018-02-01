@@ -21,8 +21,6 @@ public class Config {
     public static final int TAMADA_STATE_HIT = 2;
 
 
-    public static final float PLATFORM_WIDTH = 2;
-    public static final float PLATFORM_HEIGHT = 0.5f;
     public static final int PLATFORM_TYPE_STATIC = 0;
     public static final int PLATFORM_TYPE_MOVING = 1;
     public static final int PLATFORM_STATE_NORMAL = 0;
@@ -50,18 +48,15 @@ public class Config {
     public static final float SPRING_GENERATION_PROBABILITY = 0.3f;
     public static final float COIN_GENERATION_PROBABILITY = 0.4f;
     public static final int MUSIC_SOUND_INDEX = 1;
-    public static final Vector2 gravity = new Vector2(0, -12);
+    public static final Vector2 GRAVITY = new Vector2(0, -PIXELS.PLAYER_DIMEN*20);
 
 
     public class PIXELS {
-        public static final int PLAYER_DIMEN = 32;
+        public static final int PLAYER_DIMEN = 64;
         public static final int DOUBLE_DIMEN = PLAYER_DIMEN * 2;
         public static final int HALF_DIMEN = PLAYER_DIMEN / 2;
-
-        public static final int PLATFORM_W = DOUBLE_DIMEN;
-        public static final int PLATFORM_H = HALF_DIMEN;
-        static final int FRUSTUM_WIDTH = 10;
-        static final int FRUSTUM_HEIGHT = 15;
+        static final int FRUSTUM_WIDTH = VIEWPORT_WIDTH;
+        static final int FRUSTUM_HEIGHT = VIEWPORT_HEIGHT;
         public static final float WORLD_WIDTH = FRUSTUM_WIDTH;
         public static final float LEVEL_HEIGHT_SCREENS = 20;
         public static final float WORLD_HEIGHT = FRUSTUM_HEIGHT * LEVEL_HEIGHT_SCREENS;

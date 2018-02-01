@@ -89,29 +89,29 @@ public class Assets {
 
         Texture bgObjTexture = loadTexture("data/bg_object_small.png");
 
-        bgObjectSmall=new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN);
+        bgObjectSmall=new TextureRegion(bgObjTexture, 0, 0, 32, 32);
 
         bgObjTexture = loadTexture("data/bg_object_medium0.png");
-        bgObjectsMedium.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN));
+        bgObjectsMedium.add(new TextureRegion(bgObjTexture, 0, 0, 64, 64));
 
         bgObjTexture = loadTexture("data/bg_object_medium1.png");
-        bgObjectsMedium.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN));
+        bgObjectsMedium.add(new TextureRegion(bgObjTexture, 0, 0, 64, 64));
 
 
         bgObjTexture = loadTexture("data/bg_object_large0.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, 32*4, 32*4));
 
 
         bgObjTexture = loadTexture("data/bg_object_large1.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, 32*4, 32*4));
 
 
         bgObjTexture = loadTexture("data/bg_object_large2.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, 32*4, 32*4));
 
 
         bgObjTexture = loadTexture("data/bg_object_large3.png");
-        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, Config.PIXELS.PLAYER_DIMEN*4, Config.PIXELS.PLAYER_DIMEN*4));
+        bgObjectsLarge.add(new TextureRegion(bgObjTexture, 0, 0, 32*4, 32*4));
 
 
         items = loadTexture("data/items.png");
@@ -121,52 +121,52 @@ public class Assets {
         gameOver = new TextureRegion(items, 352, 256, 160, 96);
         highScoresRegion = new TextureRegion(Assets.items, 0, 257, 300, 110 / 3);
         logo = new TextureRegion(items, 0, 352, 274, 142);
-        soundOff = new TextureRegion(items, 0, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
-        soundOn = new TextureRegion(items, 64, 0, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
-        arrow = new TextureRegion(items, 0, 64, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
-        pause = new TextureRegion(items, 64, 64, Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
+        soundOff = new TextureRegion(items, 0, 0, 64, 64);
+        soundOn = new TextureRegion(items, 64, 0, 64, 64);
+        arrow = new TextureRegion(items, 0, 64, 64, 64);
+        pause = new TextureRegion(items, 64, 64, 64, 64);
 
         spring = new TextureRegion(items, 128, 0,
-                Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN);
+                32, 32);
         castle = new TextureRegion(items, 128, 64,
-                Config.PIXELS.DOUBLE_DIMEN, Config.PIXELS.DOUBLE_DIMEN);
+                64, 64);
 
         coinAnim = new Animation(0.2f,
                 new TextureRegion(items, 128, 32,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN),
+                        32, 32),
                 new TextureRegion(items, 160, 32,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN),
+                        32, 32),
                 new TextureRegion(items, 192, 32,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN),
+                        32, 32),
                 new TextureRegion(items, 160, 32,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN));
+                        32, 32));
 
         tamadaJump = new Animation(0.2f,
                 new TextureRegion(items, 0, 128,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN),
+                        32, 32),
                 new TextureRegion(items, 32, 128,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN));
+                        32, 32));
         tamadaFall = new Animation(0.2f,
                 new TextureRegion(items, 64, 128,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN),
+                        32, 32),
                 new TextureRegion(items, 96, 128,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN));
+                        32, 32));
         tamadaHit = new TextureRegion(items, 128, 128,
-                Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN);
+                32, 32);
         squirrelFly = new Animation(0.2f,
                 new TextureRegion(items, 0, 160,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN),
+                        32, 32),
                 new TextureRegion(items, 32, 160,
-                        Config.PIXELS.PLAYER_DIMEN, Config.PIXELS.PLAYER_DIMEN));
+                        32, 32));
 
         platform = new TextureRegion(items, 64, 160,
-                Config.PIXELS.PLATFORM_W, Config.PIXELS.PLATFORM_H);
+                64, 16);
 
         brakingPlatform = new Animation(0.2f,
-                new TextureRegion(items, 64, 160, Config.PIXELS.PLATFORM_W, Config.PIXELS.PLATFORM_H),
-                new TextureRegion(items, 64, 176, Config.PIXELS.PLATFORM_W, Config.PIXELS.PLATFORM_H),
-                new TextureRegion(items, 64, 192, Config.PIXELS.PLATFORM_W, Config.PIXELS.PLATFORM_H),
-                new TextureRegion(items, 64, 208, Config.PIXELS.PLATFORM_W, Config.PIXELS.PLATFORM_H));
+                new TextureRegion(items, 64, 160, 64, 16),
+                new TextureRegion(items, 64, 176, 64, 16),
+                new TextureRegion(items, 64, 192, 64, 16),
+                new TextureRegion(items, 64, 208, 64, 16));
 
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
 

@@ -9,7 +9,7 @@ import java.util.Random;
 
 import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_WIDTH;
-import static com.stc.tamajumper.Config.PLATFORM_HEIGHT;
+
 import static com.stc.tamajumper.Config.PLATFORM_STATE_PULVERIZING;
 import static com.stc.tamajumper.Config.TAMADA_STATE_FALL;
 import static com.stc.tamajumper.Config.TAMADA_STATE_HIT;
@@ -45,7 +45,7 @@ public class WorldRenderer {
     private void renderBackground() {
         batch.disableBlending();
         batch.begin();
-        batch.draw(Assets.backgroundRegion, cam.position.x - FRUSTUM_WIDTH / 2, cam.position.y - FRUSTUM_HEIGHT / 2-PLATFORM_HEIGHT, FRUSTUM_WIDTH,
+        batch.draw(Assets.backgroundRegion, cam.position.x - FRUSTUM_WIDTH / 2, cam.position.y - FRUSTUM_HEIGHT / 2-PlatformActor.HEIGHT, FRUSTUM_WIDTH,
                 FRUSTUM_HEIGHT);
         batch.end();
     }

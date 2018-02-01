@@ -6,24 +6,24 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Random;
 
-import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
-import static com.stc.tamajumper.Config.PLATFORM_HEIGHT;
 import static com.stc.tamajumper.Config.VIEWPORT_HEIGHT;
 import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
-import static com.stc.tamajumper.TamaActor.JUMP_VELOCITY;
 
 /**
  * Created by artem on 1/30/18.
@@ -31,7 +31,12 @@ import static com.stc.tamajumper.TamaActor.JUMP_VELOCITY;
 
 class DemoScreen extends ScreenAdapter implements InputProcessor {
 
-    private GameState gameState;
+    private static final String MESSAGE_READY = "Ready?";
+    private static final String MESSAGE_GAME_OVER = "Game Over";
+    private static final String MESSAGE_PAUSED = "Paused";
+    private Label labelScore;
+    private Label message;
+    private TextButton btnPause;
 
     public enum GameState{
         RUNNING,
@@ -41,18 +46,20 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
         LEVEL_END
     }
 
+    public GameState gameState;
+    private final Skin skin;
     private final TamaJumperGame game;
     private final Vector3 touchPoint;
     private Stage stage;
     private OrthographicCamera camera;
     private Viewport viewport;
-    public static final Vector2 gravity = new Vector2(0, -12);
     public final Random rand;
     private Group platforms;
     private TamaActor tama;
     private Group coins;
     private Group enemies;
-    private Image pauseButton;
+    private float heightSoFar=0;
+
 
 
 
@@ -60,25 +67,45 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
         this.game=game;
         rand = new Random();
         touchPoint = new Vector3();
+        skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
     }
 
+    @Override
+    public void show() {
+        super.show();
+        gameState=GameState.READY;
+        camera=new OrthographicCamera(VIEWPORT_WIDTH,VIEWPORT_HEIGHT);
+        camera.position.set(VIEWPORT_WIDTH/ 2, VIEWPORT_HEIGHT / 2, 0);
+        viewport =new FillViewport(VIEWPORT_WIDTH,VIEWPORT_HEIGHT, camera);
+        stage=new Stage( viewport);
+        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setCatchBackKey(true);
+        generateObjects();
+        btnPause=new TextButton("Pause", skin);
+        btnPause.setWidth(PlatformActor.WIDTH);
+        btnPause.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                System.out.println("pause clicked");
+                gameState=GameState.PAUSED;
+            }
+        });
+        labelScore = new Label("Score: 0", skin);
+        updateUi();
+        stage.addActor(btnPause);
+        stage.addActor(labelScore);
+    }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if(gameState==GameState.RUNNING) {
-            stage.act(delta);
-            if (Gdx.input.justTouched()) {
-                camera.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-            }
-            if (tama.getY() > camera.position.y) camera.position.y = tama.getY();
-            camera.update();
-            stage.getBatch().setProjectionMatrix(camera.combined);
-            checkCollisions();
-        }else {
-            if(Gdx.input.justTouched()){
+
+        if(Gdx.input.justTouched()){
                 switch (gameState){
+                    case RUNNING:
+                        break;
                     case READY:
                     case PAUSED:
                         gameState=GameState.RUNNING;
@@ -89,22 +116,63 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
                         game.changeScreen(TamaJumperGame.MENU);
                         return;
                 }
-            }
-            stage.getBatch().begin();
-            switch (gameState){
-                case READY:
-                case PAUSED:
-                    stage.getBatch().draw(Assets.ready,WORLD_WIDTH/2,FRUSTUM_HEIGHT/2,WORLD_WIDTH/2,WORLD_WIDTH/5);
-                    break;
-                case LEVEL_END:
-                case GAME_OVER:
-                default:
-                    stage.getBatch().draw(Assets.gameOver,WORLD_WIDTH/2,FRUSTUM_HEIGHT/2,WORLD_WIDTH/2,WORLD_WIDTH/5);
-                    break;
-            }
-            stage.getBatch().end();
         }
+        System.out.println("state="+gameState);
+        switch (gameState){
+            case READY:
+                drawMessage(MESSAGE_READY);
+                break;
+            case PAUSED:
+                drawMessage(MESSAGE_PAUSED);
+                break;
+            case LEVEL_END:
+            case GAME_OVER:
+                if(AppPreferences.setHighscore(tama.getScore())){
+                    drawMessage(MESSAGE_GAME_OVER+"\nNew highscore!");
+                }else drawMessage(MESSAGE_GAME_OVER);
+                break;
+            default:
+                drawMessage(null);
+                break;
+        }
+        if(gameState==GameState.RUNNING){
+            stage.act(delta);
+            checkCollisions();
+            if(tama.getY()>camera.position.y) {
+                camera.position.y=tama.getY();
+                camera.update();
+            }
+            checkGameOver();
+        }
+        updateUi();
         stage.draw();
+    }
+
+    private void checkGameOver() {
+        heightSoFar = Math.max(tama.getY(), heightSoFar);
+        if (heightSoFar - stage.getHeight()/2 > tama.getY()) {
+            gameState=GameState.GAME_OVER;
+        }
+    }
+
+    private void updateUi() {
+        String scoreText="Score: "+tama.getScore();
+        labelScore.setText(scoreText);
+        labelScore.setPosition(16,camera.position.y+VIEWPORT_HEIGHT/2-labelScore.getHeight()*2.5f);
+        btnPause.setPosition(stage.getWidth()-btnPause.getWidth(),camera.position.y+VIEWPORT_HEIGHT/2-btnPause.getHeight()*1.75f);
+    }
+    private void drawMessage(String text){
+        if(message!=null)message.remove();
+
+        if(text==null) {
+            stage.addActor(btnPause);
+        }else {
+            message=new Label(text,skin);
+            message.setPosition(camera.position.x-message.getWidth()/2,camera.position.y-message.getHeight());
+            message.setText(text);
+            stage.addActor(message);
+            btnPause.remove();
+        }
     }
 
     private void checkCollisions() {
@@ -134,6 +202,7 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
     private void gameOver() {
         gameState=GameState.GAME_OVER;
         Assets.playSound(Assets.gameOverSound);
+
     }
 
     private Actor checkGroupCollisions(Group group, boolean legsOnly){
@@ -152,33 +221,6 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
         return actor;
     }
 
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        gameState=GameState.RUNNING;
-        camera=new OrthographicCamera(Config.PIXELS.FRUSTUM_WIDTH,Config.PIXELS.FRUSTUM_HEIGHT);
-        camera.position.set(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 0);
-        viewport =new FillViewport(Config.PIXELS.FRUSTUM_WIDTH,Config.PIXELS.FRUSTUM_HEIGHT, camera);
-        stage=new Stage( viewport);
-
-        Gdx.input.setInputProcessor(this);
-        Gdx.input.setCatchBackKey(true);
-
-
-        generateObjects();
-
-    }
-
-    @Override
-    public void resume() {
-        super.resume();
-    }
 
     @Override
     public void dispose() {
@@ -190,8 +232,8 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
     private void generateObjects() {
         tama=new TamaActor(stage.getWidth()/2,stage.getHeight()/2);
         stage.addActor(tama);
-        float y = PLATFORM_HEIGHT / 2;
-        float maxJumpHeight = JUMP_VELOCITY * JUMP_VELOCITY / (2 * -gravity.y);
+        float y = PlatformActor.HEIGHT / 2;
+        float maxJumpHeight = TamaActor.JUMP_VELOCITY * TamaActor.JUMP_VELOCITY / (2 * -Config.GRAVITY.y);
         platforms = new Group();
         coins = new Group();
         enemies = new Group();
@@ -204,14 +246,14 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
 
 
             if (y > WORLD_HEIGHT / 5 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
-                EnemyActor enemy = new EnemyActor(platform.getX()+ rand.nextFloat(), platform.getY()
-                        + rand.nextFloat() * 2, rand.nextBoolean());
+                EnemyActor enemy = new EnemyActor(rand.nextFloat()*(WORLD_WIDTH-EnemyActor.WIDTH), platform.getY()
+                        + rand.nextFloat() * 2 *Config.PIXELS.PLAYER_DIMEN, rand.nextBoolean());
                 enemies.addActor(enemy);
             }
 
-            if (rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
-                CoinActor coin = new CoinActor(platform.getX()+ rand.nextFloat(), platform.getY()
-                        + rand.nextFloat() * 3);
+            if (platform.getType()== PlatformActor.Type.NORMAL && rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
+                CoinActor coin = new CoinActor(platform.getX()+CoinActor.WIDTH/2
+                        , platform.getY()+PlatformActor.HEIGHT);
                 coins.addActor(coin);
             }
 

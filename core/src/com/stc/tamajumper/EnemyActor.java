@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
+import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
 
 /**
@@ -13,8 +14,8 @@ import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
 
 public class EnemyActor extends MyActor {
     private static final float ENEMY_MOVING_SPEED = 2;
-    public static final float WIDTH = 1;
-    public static final float HEIGHT = 0.6f;
+    public static final float WIDTH = PLAYER_DIMEN*1.5f;
+    public static final float HEIGHT = PLAYER_DIMEN;
 
     public enum Type{
         SQUIRREL

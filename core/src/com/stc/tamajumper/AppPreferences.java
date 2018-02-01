@@ -3,15 +3,15 @@ package com.stc.tamajumper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-import static com.stc.tamajumper.TamaActor.MOVE_VELOCITY;
-
 public class AppPreferences {
+
     private static final String PREF_MUSIC_VOLUME = "volume";
     private static final String PREF_MUSIC_ENABLED = "music.enabled";
     private static final String PREF_SOUND_ENABLED = "sound.enabled";
     private static final String PREF_SOUND_VOL = "sound";
     private static final String PREFS_NAME = "tamajumperprefs";
     private static final String PREF_ACCEL_SENSITIVITY = "accel_sens";
+    private static final String PREF_HIGHSCORE = "highscores";
     private static boolean soundEnabled =getPrefs().getBoolean(PREF_SOUND_ENABLED);
     private static boolean musicEnabled =getPrefs().getBoolean(PREF_MUSIC_ENABLED);
     private static Preferences prefs;
@@ -49,14 +49,6 @@ public class AppPreferences {
     }
 
 
-    static public float getMusicVolume() {
-        return getPrefs().getFloat(PREF_MUSIC_VOLUME, 0.5f);
-    }
-
-    static public void setMusicVolume(float volume) {
-        getPrefs().putFloat(PREF_MUSIC_VOLUME, volume);
-        getPrefs().flush();
-    }
 
     static public float getSoundVolume() {
         return getPrefs().getFloat(PREF_SOUND_VOL, 0.5f);
@@ -67,21 +59,29 @@ public class AppPreferences {
         getPrefs().flush();
     }
 
+    static public void setAccelSensitivity(float val) {
+        getPrefs().putFloat(PREF_ACCEL_SENSITIVITY, val);
+        getPrefs().flush();
+    }
     static public float getAccelSensitivity() {
         return getPrefs().getFloat(PREF_ACCEL_SENSITIVITY, Config.AccelerometerValues.DEFAULT_VALUE_SENSITIVITY);
     }
 
-    static public void setAccelSensitivity(float value) {
-        getPrefs().putFloat(PREF_ACCEL_SENSITIVITY, value);
-        getPrefs().flush();
+    static public boolean setHighscore(int value) {
+        if(getHighscore()<value){
+            getPrefs().putInteger(PREF_HIGHSCORE,value);
+            getPrefs().flush();
+            return true;
+        }
+        return false;
+    }
+    static public int getHighscore() {
+        return getPrefs().getInteger(PREF_HIGHSCORE,0);
     }
 
-    static public float getNormalizedAcelX(float accelX){
-        return accelX*getAccelSensitivity();
-    }
-    static public float getNormalizedAcelX2(float accelX){
-        return -accelX*getAccelSensitivity() / 10 * MOVE_VELOCITY;
-    }
+
+
+
 
 
 }

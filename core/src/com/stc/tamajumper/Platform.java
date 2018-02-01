@@ -1,9 +1,10 @@
 package com.stc.tamajumper;
 
-import java.util.Random;
-
-import static com.stc.tamajumper.Config.*;
-import static com.stc.tamajumper.Config.PIXELS.*;
+import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
+import static com.stc.tamajumper.Config.PLATFORM_STATE_NORMAL;
+import static com.stc.tamajumper.Config.PLATFORM_STATE_PULVERIZING;
+import static com.stc.tamajumper.Config.PLATFORM_TYPE_MOVING;
+import static com.stc.tamajumper.Config.PLATFORM_VELOCITY;
 
 /**
  * Created by artem on 1/11/18.
@@ -18,7 +19,7 @@ public class Platform extends DynamicGameObject {
     private Spring spring;
 
     public Platform (boolean breakable, int type, float x, float y) {
-        super(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT);
+        super(x, y, PlatformActor.WIDTH, PlatformActor.HEIGHT);
         this.type = type;
         this.state = PLATFORM_STATE_NORMAL;
         this.stateTime = 0;
@@ -31,16 +32,16 @@ public class Platform extends DynamicGameObject {
     public void update (float deltaTime) {
         if (type == PLATFORM_TYPE_MOVING) {
             position.add(velocity.x * deltaTime, 0);
-            bounds.x = position.x - PLATFORM_WIDTH / 2;
-            bounds.y = position.y - PLATFORM_HEIGHT / 2;
+            bounds.x = position.x - PlatformActor.WIDTH / 2;
+            bounds.y = position.y - PlatformActor.HEIGHT / 2;
 
-            if (position.x < PLATFORM_WIDTH / 2) {
+            if (position.x < PlatformActor.WIDTH / 2) {
                 velocity.x = -velocity.x;
-                position.x = PLATFORM_WIDTH / 2;
+                position.x = PlatformActor.WIDTH / 2;
             }
-            if (position.x > WORLD_WIDTH - PLATFORM_WIDTH / 2) {
+            if (position.x > WORLD_WIDTH - PlatformActor.WIDTH / 2) {
                 velocity.x = -velocity.x;
-                position.x = WORLD_WIDTH - PLATFORM_WIDTH / 2;
+                position.x = WORLD_WIDTH - PlatformActor.WIDTH / 2;
             }
         }
 

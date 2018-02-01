@@ -2,6 +2,8 @@ package com.stc.tamajumper;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
+
 /**
  * Created by artem on 1/31/18.
  */
@@ -9,8 +11,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class CoinActor extends MyActor{
 
 
-    public static final float WIDTH = 1f;
-    public static final float HEIGHT = 1f;
+    public static final float WIDTH = PLAYER_DIMEN;
+    public static final float HEIGHT = PLAYER_DIMEN;
     public static final int COIN_SCORE = 10;
 
 
@@ -35,5 +37,9 @@ public class CoinActor extends MyActor{
     public void destroy(){
         objectState=ObjectState.DESTROY;
         Assets.playSound(Assets.coinSound);
+    }
+
+    public int getValue() {
+        return COIN_SCORE;
     }
 }

@@ -10,12 +10,10 @@ import static com.stc.tamajumper.CoinActor.HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.FRUSTUM_HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_HEIGHT;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
-import static com.stc.tamajumper.Config.PLATFORM_HEIGHT;
 import static com.stc.tamajumper.Config.PLATFORM_PULVERIZE_TIME;
 import static com.stc.tamajumper.Config.PLATFORM_STATE_PULVERIZING;
 import static com.stc.tamajumper.Config.PLATFORM_TYPE_MOVING;
 import static com.stc.tamajumper.Config.PLATFORM_TYPE_STATIC;
-import static com.stc.tamajumper.Config.PLATFORM_WIDTH;
 import static com.stc.tamajumper.TamaActor.JUMP_VELOCITY;
 import static com.stc.tamajumper.TamaActor.MOVE_VELOCITY;
 import static com.stc.tamajumper.Config.TAMADA_STATE_HIT;
@@ -91,7 +89,7 @@ public class World {
     }
 
     private void generateBgObjects() {
-        float y = PLATFORM_HEIGHT / 2;
+        float y = PlatformActor.HEIGHT / 2;
         float maxJumpHeight = FRUSTUM_HEIGHT/4;
 
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
@@ -124,13 +122,13 @@ public class World {
     }
 
     private void generatePlatforms() {
-        float y = PLATFORM_HEIGHT / 2;
-        float maxJumpHeight = JUMP_VELOCITY * JUMP_VELOCITY / (2 * -Config.gravity.y);
+        float y = PlatformActor.HEIGHT / 2;
+        float maxJumpHeight = JUMP_VELOCITY * JUMP_VELOCITY / (2 * -Config.GRAVITY.y);
  
 
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
             int type = rand.nextFloat() > Config.PLATFORM_RATIO_MOVING_TO_STATIC ? PLATFORM_TYPE_MOVING : PLATFORM_TYPE_STATIC;
-            float x = rand.nextFloat() * (WORLD_WIDTH - PLATFORM_WIDTH) + PLATFORM_WIDTH / 2;
+            float x = rand.nextFloat() * (WORLD_WIDTH - PlatformActor.WIDTH) + PlatformActor.WIDTH / 2;
             boolean breakable = rand.nextBoolean();
             //System.out.println("add platform: x="+x+", y="+y);
             Platform platform = new Platform(breakable, type, x, y);
@@ -145,7 +143,7 @@ public class World {
 
             if (rand.nextFloat() > (1-Config.SPRING_GENERATION_PROBABILITY) && type != Config.PLATFORM_TYPE_MOVING
                     && !breakable) {
-                Spring spring = new Spring(platform.position.x, platform.position.y + Config.PLATFORM_HEIGHT / 2
+                Spring spring = new Spring(platform.position.x, platform.position.y + PlatformActor.HEIGHT / 2
                         + Spring.SPRING_HEIGHT / 2);
                 springs.add(spring);
                 platform.setSpring(spring);
