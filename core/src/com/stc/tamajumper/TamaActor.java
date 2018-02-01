@@ -119,6 +119,7 @@ public class TamaActor extends MyActor {
     }
     public void hitCoin(CoinActor coin){
         score+=coin.getValue();
+        coin.destroy();
     }
 
     public int getScore() {

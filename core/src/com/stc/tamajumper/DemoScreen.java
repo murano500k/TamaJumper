@@ -79,6 +79,7 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
         viewport =new FillViewport(VIEWPORT_WIDTH,VIEWPORT_HEIGHT, camera);
         stage=new Stage( viewport);
         Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(this);
         Gdx.input.setCatchBackKey(true);
         generateObjects();
         btnPause=new TextButton("Pause", skin);
@@ -184,8 +185,8 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
 
         CoinActor coin= (CoinActor) checkGroupCollisions(coins,false);
         if(coin!=null){
-            System.out.println("platform was hit");
-            coin.destroy();
+            System.out.println("coin was hit");
+            tama.hitCoin(coin);
         }
 
 

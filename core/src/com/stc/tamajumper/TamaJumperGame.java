@@ -43,7 +43,7 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 				this.setScreen(menuScreen);
 				break;
 			case PREFERENCES:
-				preferencesScreen = new PreferencesScreen(this);
+				preferencesScreen = new SettingsScreen(this);
 				this.setScreen(preferencesScreen);
 				break;
 			case GAME:
