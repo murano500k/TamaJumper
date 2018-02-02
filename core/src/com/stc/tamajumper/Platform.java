@@ -1,74 +1,115 @@
 package com.stc.tamajumper;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
+
+import java.util.Random;
+
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
-import static com.stc.tamajumper.Config.PLATFORM_STATE_NORMAL;
-import static com.stc.tamajumper.Config.PLATFORM_STATE_PULVERIZING;
-import static com.stc.tamajumper.Config.PLATFORM_TYPE_MOVING;
-import static com.stc.tamajumper.Config.PLATFORM_VELOCITY;
+import static com.stc.tamajumper.Config.PLATFORM_PULVERIZE_TIME;
 
 /**
- * Created by artem on 1/11/18.
+ * Created by artem on 1/30/18.
  */
 
-public class Platform extends DynamicGameObject {
+public class Platform extends MyActor {
 
-    public final boolean canBreak;
-    public final int type;
-    public int state;
-    public float stateTime;
-    private Spring spring;
 
-    public Platform (boolean breakable, int type, float x, float y) {
-        super(x, y, PlatformActor.WIDTH, PlatformActor.HEIGHT);
-        this.type = type;
-        this.state = PLATFORM_STATE_NORMAL;
-        this.stateTime = 0;
-        if (type == PLATFORM_TYPE_MOVING) {
-            velocity.x = PLATFORM_VELOCITY;
-        }
-        canBreak = breakable;
+
+
+    private static final float PLATFORM_MOVING_SPEED = 2;
+    public static final float WIDTH = Config.PIXELS.DOUBLE_DIMEN;
+    public static final float HEIGHT = Config.PIXELS.HALF_DIMEN;
+    public enum Type{
+        NORMAL,
+        MOVING,
+        BREAKABLE,
+        BROKEN,
+        SPRING;
     }
 
-    public void update (float deltaTime) {
-        if (type == PLATFORM_TYPE_MOVING) {
-            position.add(velocity.x * deltaTime, 0);
-            bounds.x = position.x - PlatformActor.WIDTH / 2;
-            bounds.y = position.y - PlatformActor.HEIGHT / 2;
 
-            if (position.x < PlatformActor.WIDTH / 2) {
-                velocity.x = -velocity.x;
-                position.x = PlatformActor.WIDTH / 2;
-            }
-            if (position.x > WORLD_WIDTH - PlatformActor.WIDTH / 2) {
-                velocity.x = -velocity.x;
-                position.x = WORLD_WIDTH - PlatformActor.WIDTH / 2;
-            }
+    private Type type;
+    private final Action moveAction;
+
+
+
+    public Platform(float x, float y, Type type) {
+        super(x,y);
+        setWidth(WIDTH);
+        setHeight(HEIGHT);
+        this.type=type;
+        moveAction=ActionManager.initMoveAction(new Random().nextBoolean(), PLATFORM_MOVING_SPEED);
+        if(type==Type.MOVING){
+            addAction(moveAction);
+        }
+    }
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(objectState==ObjectState.DESTROY && stateTime>PLATFORM_PULVERIZE_TIME){
+            remove();
+            return;
         }
 
-        stateTime += deltaTime;
-    }
-
-    public void pulverize () {
-        state = PLATFORM_STATE_PULVERIZING;
-        stateTime = 0;
-        velocity.x = 0;
+        if (getX() < -getWidth()) setX(WORLD_WIDTH);
+        if (getX() > WORLD_WIDTH) setX(-getWidth());
     }
 
     @Override
-    public String toString() {
-        return "Platform{" +
-                "canBreak=" + canBreak +
-                ", type=" + type +
-                ", state=" + state +
-                ", stateTime=" + stateTime +
-                '}';
+    public TextureRegion getTexture() {
+        if(objectState==ObjectState.DESTROY){
+            return Assets.brakingPlatform.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+        }else {
+            return Assets.platform;
+        }
     }
 
-    public void setSpring(Spring spring) {
-        this.spring = spring;
+    public static Platform generatePlatform(float y, Random random){
+        float x = random.nextFloat() * (WORLD_WIDTH - Platform.WIDTH*2);
+        int seed = random.nextInt(10);
+        Type type;
+        if(seed==0){
+            type=Type.MOVING;
+        }else if(seed==1){
+            type=Type.BROKEN;
+        }else if(seed==2){
+            type=Type.BREAKABLE;
+        }else if(seed==3){
+            type=Type.SPRING;
+        }else {
+            type=Type.NORMAL;
+        }
+        return new Platform(x,y,type);
     }
 
-    public Spring getSpring() {
-        return spring;
+    public Type getType() {
+        return type;
+    }
+
+
+
+
+    public void pulverize(){
+        objectState=ObjectState.DESTROY;
+        stateTime=0;
+        removeAction(moveAction);
+    }
+
+
+    public Sound getJumpSound() {
+        switch (type){
+            case SPRING:
+                return Assets.jumpSounds.get(Config.JUMP_SOUND_INDEX_HIGH);
+            case MOVING:
+                return Assets.jumpSounds.get(Config.JUMP_SOUND_INDEX_MOVING);
+            case BREAKABLE:
+            case BROKEN:
+                return Assets.jumpSounds.get(Config.JUMP_SOUND_INDEX_BREAK);
+            case NORMAL:
+            default:
+                return Assets.jumpSounds.get(Config.JUMP_SOUND_INDEX_DEFAULT);
+        }
     }
 }

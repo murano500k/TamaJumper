@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -29,7 +28,7 @@ public class MenuScreen extends ScreenAdapter implements InputProcessor {
     private final Vector3 touchPoint;
     private OrthographicCamera camera;
     private FillViewport viewport;
-    private Stage stage;
+    private MyStage stage;
     private Group buttons;
     private Skin skin;
     private static final int BTN_HEIGHT = VIEWPORT_WIDTH/5;
@@ -63,7 +62,7 @@ public class MenuScreen extends ScreenAdapter implements InputProcessor {
         camera=new OrthographicCamera(VIEWPORT_WIDTH,VIEWPORT_HEIGHT);
         camera.position.set(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT /2, 0);
         viewport =new FillViewport(VIEWPORT_WIDTH,VIEWPORT_HEIGHT, camera);
-        stage=new Stage( viewport);
+        stage = new MyStage(viewport, game);
 
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchBackKey(true);

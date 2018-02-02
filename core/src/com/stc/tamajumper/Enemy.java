@@ -12,7 +12,7 @@ import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
  * Created by artem on 1/31/18.
  */
 
-public class EnemyActor extends MyActor {
+public class Enemy extends MyActor {
     private static final float ENEMY_MOVING_SPEED = 2;
     public static final float WIDTH = PLAYER_DIMEN*1.5f;
     public static final float HEIGHT = PLAYER_DIMEN;
@@ -28,7 +28,7 @@ public class EnemyActor extends MyActor {
     private final boolean reversed;
 
 
-    public EnemyActor(float x, float y, boolean reversed) {
+    public Enemy(float x, float y, boolean reversed) {
         super(x, y);
         this.reversed=reversed;
         setWidth(WIDTH);

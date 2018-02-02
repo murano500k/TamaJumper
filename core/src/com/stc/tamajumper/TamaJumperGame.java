@@ -18,18 +18,21 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	private MenuScreen menuScreen;
 	private DemoScreen gameScreen;
 	private Screen preferencesScreen;
-	private AppPreferences prefs;
+	private Prefs prefs;
 	private Assets assets;
+	private HighscoresScreen highscoresScreen;
+	private int currentScore=0;
 
 	@Override
 	public void create () {
 		batcher = new SpriteBatch();
 
-		prefs=new AppPreferences();
+		prefs=new Prefs();
 		assets=new Assets(this);
+
 		setScreen(getStartScreen());
 	}
-	public AppPreferences getPreferences(){
+	public Prefs getPreferences(){
 		return prefs;
 	}
 
@@ -39,18 +42,21 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	public void changeScreen(int screen){
 		switch(screen){
 			case MENU:
-				menuScreen = new MenuScreen(this);
-				this.setScreen(menuScreen);
+				this.setScreen(new MenuScreen(this));
 				break;
 			case PREFERENCES:
-				preferencesScreen = new SettingsScreen(this);
-				this.setScreen(preferencesScreen);
+				this.setScreen(new SettingsScreen(this));
+				break;
+			case HIGHSCORES:
+				this.setScreen(new HighscoresScreen(this));
 				break;
 			case GAME:
-				if(gameScreen == null || gameScreen.gameState== DemoScreen.GameState.GAME_OVER
-						|| gameScreen.gameState==DemoScreen.GameState.LEVEL_END){
-					gameScreen= new DemoScreen(this);
+				if(gameScreen == null || gameScreen.gameState== DemoScreen.GameState.GAME_OVER){
+					currentScore=0;
+				}else if(gameScreen.gameState== DemoScreen.GameState.LEVEL_END){
+					currentScore=gameScreen.getCurrentScore();
 				}
+				gameScreen= new DemoScreen(this, currentScore);
 				this.setScreen(gameScreen);
 				break;
 			case EXIT:

@@ -8,15 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import java.util.Random;
 
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
-import static com.stc.tamajumper.PlatformActor.Type.BREAKABLE;
-import static com.stc.tamajumper.PlatformActor.Type.BROKEN;
+import static com.stc.tamajumper.Platform.Type.BREAKABLE;
+import static com.stc.tamajumper.Platform.Type.BROKEN;
 
 
 /**
  * Created by artem on 1/30/18.
  */
 
-public class TamaActor extends MyActor {
+public class Tama extends MyActor {
     public static final float JUMP_VELOCITY = Config.PIXELS.PLAYER_DIMEN *15;
     public static final float HIGH_JUMP_VELOCITY = JUMP_VELOCITY *1.5f;
     public static final float MOVE_VELOCITY = Config.PIXELS.PLAYER_DIMEN *20;
@@ -38,11 +38,11 @@ public class TamaActor extends MyActor {
 
 
 
-    public TamaActor(float x, float y) {
+    public Tama(float x, float y, int startingScore) {
         super(x, y);
         setWidth(WIDTH);
         setHeight(HEIGHT);
-        score=0;
+        score=startingScore;
         tamaState = TamaState.FALL;
     }
 
@@ -73,7 +73,7 @@ public class TamaActor extends MyActor {
     public void act(float deltaTime) {
         super.act(deltaTime);
         float normalizedAccelX=Controller.getAccelX();
-        if (tamaState != TamaState.HIT && getY() <= 0.5f) hitPlatform(PlatformActor.generatePlatform(0,new Random()));
+        if (tamaState != TamaState.HIT && getY() <= 0.5f) hitPlatform(Platform.generatePlatform(0,new Random()));
         if (tamaState != TamaState.HIT) velocity.x = -normalizedAccelX / 10 * MOVE_VELOCITY;
 
         velocity.add(Config.GRAVITY.x * deltaTime, Config.GRAVITY.y * deltaTime);
@@ -100,12 +100,12 @@ public class TamaActor extends MyActor {
         if (getX() > WORLD_WIDTH) setX(0);
     }
 
-    public void hitPlatform(PlatformActor platform) {
+    public void hitPlatform(Platform platform) {
         if(tamaState == TamaState.FALL) {
             if(platform.getType()==BREAKABLE || platform.getType()==BROKEN) {
                     platform.pulverize();
             }
-            if(platform.getType()== PlatformActor.Type.SPRING){
+            if(platform.getType()== Platform.Type.SPRING){
                 velocity.y = HIGH_JUMP_VELOCITY;
                 tamaState = TamaState.HIGHJUMP;
             }else {
@@ -117,7 +117,7 @@ public class TamaActor extends MyActor {
             score++;
         }
     }
-    public void hitCoin(CoinActor coin){
+    public void hitCoin(Coin coin){
         score+=coin.getValue();
         coin.destroy();
     }
@@ -126,7 +126,7 @@ public class TamaActor extends MyActor {
         return score;
     }
 
-    public boolean hitEnemy(EnemyActor enemy) {
+    public boolean hitEnemy(Enemy enemy) {
         if(hasShield){
             hasShield=false;
             return true;
