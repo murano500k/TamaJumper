@@ -19,6 +19,6 @@ public class Controller {
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) rawAccelX = 5f;
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) rawAccelX = -5f;
         }
-        return rawAccelX*AppPreferences.getAccelSensitivity();
+        return rawAccelX* Prefs.getAccelSensitivity();
     }
 }

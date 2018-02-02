@@ -38,11 +38,11 @@ public class TamaActor extends MyActor {
 
 
 
-    public TamaActor(float x, float y) {
+    public TamaActor(float x, float y, int startingScore) {
         super(x, y);
         setWidth(WIDTH);
         setHeight(HEIGHT);
-        score=0;
+        score=startingScore;
         tamaState = TamaState.FALL;
     }
 

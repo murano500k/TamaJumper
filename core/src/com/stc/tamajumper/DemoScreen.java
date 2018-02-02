@@ -1,8 +1,6 @@
 package com.stc.tamajumper;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,7 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -29,14 +26,20 @@ import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
  * Created by artem on 1/30/18.
  */
 
-class DemoScreen extends ScreenAdapter implements InputProcessor {
+class DemoScreen extends ScreenAdapter {
 
     private static final String MESSAGE_READY = "Ready?";
     private static final String MESSAGE_GAME_OVER = "Game Over";
     private static final String MESSAGE_PAUSED = "Paused";
+    private final int startingScore;
     private Label labelScore;
     private Label message;
     private TextButton btnPause;
+    private LevelEnd levelEnd;
+
+    public int getCurrentScore() {
+        return tama.getScore();
+    }
 
     public enum GameState{
         RUNNING,
@@ -50,7 +53,7 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
     private final Skin skin;
     private final TamaJumperGame game;
     private final Vector3 touchPoint;
-    private Stage stage;
+    private MyStage stage;
     private OrthographicCamera camera;
     private Viewport viewport;
     public final Random rand;
@@ -63,11 +66,13 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
 
 
 
-    public DemoScreen(TamaJumperGame game) {
+
+    public DemoScreen(TamaJumperGame game, int startScore) {
         this.game=game;
         rand = new Random();
         touchPoint = new Vector3();
         skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
+        startingScore=startScore;
     }
 
     @Override
@@ -77,9 +82,8 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
         camera=new OrthographicCamera(VIEWPORT_WIDTH,VIEWPORT_HEIGHT);
         camera.position.set(VIEWPORT_WIDTH/ 2, VIEWPORT_HEIGHT / 2, 0);
         viewport =new FillViewport(VIEWPORT_WIDTH,VIEWPORT_HEIGHT, camera);
-        stage=new Stage( viewport);
+        stage=new MyStage( viewport, game);
         Gdx.input.setInputProcessor(stage);
-        Gdx.input.setInputProcessor(this);
         Gdx.input.setCatchBackKey(true);
         generateObjects();
         btnPause=new TextButton("Pause", skin);
@@ -87,7 +91,7 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
         btnPause.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
+                //super.clicked(event, x, y);
                 System.out.println("pause clicked");
                 gameState=GameState.PAUSED;
             }
@@ -128,7 +132,7 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
                 break;
             case LEVEL_END:
             case GAME_OVER:
-                if(AppPreferences.setHighscore(tama.getScore())){
+                if(Prefs.setHighscore(tama.getScore())){
                     drawMessage(MESSAGE_GAME_OVER+"\nNew highscore!");
                 }else drawMessage(MESSAGE_GAME_OVER);
                 break;
@@ -177,25 +181,28 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
     }
 
     private void checkCollisions() {
-        PlatformActor platform= (PlatformActor) checkGroupCollisions(platforms,true);
+        PlatformActor platform= (PlatformActor) checkActorCollisions(platforms,true);
         if(platform!=null){
             System.out.println("platform was hit");
             tama.hitPlatform(platform);
         }
 
-        CoinActor coin= (CoinActor) checkGroupCollisions(coins,false);
+        CoinActor coin= (CoinActor) checkActorCollisions(coins,false);
         if(coin!=null){
             System.out.println("coin was hit");
             tama.hitCoin(coin);
         }
 
 
-        EnemyActor enemy = (EnemyActor) checkGroupCollisions(enemies,false);
+        EnemyActor enemy = (EnemyActor) checkActorCollisions(enemies,false);
         if(enemy!=null){
             System.out.println("enemy was hit");
             if(!tama.hitEnemy(enemy)){
                 gameOver();
             }
+        }
+        if(checkActorCollisions(levelEnd,false)!=null){
+            gameState=GameState.LEVEL_END;
         }
 
     }
@@ -206,20 +213,20 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
 
     }
 
-    private Actor checkGroupCollisions(Group group, boolean legsOnly){
-        Actor actor = group.hit(tama.getRight(),tama.getTop() - tama.getHeight(),false);
-        if(actor==null) {
-            actor = group.hit(tama.getRight()-tama.getWidth(),tama.getTop() - tama.getHeight(),false);
+    private Actor checkActorCollisions(Actor actor, boolean legsOnly){
+        Actor hitActor = actor.hit(tama.getRight(),tama.getTop() - tama.getHeight(),false);
+        if(hitActor==null) {
+            hitActor = actor.hit(tama.getRight()-tama.getWidth(),tama.getTop() - tama.getHeight(),false);
         }
         if(!legsOnly) {
-            if (actor == null) {
-                actor = group.hit(tama.getRight() - tama.getWidth(), tama.getTop(), false);
+            if (hitActor == null) {
+                hitActor = actor.hit(tama.getRight() - tama.getWidth(), tama.getTop(), false);
             }
-            if (actor == null) {
-                actor = group.hit(tama.getRight(), tama.getTop(), false);
+            if (hitActor == null) {
+                hitActor = actor.hit(tama.getRight(), tama.getTop(), false);
             }
         }
-        return actor;
+        return hitActor;
     }
 
 
@@ -231,7 +238,7 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
 
 
     private void generateObjects() {
-        tama=new TamaActor(stage.getWidth()/2,stage.getHeight()/2);
+        tama=new TamaActor(stage.getWidth()/2,stage.getHeight()/2,startingScore);
         stage.addActor(tama);
         float y = PlatformActor.HEIGHT / 2;
         float maxJumpHeight = TamaActor.JUMP_VELOCITY * TamaActor.JUMP_VELOCITY / (2 * -Config.GRAVITY.y);
@@ -270,52 +277,12 @@ class DemoScreen extends ScreenAdapter implements InputProcessor {
             else randomSeed/=2;
             y -= (randomSeed) * maxJumpHeight*levelProgressDifficulty;
         }
+        levelEnd = new LevelEnd(WORLD_WIDTH / 2, y);
         stage.addActor(platforms);
         stage.addActor(coins);
         stage.addActor(enemies);
+        stage.addActor(levelEnd);
+
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.BACK){
-            game.changeScreen(TamaJumperGame.MENU);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
 }

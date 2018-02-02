@@ -4,15 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
 import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
@@ -20,10 +18,10 @@ import static com.stc.tamajumper.Config.VIEWPORT_HEIGHT;
 import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
 
 /**
- * Created by artem on 2/1/18.
+ * Created by artem on 2/2/18.
  */
 
-public class SettingsScreen extends ScreenAdapter {
+public class HighscoresScreen extends ScreenAdapter {
 
     private final TamaJumperGame game;
     private final Skin skin;
@@ -31,7 +29,7 @@ public class SettingsScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private FillViewport viewport;
 
-    public SettingsScreen(TamaJumperGame game) {
+    public HighscoresScreen(TamaJumperGame game) {
         this.game = game;
         skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
 
@@ -60,28 +58,16 @@ public class SettingsScreen extends ScreenAdapter {
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
-        final Slider volumeSlider = new Slider(0,1,0.1f,false,skin);
-        volumeSlider.setName("volume");
-        volumeSlider.setValue(Prefs.getSoundVolume());
-        volumeSlider.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                Prefs.setSoundVolume(volumeSlider.getValue());
-                return false;
-            }
-        });
+        table.row().pad(0,0,PLAYER_DIMEN,0);
+        table.add(new Label("Highscores",skin));
 
-        final Slider sensitivitySlider = new Slider(Config.AccelerometerValues.MIN_VALUE_SENSITIVITY,
-                Config.AccelerometerValues.MAX_VALUE_SENSITIVITY,0.1f,false,skin);
-        sensitivitySlider.setName("sensitivity");
-        sensitivitySlider.setValue(Prefs.getAccelSensitivity());
-        sensitivitySlider.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                Prefs.setAccelSensitivity(sensitivitySlider.getValue());
-                return false;
-            }
-        });
+        java.util.List<Integer> list =Prefs.getHighscores();
+        for (int i = 0; i < Prefs.HIGHSCORES_LIST_SIZE; i++) {
+            table.row();
+            table.add(new Label((i+1)+": "+list.get(i),skin)).align(Align.left);
+
+        }
+        table.row().pad(PLAYER_DIMEN,0,0,0);
         TextButton btnBack = new TextButton("Back", skin);
         btnBack.addListener(new ClickListener(){
             @Override
@@ -90,18 +76,7 @@ public class SettingsScreen extends ScreenAdapter {
                 game.changeScreen(TamaJumperGame.MENU);
             }
         });
-
-        table.add(new Label("Sound volume",skin)).uniformX();
-        table.row().pad(0,0,PLAYER_DIMEN,0);;
-        table.add(volumeSlider).fillX().uniformX();
-        table.row();
-        table.add(new Label("Control sensitivity",skin)).uniformX();
-        table.row().pad(0,0,PLAYER_DIMEN,0);
-        table.add(sensitivitySlider).fillX().uniformX();
-        table.row();
-
         table.add(btnBack).uniformX();
-
     }
     @Override
     public void dispose() {

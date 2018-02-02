@@ -177,22 +177,6 @@ public class Assets {
 
 
 
-    public void playMusic(){
-        stopMusic();
-        if (AppPreferences.isMusicEnabled()) {
-            int index=1;
-            //index=random.nextInt(musicSounds.size());
-            musicSounds.get(Config.MUSIC_SOUND_INDEX).play();
-
-        }
-    }
-    public void stopMusic(){
-        musicSounds.get(Config.MUSIC_SOUND_INDEX).stop();
-        /*for (int i = 0; i < musicSounds.size(); i++) {
-            if(musicSounds.get(i).isPlaying())
-                musicSounds.get(i).stop();
-        }*/
-    }
 
     private Music addMusic(String path) {
         Music music=Gdx.audio.newMusic(Gdx.files.internal(path));
@@ -208,30 +192,12 @@ public class Assets {
         return music;
     }
 
-    public void playJumpSound(Platform platform){
-        int index;
 
-        //index=random.nextInt(jumpSounds.size());
-        index=Config.JUMP_SOUND_INDEX_DEFAULT;
-        if(platform.canBreak)index=Config.JUMP_SOUND_INDEX_BREAK;
-        else if(platform.type==Config.PLATFORM_TYPE_MOVING){
-            index=Config.JUMP_SOUND_INDEX_MOVING;
-        }
-        if (AppPreferences.isSoundEffectsEnabled())
-            playSound(jumpSounds.get(index));
-    }
-
-
-
-    public void playHighJumpSound() {
-        if (AppPreferences.isSoundEffectsEnabled()){
-            playSound(jumpSounds.get(Config.JUMP_SOUND_INDEX_HIGH));
-        }
-    }
 
 
     public static void playSound (Sound sound) {
-        if (AppPreferences.isSoundEffectsEnabled()) sound.play(1);
+            System.out.println("play sound vol="+Prefs.getSoundVolume());
+            sound.play(Prefs.getSoundVolume());
     }
 
 
