@@ -99,7 +99,8 @@ public class World {
 
         while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
 
-            int type = rand.nextInt(BG_OBJECTS_TYPES_COUNT)+1;
+            int type= rand.nextInt(BG_OBJECTS_TYPES_COUNT)+1;
+
             float size = type;
             if(type==3) size=4;
             float x = rand.nextFloat() * (WORLD_WIDTH - type) + type / 2;
