@@ -58,12 +58,10 @@ public class Assets {
     private static ArrayList<Music> musicSounds;
     private static TextureAtlas atlas;
     private final TamaJumperGame parent;
-    public static final String TAMA1_ATLAS = "atlas/tama1.atlas";
 
     public Assets(TamaJumperGame tamaJumperGame) {
         this.parent=tamaJumperGame;
         load();
-        tama1Atlas = new TextureAtlas(TAMA1_ATLAS);
     }
 
 

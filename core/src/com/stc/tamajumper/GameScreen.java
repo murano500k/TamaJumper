@@ -26,7 +26,7 @@ import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
  * Created by artem on 1/30/18.
  */
 
-class DemoScreen extends ScreenAdapter {
+class GameScreen extends ScreenAdapter {
 
     private static final String MESSAGE_READY = "Ready?";
     private static final String MESSAGE_GAME_OVER = "Game Over";
@@ -67,7 +67,7 @@ class DemoScreen extends ScreenAdapter {
 
 
 
-    public DemoScreen(TamaJumperGame game, int startScore) {
+    public GameScreen(TamaJumperGame game, int startScore) {
         this.game=game;
         rand = new Random();
         touchPoint = new Vector3();
@@ -106,7 +106,7 @@ class DemoScreen extends ScreenAdapter {
     public void render(float delta) {
         super.render(delta);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        Gdx.gl20.glClearColor(2f/255f,8f/255f,36f/255f,1f);
         if(Gdx.input.justTouched()){
                 switch (gameState){
                     case RUNNING:
@@ -122,7 +122,6 @@ class DemoScreen extends ScreenAdapter {
                         return;
                 }
         }
-        System.out.println("state="+gameState);
         switch (gameState){
             case READY:
                 drawMessage(MESSAGE_READY);
@@ -247,36 +246,36 @@ class DemoScreen extends ScreenAdapter {
         enemies = new Group();
 
 
-        while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
-            Platform platform = Platform.generatePlatform(y,rand);
-            platforms.addActor(platform);
+    while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
+        Platform platform = Platform.generatePlatform(y,rand);
+        platforms.addActor(platform);
 
 
 
-            if (y > WORLD_HEIGHT / 5 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
-                Enemy enemy = new Enemy(rand.nextFloat()*(WORLD_WIDTH- Enemy.WIDTH), platform.getY()
-                        + rand.nextFloat() * 2 *Config.PIXELS.PLAYER_DIMEN, rand.nextBoolean());
-                enemies.addActor(enemy);
-            }
-
-            if (platform.getType()== Platform.Type.NORMAL && rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
-                Coin coin = new Coin(platform.getX()+ Coin.WIDTH/2
-                        , platform.getY()+ Platform.HEIGHT);
-                coins.addActor(coin);
-            }
-
-
-
-            y += (maxJumpHeight*0.9f - 0.5f);
-            float levelProgressDifficulty=(WORLD_HEIGHT-y)/WORLD_HEIGHT;
-
-            float randomSeed= rand.nextFloat();
-
-            if(randomSeed<0.5f) randomSeed*=2;
-            else if(randomSeed<0.75f)randomSeed/=1.2f;
-            else randomSeed/=2;
-            y -= (randomSeed) * maxJumpHeight*levelProgressDifficulty;
+        if (y > WORLD_HEIGHT / 5 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
+            Enemy enemy = new Enemy(rand.nextFloat()*(WORLD_WIDTH- Enemy.WIDTH), platform.getY()
+                    + rand.nextFloat() * 2 *Config.PIXELS.PLAYER_DIMEN, rand.nextBoolean());
+            enemies.addActor(enemy);
         }
+
+        if (platform.getType()== Platform.Type.NORMAL && rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
+            Coin coin = new Coin(platform.getX()+ Coin.WIDTH/2
+                    , platform.getY()+ Platform.HEIGHT);
+            coins.addActor(coin);
+        }
+
+
+
+        y += (maxJumpHeight*0.9f - 0.5f);
+        float levelProgressDifficulty=(WORLD_HEIGHT-y)/WORLD_HEIGHT;
+
+        float randomSeed= rand.nextFloat();
+
+        if(randomSeed<0.5f) randomSeed*=2;
+        else if(randomSeed<0.75f)randomSeed/=1.2f;
+        else randomSeed/=2;
+        y -= (randomSeed) * maxJumpHeight*levelProgressDifficulty;
+    }
         levelEnd = new LevelEnd(WORLD_WIDTH / 2, y);
         stage.addActor(platforms);
         stage.addActor(coins);

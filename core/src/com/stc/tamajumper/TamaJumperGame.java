@@ -16,12 +16,13 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	public static final int EXIT = 5;
 	public SpriteBatch batcher;
 	private MenuScreen menuScreen;
-	private DemoScreen gameScreen;
+	private GameScreen gameScreen;
 	private Screen preferencesScreen;
 	private Prefs prefs;
 	private Assets assets;
 	private HighscoresScreen highscoresScreen;
 	private int currentScore=0;
+	private Assets2 assets2;
 
 	@Override
 	public void create () {
@@ -29,7 +30,7 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 
 		prefs=new Prefs();
 		assets=new Assets(this);
-
+		assets2=new Assets2();
 		setScreen(getStartScreen());
 	}
 	public Prefs getPreferences(){
@@ -51,12 +52,12 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 				this.setScreen(new HighscoresScreen(this));
 				break;
 			case GAME:
-				if(gameScreen == null || gameScreen.gameState== DemoScreen.GameState.GAME_OVER){
+				if(gameScreen == null || gameScreen.gameState== GameScreen.GameState.GAME_OVER){
 					currentScore=0;
-				}else if(gameScreen.gameState== DemoScreen.GameState.LEVEL_END){
+				}else if(gameScreen.gameState== GameScreen.GameState.LEVEL_END){
 					currentScore=gameScreen.getCurrentScore();
 				}
-				gameScreen= new DemoScreen(this, currentScore);
+				gameScreen= new GameScreen(this, currentScore);
 				this.setScreen(gameScreen);
 				break;
 			case EXIT:

@@ -19,15 +19,7 @@ public class Coin extends MyActor{
         super(x, y);
         setWidth(WIDTH);
         setHeight(HEIGHT);
-        animation = new Animation(0.2f,
-                Assets.tama1Atlas.createSprite("money-1"),
-                Assets.tama1Atlas.createSprite("money-2"),
-                Assets.tama1Atlas.createSprite("money-3"),
-                Assets.tama1Atlas.createSprite("money-4"),
-                Assets.tama1Atlas.createSprite("money-5"),
-                Assets.tama1Atlas.createSprite("money-6"),
-                Assets.tama1Atlas.createSprite("money-7")
-        );
+        animation = Assets2.animCoin;
     }
 
     @Override

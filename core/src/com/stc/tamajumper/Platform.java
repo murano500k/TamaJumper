@@ -54,6 +54,7 @@ public class Platform extends MyActor {
             return;
         }
 
+
         if (getX() < -getWidth()) setX(WORLD_WIDTH);
         if (getX() > WORLD_WIDTH) setX(-getWidth());
     }
@@ -61,28 +62,30 @@ public class Platform extends MyActor {
     @Override
     public TextureRegion getTexture() {
         if(objectState==ObjectState.DESTROY){
-            return Assets.brakingPlatform.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+            return Assets2.animPlatformBreak.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
         }else {
             switch (type){
                 case MOVING:
-                    return Assets.tama1Atlas.createSprite("platform_motion-");
+                    return Assets2.texturePlatformMoving;
                 case BREAKABLE:
-                    return Assets.tama1Atlas.createSprite("platform_one-off-");
+                    return Assets2.texturePlatformBreakable;
+                case SPRING:
+                    return Assets2.texturePlatformSpring;
                 case NORMAL:
-                default:    
-                    return Assets.tama1Atlas.createSprite("platform_normal-");
+                default:
+                    return Assets2.texturePlatformNormal;
             }
         }
     }
 
     public static Platform generatePlatform(float y, Random random){
-        float x = random.nextFloat() * (WORLD_WIDTH - Platform.WIDTH*2);
-        int seed = random.nextInt(10);
+        float x = random.nextFloat() * (WORLD_WIDTH - Platform.WIDTH*2)+Platform.WIDTH;
+        int seed = random.nextInt(8);
         Type type;
         if(seed==0){
             type=Type.MOVING;
         }else if(seed==1){
-            type=Type.BROKEN;
+            type=Type.BREAKABLE;
         }else if(seed==2){
             type=Type.BREAKABLE;
         }else if(seed==3){

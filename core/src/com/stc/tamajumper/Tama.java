@@ -9,7 +9,6 @@ import java.util.Random;
 
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
 import static com.stc.tamajumper.Platform.Type.BREAKABLE;
-import static com.stc.tamajumper.Platform.Type.BROKEN;
 
 
 /**
@@ -17,11 +16,6 @@ import static com.stc.tamajumper.Platform.Type.BROKEN;
  */
 
 public class Tama extends MyActor {
-    public Animation animProfileJump;
-    public Animation animProfileHighJump;
-    public Animation animFaceDie;
-    public Animation animFaceJump;
-    public Animation animFaceHighJump;
 
 
 
@@ -33,6 +27,10 @@ public class Tama extends MyActor {
     private int score;
     private boolean hasShield=false;
     private MoveByAction currentAction;
+    public static final float MAX_FACE_VELOCITY = 1
+            ;
+            ;
+
 
 
     public enum TamaState {
@@ -52,17 +50,8 @@ public class Tama extends MyActor {
         setHeight(HEIGHT);
         score=startingScore;
         tamaState = TamaState.FALL;
-        initAnimations();
     }
 
-    private void initAnimations(){
-        
-        animProfileJump=initAnimation("person-profile-jump-",7);
-        animProfileHighJump=initAnimation("person-profile-superjump-",7);
-        animFaceJump=initAnimation("person-face-jump-",7);
-        animFaceHighJump=initAnimation("person-face-super-jump-",7);
-        animFaceDie=initAnimation("person-die-",4);
-    }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
@@ -74,30 +63,31 @@ public class Tama extends MyActor {
 
     @Override
     public TextureRegion getTexture() {
-        System.out.println("ax="+Controller.getAccelX()+" state="+tamaState);
-        if(Math.abs(Controller.getAccelX())>2) {
+        boolean isProfile=Math.abs(Controller.getAccelX())>MAX_FACE_VELOCITY;
+
+        if(isProfile) {
             switch (tamaState) {
                 case FALL:
-                    return animProfileJump.getKeyFrame(0, Animation.ANIMATION_LOOPING);
+                    return Assets2.animProfileFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case JUMP:
-                    return animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets2.animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
-                    return animProfileHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets2.animProfileHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIT:
                 default:
-                    return animFaceDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
             }
         }else {
             switch (tamaState) {
                 case FALL:
-                    return animFaceJump.getKeyFrame(0, Animation.ANIMATION_LOOPING);
+                    return Assets2.animFaceFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case JUMP:
-                    return animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets2.animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
-                    return animFaceHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets2.animFaceHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIT:
                 default:
-                    return animFaceDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
             }
         }
     }
@@ -135,7 +125,7 @@ public class Tama extends MyActor {
 
     public void hitPlatform(Platform platform) {
         if(tamaState == TamaState.FALL) {
-            if(platform.getType()==BREAKABLE || platform.getType()==BROKEN) {
+            if(platform.getType()==BREAKABLE) {
                     platform.pulverize();
             }
             if(platform.getType()== Platform.Type.SPRING){
@@ -173,68 +163,4 @@ public class Tama extends MyActor {
         return false;
     }
 
-
-    private Animation initAnimation(String imgName, int i){
-        if(i==7){
-            return new Animation(0.2f,
-                    Assets.tama1Atlas.createSprite(imgName+1),
-                    Assets.tama1Atlas.createSprite(imgName+2),
-                    Assets.tama1Atlas.createSprite(imgName+3),
-                    Assets.tama1Atlas.createSprite(imgName+4),
-                    Assets.tama1Atlas.createSprite(imgName+5),
-                    Assets.tama1Atlas.createSprite(imgName+6),
-                    Assets.tama1Atlas.createSprite(imgName+7)
-            );
-        }else {
-            return new Animation(0.2f,
-                    Assets.tama1Atlas.createSprite(imgName+1),
-                    Assets.tama1Atlas.createSprite(imgName+2),
-                    Assets.tama1Atlas.createSprite(imgName+3),
-                    Assets.tama1Atlas.createSprite(imgName+4)
-            );
-        }
-    }
 }
-/*/home/artem/projects/TamaJumper/android/assets/forArtem/money-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_bad.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_motion-.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_normal-.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_one-off-.png*/
