@@ -21,6 +21,7 @@ public class Platform extends MyActor {
     private static final float PLATFORM_MOVING_SPEED = 2;
     public static final float WIDTH = Config.PIXELS.DOUBLE_DIMEN;
     public static final float HEIGHT = Config.PIXELS.HALF_DIMEN;
+
     public enum Type{
         NORMAL,
         MOVING,
@@ -62,7 +63,15 @@ public class Platform extends MyActor {
         if(objectState==ObjectState.DESTROY){
             return Assets.brakingPlatform.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
         }else {
-            return Assets.platform;
+            switch (type){
+                case MOVING:
+                    return Assets.tama1Atlas.createSprite("platform_motion-");
+                case BREAKABLE:
+                    return Assets.tama1Atlas.createSprite("platform_one-off-");
+                case NORMAL:
+                default:    
+                    return Assets.tama1Atlas.createSprite("platform_normal-");
+            }
         }
     }
 

@@ -19,6 +19,8 @@ public class Assets {
     public static Texture background;
     public static TextureRegion backgroundRegion;
 
+    public static TextureAtlas tama1Atlas;
+
     public static Texture items;
     public static TextureRegion mainMenu;
     public static TextureRegion pauseMenu;
@@ -56,11 +58,14 @@ public class Assets {
     private static ArrayList<Music> musicSounds;
     private static TextureAtlas atlas;
     private final TamaJumperGame parent;
+    public static final String TAMA1_ATLAS = "atlas/tama1.atlas";
 
     public Assets(TamaJumperGame tamaJumperGame) {
         this.parent=tamaJumperGame;
         load();
+        tama1Atlas = new TextureAtlas(TAMA1_ATLAS);
     }
+
 
     public static Texture loadTexture (String file) {
         return new Texture(Gdx.files.internal(file));
