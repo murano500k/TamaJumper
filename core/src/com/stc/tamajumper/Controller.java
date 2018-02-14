@@ -16,8 +16,8 @@ public class Controller {
                 Gdx.app.getType() == Application.ApplicationType.iOS) {
             rawAccelX= Gdx.input.getAccelerometerX();
         } else {
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) rawAccelX = 5f;
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) rawAccelX = -5f;
+            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) rawAccelX = 1f;
+            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) rawAccelX = -1f;
         }
         return rawAccelX* Prefs.getAccelSensitivity();
     }

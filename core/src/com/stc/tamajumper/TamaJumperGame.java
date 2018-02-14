@@ -51,6 +51,9 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 			case HIGHSCORES:
 				this.setScreen(new HighscoresScreen(this));
 				break;
+			case HELP:
+				this.setScreen(new HelpScreen(this));
+				break;
 			case GAME:
 				if(gameScreen == null || gameScreen.gameState== GameScreen.GameState.GAME_OVER){
 					currentScore=0;

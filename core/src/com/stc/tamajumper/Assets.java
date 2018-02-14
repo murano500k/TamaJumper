@@ -199,7 +199,6 @@ public class Assets {
 
 
     public static void playSound (Sound sound) {
-            System.out.println("play sound vol="+Prefs.getSoundVolume());
             sound.play(Prefs.getSoundVolume());
     }
 

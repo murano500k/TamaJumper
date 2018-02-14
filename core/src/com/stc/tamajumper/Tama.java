@@ -20,17 +20,17 @@ public class Tama extends MyActor {
 
 
     public static final float JUMP_VELOCITY = Config.PIXELS.PLAYER_DIMEN *15;
-    public static final float HIGH_JUMP_VELOCITY = JUMP_VELOCITY *1.5f;
+    public static final float HIGH_JUMP_VELOCITY = JUMP_VELOCITY *2f;
     public static final float MOVE_VELOCITY = Config.PIXELS.PLAYER_DIMEN *20;
     public static final float WIDTH = 48 ;
     public static final float HEIGHT = Config.PIXELS.PLAYER_DIMEN;
     private int score;
     private boolean hasShield=false;
     private MoveByAction currentAction;
-    public static final float MAX_FACE_VELOCITY = 1
-            ;
-            ;
-
+    public static final float MAX_FACE_VELOCITY = 4;
+    public static final float MIN_FACE_VELOCITY = 1;
+    private boolean isProfile;
+    private boolean gameStarted=false;
 
 
     public enum TamaState {
@@ -50,6 +50,7 @@ public class Tama extends MyActor {
         setHeight(HEIGHT);
         score=startingScore;
         tamaState = TamaState.FALL;
+        isProfile=false;
     }
 
 
@@ -63,31 +64,35 @@ public class Tama extends MyActor {
 
     @Override
     public TextureRegion getTexture() {
-        boolean isProfile=Math.abs(Controller.getAccelX())>MAX_FACE_VELOCITY;
-
+        if(tamaState==TamaState.HIT){
+            return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+        }
+        if(gameStarted) {
+            if (!isProfile) {
+                isProfile = Math.abs(Controller.getAccelX()) >= MAX_FACE_VELOCITY;
+            } else {
+                isProfile = Math.abs(Controller.getAccelX()) >= MIN_FACE_VELOCITY;
+            }
+        }
         if(isProfile) {
             switch (tamaState) {
                 case FALL:
                     return Assets2.animProfileFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                case JUMP:
-                    return Assets2.animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
                     return Assets2.animProfileHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                case HIT:
+                case JUMP:
                 default:
-                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+                    return Assets2.animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
             }
         }else {
             switch (tamaState) {
                 case FALL:
                     return Assets2.animFaceFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                case JUMP:
-                    return Assets2.animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
                     return Assets2.animFaceHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                case HIT:
+                case JUMP:
                 default:
-                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+                    return Assets2.animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
             }
         }
     }
@@ -95,32 +100,35 @@ public class Tama extends MyActor {
     @Override
     public void act(float deltaTime) {
         super.act(deltaTime);
-        float normalizedAccelX=Controller.getAccelX();
-        if (tamaState != TamaState.HIT && getY() <= 0.5f) hitPlatform(Platform.generatePlatform(0,new Random()));
-        if (tamaState != TamaState.HIT) velocity.x = -normalizedAccelX / 10 * MOVE_VELOCITY;
+        if(gameStarted) {
+            float normalizedAccelX = Controller.getAccelX();
+            if (tamaState != TamaState.HIT && getY() <= 0.5f)
+                hitPlatform(Platform.generatePlatform(0, new Random()));
+            if (tamaState != TamaState.HIT) velocity.x = -normalizedAccelX / 10 * MOVE_VELOCITY;
 
-        velocity.add(Config.GRAVITY.x * deltaTime, Config.GRAVITY.y * deltaTime);
-        currentAction = new MoveByAction();
-        currentAction.setDuration(deltaTime);
-        currentAction.setAmount(velocity.x * deltaTime,velocity.y * deltaTime);
-        addAction(currentAction);
+            velocity.add(Config.GRAVITY.x * deltaTime, Config.GRAVITY.y * deltaTime);
+            currentAction = new MoveByAction();
+            currentAction.setDuration(deltaTime);
+            currentAction.setAmount(velocity.x * deltaTime, velocity.y * deltaTime);
+            addAction(currentAction);
 
-        if (velocity.y > 0 && tamaState != TamaState.HIT) {
-            if (tamaState == TamaState.FALL) {
-                tamaState = TamaState.JUMP;
-                stateTime = 0;
+            if (velocity.y > 0 && tamaState != TamaState.HIT) {
+                if (tamaState == TamaState.FALL) {
+                    tamaState = TamaState.JUMP;
+                    stateTime = 0;
+                }
             }
-        }
 
-        if (velocity.y < 0 && tamaState != TamaState.HIT) {
-            if (tamaState != TamaState.FALL) {
-                tamaState = TamaState.FALL;
-                stateTime = 0;
+            if (velocity.y < 0 && tamaState != TamaState.HIT) {
+                if (tamaState != TamaState.FALL) {
+                    tamaState = TamaState.FALL;
+                    stateTime = 0;
+                }
             }
-        }
 
-        if (getX() < 0) setX(WORLD_WIDTH);
-        if (getX() > WORLD_WIDTH) setX(0);
+            if (getX() < 0) setX(WORLD_WIDTH);
+            if (getX() > WORLD_WIDTH) setX(0);
+        }
     }
 
     public void hitPlatform(Platform platform) {
@@ -134,8 +142,8 @@ public class Tama extends MyActor {
             }else {
                 velocity.y = JUMP_VELOCITY;
                 tamaState = TamaState.JUMP;
-                Assets.playSound(platform.getJumpSound());
             }
+            Assets.playSound(platform.getJumpSound());
             stateTime = 0;
             score++;
         }
@@ -161,6 +169,9 @@ public class Tama extends MyActor {
         tamaState = TamaState.HIT;
         stateTime = 0;
         return false;
+    }
+    public void setGameStarted(boolean val){
+        gameStarted=val;
     }
 
 }

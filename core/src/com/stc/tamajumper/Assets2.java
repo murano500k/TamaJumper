@@ -42,7 +42,7 @@ public class Assets2 {
         animFaceFall=createFallAnim("person-face-jump-");
         animProfileFall=createFallAnim("person-profile-jump-");
 
-        animDie =new Animation(0.5f,
+        animDie =new Animation(0.25f,
                 atlas.createSprite("person-die-1"),
                 atlas.createSprite("person-die-2"),
                 atlas.createSprite("person-die-3"),
@@ -60,13 +60,14 @@ public class Assets2 {
         );
 
         Sprite breakingPlatform1=atlas.createSprite("platform_bad");
+        breakingPlatform1.setAlpha(0.75f);
         Sprite breakingPlatform2=atlas.createSprite("platform_bad");
-        breakingPlatform2.setAlpha(0.75f);
+        breakingPlatform2.setAlpha(0.5f);
         Sprite breakingPlatform3=atlas.createSprite("platform_bad");
-        breakingPlatform3.setAlpha(0.5f);
+        breakingPlatform3.setAlpha(0.34f);
         Sprite breakingPlatform4=atlas.createSprite("platform_bad");
-        breakingPlatform4.setAlpha(0.25f);
-        animPlatformBreak =new Animation(0.15f,
+        breakingPlatform4.setAlpha(0.2f);
+        animPlatformBreak =new Animation(0.1f,
                 breakingPlatform1,
                 breakingPlatform2,
                 breakingPlatform3,

@@ -13,11 +13,11 @@ import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
  */
 
 public class Enemy extends MyActor {
-    private static final float ENEMY_MOVING_SPEED = 2;
-    public static final float WIDTH = PLAYER_DIMEN*1.5f;
+    private static final float ENEMY_MOVING_SPEED = PLAYER_DIMEN*3;
+    public static final float WIDTH = PLAYER_DIMEN*1.25f;
     public static final float HEIGHT = PLAYER_DIMEN;
 
-    public enum Type{
+    public enum Type {
         SQUIRREL
     }
 

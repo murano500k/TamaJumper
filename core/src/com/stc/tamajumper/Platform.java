@@ -18,9 +18,9 @@ public class Platform extends MyActor {
 
 
 
-    private static final float PLATFORM_MOVING_SPEED = 2;
-    public static final float WIDTH = Config.PIXELS.DOUBLE_DIMEN;
-    public static final float HEIGHT = Config.PIXELS.HALF_DIMEN;
+    private static final float PLATFORM_MOVING_SPEED = Config.PIXELS.PLAYER_DIMEN*2;
+    public static final float WIDTH = Config.PIXELS.PLAYER_DIMEN*2;
+    public static final float HEIGHT = Config.PIXELS.PLAYER_DIMEN/3f;
 
     public enum Type{
         NORMAL,
@@ -32,7 +32,7 @@ public class Platform extends MyActor {
 
 
     private Type type;
-    private final Action moveAction;
+    private Action moveAction;
 
 
 
@@ -41,8 +41,8 @@ public class Platform extends MyActor {
         setWidth(WIDTH);
         setHeight(HEIGHT);
         this.type=type;
-        moveAction=ActionManager.initMoveAction(new Random().nextBoolean(), PLATFORM_MOVING_SPEED);
         if(type==Type.MOVING){
+            moveAction=ActionManager.initMoveAction(new Random().nextBoolean(), PLATFORM_MOVING_SPEED);
             addAction(moveAction);
         }
     }
@@ -79,17 +79,16 @@ public class Platform extends MyActor {
     }
 
     public static Platform generatePlatform(float y, Random random){
-        float x = random.nextFloat() * (WORLD_WIDTH - Platform.WIDTH*2)+Platform.WIDTH;
-        int seed = random.nextInt(8);
+
+        float x = random.nextInt((int)(WORLD_WIDTH/Platform.WIDTH)) *Platform.WIDTH;
+        int seed = random.nextInt(5);
         Type type;
         if(seed==0){
             type=Type.MOVING;
         }else if(seed==1){
-            type=Type.BREAKABLE;
+            type=Type.SPRING;
         }else if(seed==2){
             type=Type.BREAKABLE;
-        }else if(seed==3){
-            type=Type.SPRING;
         }else {
             type=Type.NORMAL;
         }

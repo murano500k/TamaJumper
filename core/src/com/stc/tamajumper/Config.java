@@ -63,8 +63,8 @@ public class Config {
     }
 
     public class AccelerometerValues{
-        public static final float MIN_VALUE_SENSITIVITY = 0.5f;
-        public static final float MAX_VALUE_SENSITIVITY = 4f;
-        public static final float DEFAULT_VALUE_SENSITIVITY = 1f;
+        public static final float MIN_VALUE_SENSITIVITY = 1f;
+        public static final float MAX_VALUE_SENSITIVITY = 10f;
+        public static final float DEFAULT_VALUE_SENSITIVITY = 5f;
     }
 }

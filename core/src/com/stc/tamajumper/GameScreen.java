@@ -140,14 +140,19 @@ class GameScreen extends ScreenAdapter {
                 break;
         }
         if(gameState==GameState.RUNNING){
-            stage.act(delta);
+            tama.setGameStarted(true);
             checkCollisions();
             if(tama.getY()>camera.position.y) {
                 camera.position.y=tama.getY();
                 camera.update();
             }
             checkGameOver();
+            stage.act(delta);
+        }else {
+            tama.setGameStarted(false);
+            tama.act(delta);
         }
+
         updateUi();
         stage.draw();
     }
@@ -155,7 +160,7 @@ class GameScreen extends ScreenAdapter {
     private void checkGameOver() {
         heightSoFar = Math.max(tama.getY(), heightSoFar);
         if (heightSoFar - stage.getHeight()/2 > tama.getY()) {
-            gameState=GameState.GAME_OVER;
+            gameOver();
         }
     }
 
@@ -182,20 +187,17 @@ class GameScreen extends ScreenAdapter {
     private void checkCollisions() {
         Platform platform= (Platform) checkActorCollisions(platforms,true);
         if(platform!=null){
-            System.out.println("platform was hit");
             tama.hitPlatform(platform);
         }
 
         Coin coin= (Coin) checkActorCollisions(coins,false);
         if(coin!=null){
-            System.out.println("coin was hit");
             tama.hitCoin(coin);
         }
 
 
         Enemy enemy = (Enemy) checkActorCollisions(enemies,false);
         if(enemy!=null){
-            System.out.println("enemy was hit");
             if(!tama.hitEnemy(enemy)){
                 gameOver();
             }
@@ -238,7 +240,6 @@ class GameScreen extends ScreenAdapter {
 
     private void generateObjects() {
         tama=new Tama(stage.getWidth()/2,stage.getHeight()/2,startingScore);
-        stage.addActor(tama);
         float y = Platform.HEIGHT / 2;
         float maxJumpHeight = Tama.JUMP_VELOCITY * Tama.JUMP_VELOCITY / (2 * -Config.GRAVITY.y);
         platforms = new Group();
@@ -252,7 +253,7 @@ class GameScreen extends ScreenAdapter {
 
 
 
-        if (y > WORLD_HEIGHT / 5 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
+        if (/*y > WORLD_HEIGHT / 5 && */rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
             Enemy enemy = new Enemy(rand.nextFloat()*(WORLD_WIDTH- Enemy.WIDTH), platform.getY()
                     + rand.nextFloat() * 2 *Config.PIXELS.PLAYER_DIMEN, rand.nextBoolean());
             enemies.addActor(enemy);
@@ -266,7 +267,7 @@ class GameScreen extends ScreenAdapter {
 
 
 
-        y += (maxJumpHeight*0.9f - 0.5f);
+        y += (maxJumpHeight*0.8f - 0.5f);
         float levelProgressDifficulty=(WORLD_HEIGHT-y)/WORLD_HEIGHT;
 
         float randomSeed= rand.nextFloat();
@@ -281,6 +282,7 @@ class GameScreen extends ScreenAdapter {
         stage.addActor(coins);
         stage.addActor(enemies);
         stage.addActor(levelEnd);
+        stage.addActor(tama);
 
     }
 
