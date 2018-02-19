@@ -1,8 +1,11 @@
 package com.stc.tamajumper;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets2 {
     public static final String TAMA1_ATLAS = "atlas/tama1.atlas";
@@ -14,13 +17,17 @@ public class Assets2 {
     public static Animation animFaceJump;
     public static Animation animFaceHighJump;
     public static Animation animFaceFall;
+    public static Animation animFaceHighFall;
     public static Animation animProfileFall;
+    public static Animation animProfileHighFall;
     public static Animation animCoin;
     public static Sprite texturePlatformNormal;
     public static Sprite texturePlatformMoving;
     public static Sprite texturePlatformBreakable;
     public static Sprite texturePlatformSpring;
     public static Animation animPlatformBreak;
+    public static TextureRegion textureKon6;
+    public static Sprite textureMenuBg;
 
     public Assets2() {
         load();
@@ -40,7 +47,10 @@ public class Assets2 {
         animFaceHighJump=createHighJumpAnim("person-face-super-jump-");
 
         animFaceFall=createFallAnim("person-face-jump-");
+        animFaceHighFall=createFallAnim("person-face-super-jump-");
+
         animProfileFall=createFallAnim("person-profile-jump-");
+        animProfileHighFall=createFallAnim("person-profile-superjump-");
 
         animDie =new Animation(0.25f,
                 atlas.createSprite("person-die-1"),
@@ -111,6 +121,11 @@ public class Assets2 {
         texturePlatformNormal=atlas.createSprite("platform_normal-");
         texturePlatformSpring=atlas.createSprite("platform_one-off-");
         texturePlatformBreakable=atlas.createSprite("platform_bad");
+        textureKon6=new TextureRegion(new Texture( Gdx.files.internal("data/kon.png")));
+        textureMenuBg=new Sprite(new Texture( Gdx.files.internal("data/bg.jpg")));
+
+        textureMenuBg.setAlpha(0.5f);
+
     }
 
 

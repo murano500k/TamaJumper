@@ -32,11 +32,16 @@ public class Tama extends MyActor {
     private boolean isProfile;
     private boolean gameStarted=false;
 
+    public void setGameStarted(boolean b) {
+        gameStarted=b;
+    }
+
 
     public enum TamaState {
         JUMP,
         HIGHJUMP,
         FALL,
+        HIGHFALL,
         HIT
     }
     public TamaState tamaState;
@@ -50,7 +55,6 @@ public class Tama extends MyActor {
         setHeight(HEIGHT);
         score=startingScore;
         tamaState = TamaState.FALL;
-        isProfile=false;
     }
 
 
@@ -78,21 +82,29 @@ public class Tama extends MyActor {
             switch (tamaState) {
                 case FALL:
                     return Assets2.animProfileFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                case HIGHFALL:
+                    return Assets2.animProfileHighFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                case JUMP:
+                    return Assets2.animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
                     return Assets2.animProfileHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                case JUMP:
+                case HIT:
                 default:
-                    return Assets2.animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
             }
         }else {
             switch (tamaState) {
                 case FALL:
                     return Assets2.animFaceFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                case HIGHFALL:
+                    return Assets2.animFaceHighFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                case JUMP:
+                    return Assets2.animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
                     return Assets2.animFaceHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
-                case JUMP:
+                case HIT:
                 default:
-                    return Assets2.animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
             }
         }
     }
@@ -106,25 +118,29 @@ public class Tama extends MyActor {
                 hitPlatform(Platform.generatePlatform(0, new Random()));
             if (tamaState != TamaState.HIT) velocity.x = -normalizedAccelX / 10 * MOVE_VELOCITY;
 
-            velocity.add(Config.GRAVITY.x * deltaTime, Config.GRAVITY.y * deltaTime);
-            currentAction = new MoveByAction();
-            currentAction.setDuration(deltaTime);
-            currentAction.setAmount(velocity.x * deltaTime, velocity.y * deltaTime);
-            addAction(currentAction);
+        velocity.add(Config.GRAVITY.x * deltaTime, Config.GRAVITY.y * deltaTime);
+        currentAction = new MoveByAction();
+        currentAction.setDuration(deltaTime);
+        currentAction.setAmount(velocity.x * deltaTime,velocity.y * deltaTime);
+        addAction(currentAction);
 
-            if (velocity.y > 0 && tamaState != TamaState.HIT) {
-                if (tamaState == TamaState.FALL) {
-                    tamaState = TamaState.JUMP;
-                    stateTime = 0;
-                }
+        if (velocity.y > 0 && tamaState != TamaState.HIT) {
+            if (tamaState == TamaState.FALL ||
+                    tamaState == TamaState.HIGHFALL) {
+                tamaState = TamaState.JUMP;
+                stateTime = 0;
             }
+        }
 
-            if (velocity.y < 0 && tamaState != TamaState.HIT) {
-                if (tamaState != TamaState.FALL) {
-                    tamaState = TamaState.FALL;
-                    stateTime = 0;
-                }
+        if (velocity.y < 0 && tamaState != TamaState.HIT) {
+            if(tamaState==TamaState.JUMP) {
+                tamaState=TamaState.FALL;
+                stateTime=0;
+            }else if(tamaState==TamaState.HIGHJUMP) {
+                tamaState=TamaState.HIGHFALL;
+                stateTime=0;
             }
+        }
 
             if (getX() < 0) setX(WORLD_WIDTH);
             if (getX() > WORLD_WIDTH) setX(0);
@@ -132,7 +148,7 @@ public class Tama extends MyActor {
     }
 
     public void hitPlatform(Platform platform) {
-        if(tamaState == TamaState.FALL) {
+        if(tamaState == TamaState.FALL || tamaState == TamaState.HIGHFALL) {
             if(platform.getType()==BREAKABLE) {
                     platform.pulverize();
             }
@@ -169,9 +185,6 @@ public class Tama extends MyActor {
         tamaState = TamaState.HIT;
         stateTime = 0;
         return false;
-    }
-    public void setGameStarted(boolean val){
-        gameStarted=val;
     }
 
 }

@@ -83,10 +83,6 @@ public class Assets {
     }
     public void load () {
         loadSounds();
-        background = loadTexture("data/bg.png");
-        backgroundRegionMenu = new TextureRegion(background, 0, 0, 650,1067);
-        backgroundRegion = new TextureRegion(background, 0, 0,100,100);
-
         bgObjectsMedium= new ArrayList<>();
         bgObjectsLarge= new ArrayList<>();
 

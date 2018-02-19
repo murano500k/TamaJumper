@@ -1,6 +1,7 @@
 package com.stc.tamajumper;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -107,7 +108,7 @@ class GameScreen extends ScreenAdapter {
         super.render(delta);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl20.glClearColor(2f/255f,8f/255f,36f/255f,1f);
-        if(Gdx.input.justTouched()){
+        if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
                 switch (gameState){
                     case RUNNING:
                         break;
@@ -202,8 +203,10 @@ class GameScreen extends ScreenAdapter {
                 gameOver();
             }
         }
+
         if(checkActorCollisions(levelEnd,false)!=null){
             gameState=GameState.LEVEL_END;
+            game.changeScreen(TamaJumperGame.WIN);
         }
 
     }
@@ -277,7 +280,7 @@ class GameScreen extends ScreenAdapter {
         else randomSeed/=2;
         y -= (randomSeed) * maxJumpHeight*levelProgressDifficulty;
     }
-        levelEnd = new LevelEnd(WORLD_WIDTH / 2, y);
+        levelEnd = new LevelEnd(WORLD_WIDTH / 2, y/4);
         stage.addActor(platforms);
         stage.addActor(coins);
         stage.addActor(enemies);
