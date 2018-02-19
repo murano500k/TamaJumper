@@ -18,7 +18,7 @@ public class Platform extends MyActor {
 
 
 
-    private static final float PLATFORM_MOVING_SPEED = Config.PIXELS.PLAYER_DIMEN*2;
+    private static final float PLATFORM_MOVING_SPEED = Config.PIXELS.PLAYER_DIMEN*2 ;
     public static final float WIDTH = Config.PIXELS.PLAYER_DIMEN*2;
     public static final float HEIGHT = Config.PIXELS.PLAYER_DIMEN/3f;
 

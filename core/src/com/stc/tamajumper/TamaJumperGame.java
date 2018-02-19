@@ -14,6 +14,7 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	public static final int HELP = 3;
 	public static final int HIGHSCORES = 4;
 	public static final int EXIT = 5;
+	public static final int WIN = 6;
 	public SpriteBatch batcher;
 	private MenuScreen menuScreen;
 	private GameScreen gameScreen;
@@ -47,6 +48,9 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 				break;
 			case PREFERENCES:
 				this.setScreen(new SettingsScreen(this));
+				break;
+			case WIN:
+				this.setScreen(new WinScreen(this));
 				break;
 			case HIGHSCORES:
 				this.setScreen(new HighscoresScreen(this));
