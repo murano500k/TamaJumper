@@ -15,7 +15,7 @@ public class ActionManager {
         float duration=WORLD_WIDTH*2/speed;
         MoveByAction moveByAction = new MoveByAction();
         moveByAction.setDuration(duration);
-        moveByAction.setAmountX(WORLD_WIDTH*2);
+        moveByAction.setAmountX(WORLD_WIDTH*1.5f);
         moveByAction.setReverse(reverse);
         RepeatAction repeatAction=new RepeatAction();
         repeatAction.setAction(moveByAction);

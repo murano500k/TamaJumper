@@ -37,6 +37,7 @@ class GameScreen extends ScreenAdapter {
     private Label message;
     private TextButton btnPause;
     private LevelEnd levelEnd;
+    private BackStage backStage;
 
     public int getCurrentScore() {
         return tama.getScore();
@@ -84,9 +85,11 @@ class GameScreen extends ScreenAdapter {
         camera.position.set(VIEWPORT_WIDTH/ 2, VIEWPORT_HEIGHT / 2, 0);
         viewport =new FillViewport(VIEWPORT_WIDTH,VIEWPORT_HEIGHT, camera);
         stage=new MyStage( viewport, game);
+        backStage=new BackStage(viewport,game);
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchBackKey(true);
         generateObjects();
+        backStage.generateObjects();
         btnPause=new TextButton("Pause", skin);
         btnPause.setWidth(Platform.WIDTH);
         btnPause.addListener(new ClickListener(){
@@ -149,12 +152,14 @@ class GameScreen extends ScreenAdapter {
             }
             checkGameOver();
             stage.act(delta);
+            backStage.act(delta);
         }else {
             tama.setGameStarted(false);
             tama.act(delta);
         }
 
         updateUi();
+        backStage.draw();
         stage.draw();
     }
 
@@ -238,6 +243,7 @@ class GameScreen extends ScreenAdapter {
     public void dispose() {
         super.dispose();
         stage.dispose();
+        backStage.dispose();
     }
 
 
@@ -256,15 +262,13 @@ class GameScreen extends ScreenAdapter {
 
 
 
-        if (/*y > WORLD_HEIGHT / 5 && */rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
-            Enemy enemy = new Enemy(rand.nextFloat()*(WORLD_WIDTH- Enemy.WIDTH), platform.getY()
-                    + rand.nextFloat() * 2 *Config.PIXELS.PLAYER_DIMEN, rand.nextBoolean());
+        if (y > WORLD_HEIGHT / 10 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
+            Enemy enemy = new Enemy(platform.getX()+ Enemy.WIDTH/2,
+                    platform.getY()+ Platform.HEIGHT, rand.nextBoolean(),Enemy.getRandomType());
             enemies.addActor(enemy);
-        }
-
-        if (platform.getType()== Platform.Type.NORMAL && rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
+        }else if (platform.getType()== Platform.Type.NORMAL && rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
             Coin coin = new Coin(platform.getX()+ Coin.WIDTH/2
-                    , platform.getY()+ Platform.HEIGHT);
+                    , platform.getY()+ Platform.HEIGHT,Coin.getRandomScore());
             coins.addActor(coin);
         }
 

@@ -44,7 +44,7 @@ public class Config {
     public static final int JUMP_SOUND_INDEX_HIGH = 5;
     public static final int JUMP_SOUND_INDEX_MOVING = 1;
     public static final float PLATFORM_RATIO_MOVING_TO_STATIC = 0.8f;
-    public static final float ENEMY_GENERATION_PROBABILITY = 0.1f;
+    public static final float ENEMY_GENERATION_PROBABILITY = 0.05f;
     public static final float SPRING_GENERATION_PROBABILITY = 0.3f;
     public static final float COIN_GENERATION_PROBABILITY = 0.4f;
     public static final int MUSIC_SOUND_INDEX = 1;

@@ -7,8 +7,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.stc.tamajumper.Coin.COIN_GOLD_SCORE;
+import static com.stc.tamajumper.Coin.COIN_RED_SCORE;
+import static com.stc.tamajumper.Coin.COIN_SCORE;
+
 public class Assets2 {
-    public static final String TAMA1_ATLAS = "atlas/tama1.atlas";
+    public static final String TAMA1_ATLAS = "atlas/new.atlas";
     public static TextureAtlas atlas;
 
     public static Animation animProfileJump;
@@ -20,7 +27,8 @@ public class Assets2 {
     public static Animation animFaceHighFall;
     public static Animation animProfileFall;
     public static Animation animProfileHighFall;
-    public static Animation animCoin;
+    public static Animation animCoin, animCoinRed, animCoinGold;
+    public static Animation animEnemyFlower, animEnemyUfo, animEnemyOctopus;
     public static Sprite texturePlatformNormal;
     public static Sprite texturePlatformMoving;
     public static Sprite texturePlatformBreakable;
@@ -28,6 +36,7 @@ public class Assets2 {
     public static Animation animPlatformBreak;
     public static TextureRegion textureKon6;
     public static Sprite textureMenuBg;
+    public static List<Sprite> bgObjects;
 
     public Assets2() {
         load();
@@ -40,6 +49,8 @@ public class Assets2 {
     }
 
     private static void initAnimations(){
+        initCoins();
+        initEnemies();
         animProfileJump=createJumpAnim("person-profile-jump-");
         animProfileHighJump=createHighJumpAnim("person-profile-superjump-");
 
@@ -59,15 +70,7 @@ public class Assets2 {
                 atlas.createSprite("person-die-4")
         );
 
-        animCoin=new Animation(0.14f,
-                atlas.createSprite("money-1"),
-                atlas.createSprite("money-2"),
-                atlas.createSprite("money-3"),
-                atlas.createSprite("money-4"),
-                atlas.createSprite("money-5"),
-                atlas.createSprite("money-6"),
-                atlas.createSprite("money-7")
-        );
+
 
         Sprite breakingPlatform1=atlas.createSprite("platform_bad");
         breakingPlatform1.setAlpha(0.75f);
@@ -125,55 +128,133 @@ public class Assets2 {
         textureMenuBg=new Sprite(new Texture( Gdx.files.internal("data/bg.jpg")));
 
         textureMenuBg.setAlpha(0.5f);
+        initBgTextures();
+    }
 
+    private static void initBgTextures(){
+        bgObjects=new ArrayList<>();
+        bgObjects.add(atlas.createSprite("planet-1.1"));
+        bgObjects.add(atlas.createSprite("planet-1.2"));
+        bgObjects.add(atlas.createSprite("planet-1"));
+        bgObjects.add(atlas.createSprite("planet-2.1"));
+        bgObjects.add(atlas.createSprite("planet-2"));
+        bgObjects.add(atlas.createSprite("planet-3.1"));
+        bgObjects.add(atlas.createSprite("planet-3"));
+        bgObjects.add(atlas.createSprite("planet-4.1"));
+        bgObjects.add(atlas.createSprite("planet-4"));
+        bgObjects.add(atlas.createSprite("planet-5.1"));
+        bgObjects.add(atlas.createSprite("planet-5"));
+        bgObjects.add(atlas.createSprite("star-1(2)"));
+        bgObjects.add(atlas.createSprite("star-1(4)"));
+        bgObjects.add(atlas.createSprite("star-1(6)"));
+        bgObjects.add(atlas.createSprite("star-1(8)"));
+        bgObjects.add(atlas.createSprite("star-1(12)"));
+        bgObjects.add(atlas.createSprite("star-1(14)"));
+        bgObjects.add(atlas.createSprite("star-1(16)"));
+        bgObjects.add(atlas.createSprite("star-1(24)"));
+        bgObjects.add(atlas.createSprite("star-1(32)"));
+        bgObjects.add(atlas.createSprite("platform_motion-"));
+
+
+    }
+
+    private static  void initCoins(){
+        animCoin=new Animation(0.14f,
+                atlas.createSprite("money-1"),
+                atlas.createSprite("money-2"),
+                atlas.createSprite("money-3"),
+                atlas.createSprite("money-4"),
+                atlas.createSprite("money-5"),
+                atlas.createSprite("money-6"),
+                atlas.createSprite("money-7")
+        );
+        animCoinRed=new Animation(0.14f,
+                atlas.createSprite("money(2)-1"),
+                atlas.createSprite("money(2)-2"),
+                atlas.createSprite("money(2)-3"),
+                atlas.createSprite("money(2)-4"),
+                atlas.createSprite("money(2)-5"),
+                atlas.createSprite("money(2)-6"),
+                atlas.createSprite("money(2)-7")
+        );
+        animCoinGold=new Animation(0.14f,
+                atlas.createSprite("money(3)-1"),
+                atlas.createSprite("money(3)-2"),
+                atlas.createSprite("money(3)-3"),
+                atlas.createSprite("money(3)-4"),
+                atlas.createSprite("money(3)-5"),
+                atlas.createSprite("money(3)-6")
+        );
+    }
+
+
+    public static Animation getCoinAnim(int score) {
+        switch (score){
+            case COIN_RED_SCORE:
+                return animCoinRed;
+            case COIN_GOLD_SCORE:
+                return animCoinGold;
+            case COIN_SCORE:
+            default:
+                return animCoin;
+        }
+    }
+
+    public static Animation getEnemyAnim(Enemy.Type type) {
+        switch (type){
+            case OCTOPUS:
+                return animEnemyOctopus;
+            case FLOWER:
+                return animEnemyFlower;
+            case UFO:
+            default:
+                return animEnemyUfo;
+        }
+    }
+
+
+    private static  void initEnemies(){
+        animEnemyUfo=new Animation(0.14f,
+                atlas.createSprite("enemy-1"),
+                atlas.createSprite("enemy-2"),
+                atlas.createSprite("enemy-3"),
+                atlas.createSprite("enemy-4"),
+                atlas.createSprite("enemy-5"),
+                atlas.createSprite("enemy-6"),
+                atlas.createSprite("enemy-7"),
+                atlas.createSprite("enemy-8")
+        );
+        animEnemyOctopus=new Animation(0.14f,
+                atlas.createSprite("enemy(2)-1"),
+                atlas.createSprite("enemy(2)-2"),
+                atlas.createSprite("enemy(2)-3"),
+                atlas.createSprite("enemy(2)-4"),
+                atlas.createSprite("enemy(2)-5"),
+                atlas.createSprite("enemy(2)-6"),
+                atlas.createSprite("enemy(2)-7")
+        );
+        animEnemyFlower=new Animation(0.14f,
+                atlas.createSprite("enemy(3)-1"),
+                atlas.createSprite("enemy(3)-2"),
+                atlas.createSprite("enemy(3)-3"),
+                atlas.createSprite("enemy(3)-4"),
+                atlas.createSprite("enemy(3)-5"),
+                atlas.createSprite("enemy(3)-6"),
+                atlas.createSprite("enemy(3)-7")
+        );
     }
 
 
 
+    public static TextureRegion getBgObjectTexture(int type) {
+        if(type>=bgObjects.size()){
+            type-=bgObjects.size();
+        }
+        return bgObjects.get(type);
+    }
 
 }
 
+/*
 
-/*/home/artem/projects/TamaJumper/android/assets/forArtem/money-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/money-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-die-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-jump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-face-super-jump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-jump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-1.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-2.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-3.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-4.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-5.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-6.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/person-profile-superjump-7.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_bad.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_motion-.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_normal-.png
-/home/artem/projects/TamaJumper/android/assets/forArtem/platform_one-off-.png*/
+*/

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
+import java.util.Random;
+
 import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
 
@@ -13,28 +15,41 @@ import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
  */
 
 public class Enemy extends MyActor {
-    private static final float ENEMY_MOVING_SPEED = PLAYER_DIMEN*3;
+    private static final float ENEMY_MOVING_SPEED = PLAYER_DIMEN*2;
     public static final float WIDTH = PLAYER_DIMEN*1.25f;
     public static final float HEIGHT = PLAYER_DIMEN;
 
     public enum Type {
-        SQUIRREL
+        OCTOPUS,
+        FLOWER,
+        UFO
     }
 
 
     private Type type;
 
-    private final Action moveAction;
+    private Action moveAction;
     private final boolean reversed;
 
+    public static Type getRandomType(){
+        Type type;
+        int intType = new Random().nextInt(3);
+        if(intType==0) type=Type.OCTOPUS;
+        else if(intType==1) type=Type.FLOWER;
+        else type=Type.UFO;
+        return type;
+    }
 
-    public Enemy(float x, float y, boolean reversed) {
+    public Enemy(float x, float y, boolean reversed, Type type) {
         super(x, y);
         this.reversed=reversed;
+        this.type=type;
         setWidth(WIDTH);
         setHeight(HEIGHT);
-        moveAction=ActionManager.initMoveAction(reversed,ENEMY_MOVING_SPEED);
-        addAction(moveAction);
+        if(type!=Type.FLOWER) {
+            moveAction = ActionManager.initMoveAction(reversed, ENEMY_MOVING_SPEED);
+            addAction(moveAction);
+        }
     }
 
     @Override
@@ -55,6 +70,6 @@ public class Enemy extends MyActor {
     }
     @Override
     public TextureRegion getTexture() {
-        return Assets.squirrelFly.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+        return Assets2.getEnemyAnim(type).getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
     }
 }
