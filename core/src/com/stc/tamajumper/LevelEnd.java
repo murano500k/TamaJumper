@@ -10,8 +10,8 @@ import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
 
 public class LevelEnd extends MyActor{
 
-    public static final float WIDTH = PLAYER_DIMEN*2;
-    public static final float HEIGHT = PLAYER_DIMEN*2;
+    public static final float WIDTH = PLAYER_DIMEN*4;
+    public static final float HEIGHT = PLAYER_DIMEN*4;
 
 
     public LevelEnd(float x, float y) {

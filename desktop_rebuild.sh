@@ -2,4 +2,4 @@
 
 GAMEDIR="/home/artem/projects/TamaJumper"
 $GAMEDIR/gradlew desktop:dist
-java -jar $GAMEDIR/desktop/build/libs/desktop-1.0.jar
+java -jar $GAMEDIR/desktop/build/libs/desktop-1.3t .jar

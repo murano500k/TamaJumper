@@ -10,7 +10,7 @@ import java.util.Random;
 import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
 import static com.stc.tamajumper.Config.PIXELS.WORLD_WIDTH;
 
-public class BgObject extends MyActor {
+public class BgPlanet extends MyActor {
     private static final float BG_DEFAULT_MOVING_SPEED = PLAYER_DIMEN*2;
 
     public  final int type;
@@ -19,22 +19,21 @@ public class BgObject extends MyActor {
     private final boolean reversed;
 
 
-    public static BgObject createBgObject(float y){
+    public static BgPlanet createBgPlanet(float y){
         Random r= new Random();
-        int type= r.nextInt(Assets2.bgObjects.size());
-        float width = Assets2.getBgObjectTexture(type).getRegionWidth();
-        float x = r.nextInt((int)(WORLD_WIDTH/width)) *width;
-        return new BgObject(x,y,type, r.nextBoolean());
+        int type= r.nextInt(Assets2.bgPlanets.size());
+        float x = r.nextInt((int)WORLD_WIDTH);
+        return new BgPlanet(x,y,type, r.nextBoolean());
     }
 
-    public BgObject(float x, float y, int type, boolean reversed) {
+    public BgPlanet(float x, float y, int type, boolean reversed) {
         super(x, y);
         this.reversed=reversed;
         this.type=type;
         setWidth(getTexture().getRegionWidth());
         setHeight(getTexture().getRegionHeight());
         moveAction = ActionManager.initMoveAction(reversed,
-                BG_DEFAULT_MOVING_SPEED * (Assets2.bgObjects.size()-type)/Assets2.bgObjects.size());
+                BG_DEFAULT_MOVING_SPEED * (Assets2.bgPlanets.size()-type)/Assets2.bgPlanets.size());
         addAction(moveAction);
     }
 
@@ -57,7 +56,7 @@ public class BgObject extends MyActor {
 
     @Override
     public TextureRegion getTexture() {
-        return Assets2.getBgObjectTexture(type);
+        return Assets2.getBgPlanetTexture(type);
     }
 
 }

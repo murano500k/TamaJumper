@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -37,7 +36,6 @@ class GameScreen extends ScreenAdapter {
     private Label message;
     private TextButton btnPause;
     private LevelEnd levelEnd;
-    private BackStage backStage;
 
     public int getCurrentScore() {
         return tama.getScore();
@@ -54,8 +52,8 @@ class GameScreen extends ScreenAdapter {
     public GameState gameState;
     private final Skin skin;
     private final TamaJumperGame game;
-    private final Vector3 touchPoint;
     private MyStage stage;
+    private BackStage backStage;
     private OrthographicCamera camera;
     private Viewport viewport;
     public final Random rand;
@@ -72,7 +70,6 @@ class GameScreen extends ScreenAdapter {
     public GameScreen(TamaJumperGame game, int startScore) {
         this.game=game;
         rand = new Random();
-        touchPoint = new Vector3();
         skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
         startingScore=startScore;
     }
@@ -284,7 +281,7 @@ class GameScreen extends ScreenAdapter {
         else randomSeed/=2;
         y -= (randomSeed) * maxJumpHeight*levelProgressDifficulty;
     }
-        levelEnd = new LevelEnd(WORLD_WIDTH / 2, y/4);
+        levelEnd = new LevelEnd(WORLD_WIDTH / 2, y+maxJumpHeight*0.8f);
         stage.addActor(platforms);
         stage.addActor(coins);
         stage.addActor(enemies);

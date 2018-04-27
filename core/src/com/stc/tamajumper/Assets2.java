@@ -36,7 +36,8 @@ public class Assets2 {
     public static Animation animPlatformBreak;
     public static TextureRegion textureKon6;
     public static Sprite textureMenuBg;
-    public static List<Sprite> bgObjects;
+    public static List<Sprite> bgPlanets;
+    public static List<Sprite> bgStars;
 
     public Assets2() {
         load();
@@ -132,28 +133,28 @@ public class Assets2 {
     }
 
     private static void initBgTextures(){
-        bgObjects=new ArrayList<>();
-        bgObjects.add(atlas.createSprite("planet-1.1"));
-        bgObjects.add(atlas.createSprite("planet-1.2"));
-        bgObjects.add(atlas.createSprite("planet-1"));
-        bgObjects.add(atlas.createSprite("planet-2.1"));
-        bgObjects.add(atlas.createSprite("planet-2"));
-        bgObjects.add(atlas.createSprite("planet-3.1"));
-        bgObjects.add(atlas.createSprite("planet-3"));
-        bgObjects.add(atlas.createSprite("planet-4.1"));
-        bgObjects.add(atlas.createSprite("planet-4"));
-        bgObjects.add(atlas.createSprite("planet-5.1"));
-        bgObjects.add(atlas.createSprite("planet-5"));
-        bgObjects.add(atlas.createSprite("star-1(2)"));
-        bgObjects.add(atlas.createSprite("star-1(4)"));
-        bgObjects.add(atlas.createSprite("star-1(6)"));
-        bgObjects.add(atlas.createSprite("star-1(8)"));
-        bgObjects.add(atlas.createSprite("star-1(12)"));
-        bgObjects.add(atlas.createSprite("star-1(14)"));
-        bgObjects.add(atlas.createSprite("star-1(16)"));
-        bgObjects.add(atlas.createSprite("star-1(24)"));
-        bgObjects.add(atlas.createSprite("star-1(32)"));
-        bgObjects.add(atlas.createSprite("platform_motion-"));
+        bgPlanets =new ArrayList<>();
+        bgStars =new ArrayList<>();
+        bgPlanets.add(atlas.createSprite("planet-1.1"));
+        bgPlanets.add(atlas.createSprite("planet-1.2"));
+        bgPlanets.add(atlas.createSprite("planet-1"));
+        bgPlanets.add(atlas.createSprite("planet-2.1"));
+        bgPlanets.add(atlas.createSprite("planet-2"));
+        bgPlanets.add(atlas.createSprite("planet-3.1"));
+        bgPlanets.add(atlas.createSprite("planet-3"));
+        bgPlanets.add(atlas.createSprite("planet-4.1"));
+        bgPlanets.add(atlas.createSprite("planet-4"));
+        bgPlanets.add(atlas.createSprite("planet-5.1"));
+        bgPlanets.add(atlas.createSprite("planet-5"));
+        bgStars.add(atlas.createSprite("star-1(2)"));
+        bgStars.add(atlas.createSprite("star-1(4)"));
+        bgStars.add(atlas.createSprite("star-1(6)"));
+        bgStars.add(atlas.createSprite("star-1(8)"));
+        bgStars.add(atlas.createSprite("star-1(12)"));
+        bgStars.add(atlas.createSprite("star-1(14)"));
+        bgStars.add(atlas.createSprite("star-1(16)"));
+        bgStars.add(atlas.createSprite("star-1(24)"));
+        bgStars.add(atlas.createSprite("star-1(32)"));
 
 
     }
@@ -246,11 +247,18 @@ public class Assets2 {
 
 
 
-    public static TextureRegion getBgObjectTexture(int type) {
-        if(type>=bgObjects.size()){
-            type-=bgObjects.size();
+    public static TextureRegion getBgPlanetTexture(int type) {
+        if(type>= bgPlanets.size()){
+            type-= bgPlanets.size();
         }
-        return bgObjects.get(type);
+        return bgPlanets.get(type);
+    }
+
+    public static TextureRegion getBgStarTexture(int type) {
+        if(type>= bgStars.size()){
+            type-= bgStars.size();
+        }
+        return bgStars.get(type);
     }
 
 }
