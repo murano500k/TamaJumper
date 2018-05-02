@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static com.stc.tamajumper.Config.PIXELS.WORLD_HEIGHT;
@@ -36,6 +38,7 @@ class GameScreen extends ScreenAdapter {
     private Label message;
     private TextButton btnPause;
     private LevelEnd levelEnd;
+    private List<Octopus> octopuses;
 
     public int getCurrentScore() {
         return tama.getScore();
@@ -188,27 +191,33 @@ class GameScreen extends ScreenAdapter {
     }
 
     private void checkCollisions() {
-        Platform platform= (Platform) checkActorCollisions(platforms,true);
+        Platform platform= (Platform) checkTamaCollisions(platforms,true);
         if(platform!=null){
             tama.hitPlatform(platform);
         }
 
-        Coin coin= (Coin) checkActorCollisions(coins,false);
+        Coin coin= (Coin) checkTamaCollisions(coins,false);
         if(coin!=null){
             tama.hitCoin(coin);
         }
 
 
-        Enemy enemy = (Enemy) checkActorCollisions(enemies,false);
+        SmartEnemy enemy = (SmartEnemy) checkTamaCollisions(enemies,false);
         if(enemy!=null){
             if(!tama.hitEnemy(enemy)){
                 gameOver();
             }
         }
 
-        if(checkActorCollisions(levelEnd,false)!=null){
+        if(checkTamaCollisions(levelEnd,false)!=null){
             gameState=GameState.LEVEL_END;
             game.changeScreen(TamaJumperGame.WIN);
+        }
+
+        for(Octopus octopus : octopuses){
+            if(checkActorCollisions(octopus,platforms,true)!=null){
+                octopus.hitPlatform();
+            }
         }
 
     }
@@ -219,20 +228,25 @@ class GameScreen extends ScreenAdapter {
 
     }
 
-    private Actor checkActorCollisions(Actor actor, boolean legsOnly){
-        Actor hitActor = actor.hit(tama.getRight(),tama.getTop() - tama.getHeight(),false);
+    private Actor checkActorCollisions(Actor testActor, Actor actor, boolean legsOnly){
+        Actor hitActor = actor.hit(testActor.getRight(),testActor.getTop() - testActor.getHeight(),false);
         if(hitActor==null) {
-            hitActor = actor.hit(tama.getRight()-tama.getWidth(),tama.getTop() - tama.getHeight(),false);
+            hitActor = actor.hit(testActor.getRight()-testActor.getWidth(),testActor.getTop() - testActor.getHeight(),false);
         }
         if(!legsOnly) {
             if (hitActor == null) {
-                hitActor = actor.hit(tama.getRight() - tama.getWidth(), tama.getTop(), false);
+                hitActor = actor.hit(testActor.getRight() - testActor.getWidth(), testActor.getTop(), false);
             }
             if (hitActor == null) {
-                hitActor = actor.hit(tama.getRight(), tama.getTop(), false);
+                hitActor = actor.hit(testActor.getRight(), testActor.getTop(), false);
             }
         }
         return hitActor;
+    }
+
+
+    private Actor checkTamaCollisions(Actor actor, boolean legsOnly){
+        return checkActorCollisions(tama,actor,legsOnly);
     }
 
 
@@ -251,17 +265,25 @@ class GameScreen extends ScreenAdapter {
         platforms = new Group();
         coins = new Group();
         enemies = new Group();
+        octopuses=new ArrayList<>();
 
 
     while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
         Platform platform = Platform.generatePlatform(y,rand);
         platforms.addActor(platform);
 
-
-
         if (y > WORLD_HEIGHT / 10 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
-            Enemy enemy = new Enemy(platform.getX()+ Enemy.WIDTH/2,
-                    platform.getY()+ Platform.HEIGHT, rand.nextBoolean(),Enemy.getRandomType());
+            SmartEnemy enemy;
+            int enemyType=rand.nextInt(3);
+            if(enemyType==0) {
+                Octopus octopus= new Octopus(platform.getY(),rand.nextBoolean(),tama);
+                octopuses.add(octopus);
+                enemy=octopus;
+            }else if(enemyType==1){
+                enemy = new Ufo(platform.getY(),rand.nextBoolean());
+            }else {
+                enemy = new Flower(platform);
+            }
             enemies.addActor(enemy);
         }else if (platform.getType()== Platform.Type.NORMAL && rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
             Coin coin = new Coin(platform.getX()+ Coin.WIDTH/2

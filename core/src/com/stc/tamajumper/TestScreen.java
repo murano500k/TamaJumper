@@ -38,6 +38,8 @@ public class TestScreen extends ScreenAdapter {
         backStage=new BackStage(viewport,game);
         Gdx.input.setCatchBackKey(true);
         backStage.generateObjects();
+        Ufo ufo = new Ufo( 0,true);
+        backStage.addActor(ufo);
     }
 
     @Override
@@ -45,7 +47,7 @@ public class TestScreen extends ScreenAdapter {
         super.render(delta);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl20.glClearColor(2f/255f,8f/255f,36f/255f,1f);
-        camera.position.y+=VIEWPORT_HEIGHT/4*delta;
+        //camera.position.y+=VIEWPORT_HEIGHT/4*delta;
         camera.update();
         backStage.act(delta);
         backStage.draw();

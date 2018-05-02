@@ -22,5 +22,4 @@ public class ActionManager {
         repeatAction.setCount(RepeatAction.FOREVER);
         return repeatAction;
     }
-
 }

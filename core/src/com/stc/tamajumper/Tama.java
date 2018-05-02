@@ -36,6 +36,9 @@ public class Tama extends MyActor {
         gameStarted=b;
     }
 
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
 
     public enum TamaState {
         JUMP,
@@ -173,7 +176,7 @@ public class Tama extends MyActor {
         return score;
     }
 
-    public boolean hitEnemy(Enemy enemy) {
+    public boolean hitEnemy(SmartEnemy enemy) {
         if(hasShield){
             hasShield=false;
             return true;

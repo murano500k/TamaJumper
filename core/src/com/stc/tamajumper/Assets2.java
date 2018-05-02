@@ -215,7 +215,7 @@ public class Assets2 {
 
 
     private static  void initEnemies(){
-        animEnemyUfo=new Animation(0.14f,
+        animEnemyUfo=new Animation(0.4f,
                 atlas.createSprite("enemy-1"),
                 atlas.createSprite("enemy-2"),
                 atlas.createSprite("enemy-3"),
@@ -234,7 +234,7 @@ public class Assets2 {
                 atlas.createSprite("enemy(2)-6"),
                 atlas.createSprite("enemy(2)-7")
         );
-        animEnemyFlower=new Animation(0.14f,
+        animEnemyFlower=new Animation(0.2f,
                 atlas.createSprite("enemy(3)-1"),
                 atlas.createSprite("enemy(3)-2"),
                 atlas.createSprite("enemy(3)-3"),

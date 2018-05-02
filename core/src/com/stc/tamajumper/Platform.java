@@ -99,7 +99,9 @@ public class Platform extends MyActor {
         return type;
     }
 
-
+    public ObjectState getState(){
+        return objectState;
+    }
 
 
     public void pulverize(){
