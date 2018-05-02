@@ -280,7 +280,8 @@ class GameScreen extends ScreenAdapter {
                 octopuses.add(octopus);
                 enemy=octopus;
             }else if(enemyType==1){
-                enemy = new Ufo(platform.getY(),rand.nextBoolean());
+                float seed = rand.nextFloat()*5;
+                enemy = new Ufo(platform.getY(),rand.nextBoolean(), seed);
             }else {
                 enemy = new Flower(platform);
             }

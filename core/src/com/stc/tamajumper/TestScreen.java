@@ -38,7 +38,7 @@ public class TestScreen extends ScreenAdapter {
         backStage=new BackStage(viewport,game);
         Gdx.input.setCatchBackKey(true);
         backStage.generateObjects();
-        Ufo ufo = new Ufo( 0,true);
+        Ufo ufo = new Ufo( VIEWPORT_HEIGHT/4,true, 3f);
         backStage.addActor(ufo);
     }
 
