@@ -3,6 +3,9 @@ package com.stc.tamajumper;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
 import java.util.Random;
 
@@ -18,33 +21,33 @@ public class Platform extends MyActor {
 
 
 
-    private static final float PLATFORM_MOVING_SPEED = Config.PIXELS.PLAYER_DIMEN*2 ;
+    private static final float DURATION_MOVE_LEFT_TO_RIGHT = 5f;
     public static final float WIDTH = Config.PIXELS.PLAYER_DIMEN*2;
     public static final float HEIGHT = Config.PIXELS.PLAYER_DIMEN/3f;
+    private final boolean reversed;
 
     public enum Type{
         NORMAL,
         MOVING,
         BREAKABLE,
         BROKEN,
-        SPRING;
+        SPRING
     }
 
 
     private Type type;
-    private Action moveAction;
+    private final float seed;
+    private boolean startedMoving=false;
 
 
 
-    public Platform(float x, float y, Type type) {
+    public Platform(float x, float y, Type type, float startTime, boolean reversed) {
         super(x,y);
         setWidth(WIDTH);
         setHeight(HEIGHT);
         this.type=type;
-        if(type==Type.MOVING){
-            moveAction=ActionManager.initMoveAction(new Random().nextBoolean(), PLATFORM_MOVING_SPEED);
-            addAction(moveAction);
-        }
+        this.reversed=reversed;
+        seed = startTime;
     }
     @Override
     public void act(float delta) {
@@ -55,8 +58,12 @@ public class Platform extends MyActor {
         }
 
 
-        if (getX() < -getWidth()) setX(WORLD_WIDTH);
-        if (getX() > WORLD_WIDTH) setX(-getWidth());
+        if(type==Type.MOVING){
+            if(!startedMoving && stateTime>=seed){
+                startedMoving=true;
+                addAction(getMoveAction());
+            }
+        }
     }
 
     @Override
@@ -79,12 +86,16 @@ public class Platform extends MyActor {
     }
 
     public static Platform generatePlatform(float y, Random random){
-
+        boolean reversed=random.nextBoolean();
         float x = random.nextInt((int)(WORLD_WIDTH/Platform.WIDTH)) *Platform.WIDTH;
+
+        float startTime= random.nextFloat()*DURATION_MOVE_LEFT_TO_RIGHT;
         int seed = random.nextInt(5);
         Type type;
         if(seed==0){
             type=Type.MOVING;
+            if(reversed)x=Config.VIEWPORT_WIDTH-Platform.WIDTH;
+            else x=0;
         }else if(seed==1){
             type=Type.SPRING;
         }else if(seed==2){
@@ -92,7 +103,7 @@ public class Platform extends MyActor {
         }else {
             type=Type.NORMAL;
         }
-        return new Platform(x,y,type);
+        return new Platform(x,y,type,startTime,reversed);
     }
 
     public Type getType() {
@@ -107,7 +118,6 @@ public class Platform extends MyActor {
     public void pulverize(){
         objectState=ObjectState.DESTROY;
         stateTime=0;
-        removeAction(moveAction);
     }
 
 
@@ -125,4 +135,33 @@ public class Platform extends MyActor {
                 return Assets.jumpSounds.get(Config.JUMP_SOUND_INDEX_DEFAULT);
         }
     }
-}
+    private Action getMoveAction(){
+         SequenceAction sequenceAction = new SequenceAction();
+
+         MoveToAction moveActionReturn = new MoveToAction();
+         moveActionReturn.setPosition(Config.VIEWPORT_WIDTH-getWidth(),getY());
+         moveActionReturn.setDuration(DURATION_MOVE_LEFT_TO_RIGHT);
+
+
+
+        MoveToAction moveAction = new MoveToAction();
+        moveAction.setPosition(0,getY());
+        moveAction.setDuration(DURATION_MOVE_LEFT_TO_RIGHT);
+
+        if(reversed) {
+            sequenceAction.addAction(moveActionReturn);
+            sequenceAction.addAction(moveAction);
+        }else {
+            sequenceAction.addAction(moveAction);
+            sequenceAction.addAction(moveActionReturn);
+        }
+
+        RepeatAction repeatAction=new RepeatAction();
+        repeatAction.setAction(sequenceAction);
+
+        repeatAction.setCount(RepeatAction.FOREVER);
+        return repeatAction;
+    }
+
+    }
+

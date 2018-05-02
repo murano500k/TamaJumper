@@ -9,11 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
 public class Ufo extends SmartEnemy {
+    private static final float DURATION_MOVE_LEFT_TO_RIGHT = 4f;
+    private final float seed;
+    private boolean started = false;
     boolean reversed;
-    public Ufo(float y, boolean r) {
+    public Ufo(float y, boolean r, float seed) {
         super(0, y);
         reversed=r;
-        addAction(getAction());
+        this.seed=seed;
+        //akiaddAction(getAction());
     }
 
 
@@ -23,6 +27,15 @@ public class Ufo extends SmartEnemy {
         sprite.setBounds(getX(),getY(),getWidth(),getHeight());
         sprite.flip(reversed,false);
         sprite.draw(batch);
+    }
+    @Override
+    public void act(float delta){
+        super.act(delta);
+        if(!started && stateTime>=seed){
+            started=true;
+            addAction(getAction());
+        }
+        if(stateTime%DURATION_MOVE_LEFT_TO_RIGHT==0) stateTime=0;
     }
 
     @Override
@@ -44,17 +57,16 @@ public class Ufo extends SmartEnemy {
     Action getReversedSequenceAction(){
         SequenceAction sequenceAction= new SequenceAction();
 
-
         MoveToAction moveToActionReturn = new MoveToAction();
-        moveToActionReturn.setX(Config.VIEWPORT_WIDTH);
+        moveToActionReturn.setX(Config.VIEWPORT_WIDTH+getWidth());
         moveToActionReturn.setY(getY());
         moveToActionReturn.setDuration(0);
         sequenceAction.addAction(moveToActionReturn);
 
         MoveToAction moveToAction = new MoveToAction();
-        moveToAction.setX(0);
+        moveToAction.setX(0-getWidth());
         moveToAction.setY(getY()+Config.VIEWPORT_WIDTH/2);
-        moveToAction.setDuration(4);
+        moveToAction.setDuration(DURATION_MOVE_LEFT_TO_RIGHT);
         sequenceAction.addAction(moveToAction);
 
         return sequenceAction;
@@ -63,13 +75,13 @@ public class Ufo extends SmartEnemy {
         SequenceAction sequenceAction= new SequenceAction();
 
         MoveToAction moveToAction = new MoveToAction();
-        moveToAction.setX(Config.VIEWPORT_WIDTH);
+        moveToAction.setX(Config.VIEWPORT_WIDTH+getWidth());
         moveToAction.setY(getY()+Config.VIEWPORT_WIDTH/2);
-        moveToAction.setDuration(4);
+        moveToAction.setDuration(DURATION_MOVE_LEFT_TO_RIGHT);
         sequenceAction.addAction(moveToAction);
 
         MoveToAction moveToActionReturn = new MoveToAction();
-        moveToActionReturn.setX(0);
+        moveToActionReturn.setX(0-getWidth());
         moveToActionReturn.setY(getY());
         moveToActionReturn.setDuration(0);
         sequenceAction.addAction(moveToActionReturn);
