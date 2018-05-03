@@ -19,7 +19,7 @@ public class BgStar extends MyActor {
 
     public static BgStar createBgStar(float y){
         Random r= new Random();
-        int type= r.nextInt(Assets2.bgStars.size());
+        int type= r.nextInt(Assets.bgStars.size());
         float x = r.nextInt((int)(WORLD_WIDTH)) *1f;
         return new BgStar(x,y,type);
     }
@@ -32,6 +32,6 @@ public class BgStar extends MyActor {
 
     @Override
     public TextureRegion getTexture() {
-        return Assets2.getBgStarTexture(type);
+        return Assets.getBgStarTexture(type);
     }
 }

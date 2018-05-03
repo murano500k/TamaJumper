@@ -72,7 +72,7 @@ public class Tama extends MyActor {
     @Override
     public TextureRegion getTexture() {
         if(tamaState==TamaState.HIT){
-            return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+            return Assets.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
         }
         if(gameStarted) {
             if (!isProfile) {
@@ -84,30 +84,30 @@ public class Tama extends MyActor {
         if(isProfile) {
             switch (tamaState) {
                 case FALL:
-                    return Assets2.animProfileFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animProfileFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHFALL:
-                    return Assets2.animProfileHighFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animProfileHighFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case JUMP:
-                    return Assets2.animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animProfileJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
-                    return Assets2.animProfileHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animProfileHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIT:
                 default:
-                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+                    return Assets.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
             }
         }else {
             switch (tamaState) {
                 case FALL:
-                    return Assets2.animFaceFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animFaceFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHFALL:
-                    return Assets2.animFaceHighFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animFaceHighFall.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case JUMP:
-                    return Assets2.animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animFaceJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIGHJUMP:
-                    return Assets2.animFaceHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+                    return Assets.animFaceHighJump.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
                 case HIT:
                 default:
-                    return Assets2.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+                    return Assets.animDie.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
             }
         }
     }

@@ -18,6 +18,6 @@ public class MainActivity extends AndroidApplication {
 
         //cfg.useGL20 = false;
         
-        initialize(new TamaJumperGame(), cfg);
+        initialize(new Game(), cfg);
     }
 }

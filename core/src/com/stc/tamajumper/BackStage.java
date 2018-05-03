@@ -12,7 +12,7 @@ public class BackStage extends MyStage {
     private Group objects;
     Random random;
 
-    public BackStage(Viewport viewport, TamaJumperGame game) {
+    public BackStage(Viewport viewport, Game game) {
         super(viewport, game);
         random=new Random();
     }

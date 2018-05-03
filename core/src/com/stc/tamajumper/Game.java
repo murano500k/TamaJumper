@@ -1,12 +1,11 @@
 package com.stc.tamajumper;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
-public class TamaJumperGame extends com.badlogic.gdx.Game {
+public class Game extends com.badlogic.gdx.Game {
 
 	public static final int MENU = 0;
 	public static final int PREFERENCES = 1;
@@ -16,26 +15,19 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	public static final int EXIT = 5;
 	public static final int WIN = 6;
 	public SpriteBatch batcher;
-	private MenuScreen menuScreen;
 	private GameScreen gameScreen;
-	private Screen preferencesScreen;
 	private Prefs prefs;
-	private Assets assets;
 	private HighscoresScreen highscoresScreen;
 	private int currentScore=0;
-	private Assets2 assets2;
+	private Assets assets;
 
 	@Override
 	public void create () {
 		batcher = new SpriteBatch();
 
 		prefs=new Prefs();
-		assets=new Assets(this);
-		assets2=new Assets2();
+		assets =new Assets();
 		setScreen(getStartScreen());
-	}
-	public Prefs getPreferences(){
-		return prefs;
 	}
 
 
@@ -85,7 +77,4 @@ public class TamaJumperGame extends com.badlogic.gdx.Game {
 	}
 
 
-	public Assets getAssets() {
-		return assets;
-	}
 }

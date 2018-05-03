@@ -54,7 +54,7 @@ public class Octopus extends SmartEnemy {
 
     @Override
     public TextureRegion getTexture() {
-        return Assets2.getEnemyAnim(Enemy.Type.OCTOPUS).getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+        return Assets.getEnemyAnim(SmartEnemy.Type.OCTOPUS).getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
     }
     @Override
     public void act(float deltaTime) {

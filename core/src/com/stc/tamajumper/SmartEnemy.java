@@ -4,6 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class SmartEnemy extends MyActor {
 
+    public enum Type {
+        OCTOPUS,
+        FLOWER,
+        UFO
+    }
     public static final float WIDTH = Config.PIXELS.PLAYER_DIMEN ;
     public static final float HEIGHT = Config.PIXELS.PLAYER_DIMEN;
 

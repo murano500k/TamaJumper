@@ -15,13 +15,13 @@ import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
  */
 
 public class BaseMenuScreen extends ScreenAdapter {
-    protected final TamaJumperGame game;
+    protected final Game game;
     protected final Skin skin;
     protected MyStage stage;
     protected OrthographicCamera camera;
     protected FillViewport viewport;
 
-    public BaseMenuScreen(TamaJumperGame game) {
+    public BaseMenuScreen(Game game) {
         this.game = game;
         this.skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
 

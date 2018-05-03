@@ -22,9 +22,9 @@ public class Flower extends SmartEnemy {
     @Override
     public TextureRegion getTexture() {
         if(platform.getState()==ObjectState.EXIST){
-            return Assets2.getEnemyAnim(Enemy.Type.FLOWER).getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+            return Assets.getEnemyAnim(SmartEnemy.Type.FLOWER).getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
         } else {
-            return Assets2.getEnemyAnim(Enemy.Type.FLOWER).getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+            return Assets.getEnemyAnim(SmartEnemy.Type.FLOWER).getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
         }
     }
 }

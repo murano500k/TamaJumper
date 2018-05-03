@@ -19,6 +19,6 @@ public class BackgroundImage extends MyActor {
 
     @Override
     public TextureRegion getTexture() {
-        return Assets2.textureMenuBg;
+        return Assets.textureMenuBg;
     }
 }

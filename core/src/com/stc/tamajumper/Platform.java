@@ -69,18 +69,18 @@ public class Platform extends MyActor {
     @Override
     public TextureRegion getTexture() {
         if(objectState==ObjectState.DESTROY){
-            return Assets2.animPlatformBreak.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+            return Assets.animPlatformBreak.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
         }else {
             switch (type){
                 case MOVING:
-                    return Assets2.texturePlatformMoving;
+                    return Assets.texturePlatformMoving;
                 case BREAKABLE:
-                    return Assets2.texturePlatformBreakable;
+                    return Assets.texturePlatformBreakable;
                 case SPRING:
-                    return Assets2.texturePlatformSpring;
+                    return Assets.texturePlatformSpring;
                 case NORMAL:
                 default:
-                    return Assets2.texturePlatformNormal;
+                    return Assets.texturePlatformNormal;
             }
         }
     }

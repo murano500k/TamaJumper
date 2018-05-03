@@ -40,7 +40,7 @@ public class Ufo extends SmartEnemy {
 
     @Override
     public TextureRegion getTexture() {
-        return Assets2.getEnemyAnim(Enemy.Type.UFO).getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+        return Assets.getEnemyAnim(SmartEnemy.Type.UFO).getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
     }
 
     Action getAction(){

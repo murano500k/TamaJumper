@@ -17,7 +17,7 @@ import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
 
 public class SettingsScreen extends BaseMenuScreen{
 
-    public SettingsScreen(TamaJumperGame game) {
+    public SettingsScreen(Game game) {
         super(game);
     }
 
@@ -57,7 +57,7 @@ public class SettingsScreen extends BaseMenuScreen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.changeScreen(TamaJumperGame.MENU);
+                game.changeScreen(Game.MENU);
             }
         });
 

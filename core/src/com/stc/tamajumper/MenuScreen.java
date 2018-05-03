@@ -1,5 +1,7 @@
 package com.stc.tamajumper;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,9 +21,10 @@ public class MenuScreen extends BaseMenuScreen   {
     private static final int BTN_WIDTH = VIEWPORT_WIDTH/2;
     private TextButton btnPlay, btnSettings,btnExit,btnHelp, btnHighscores;
 
-    public MenuScreen(TamaJumperGame game) {
+    public MenuScreen(final Game game) {
         super(game);
         touchPoint = new Vector3();
+
     }
 
 
@@ -30,6 +33,14 @@ public class MenuScreen extends BaseMenuScreen   {
     public void show() {
         super.show();
         generateMenu();
+    }
+
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        if(Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            game.changeScreen(Game.GAME);
+        }
     }
 
     private void generateMenu() {
@@ -44,53 +55,40 @@ public class MenuScreen extends BaseMenuScreen   {
 
 
 
-        btnPlay=createButton("Play", TamaJumperGame.GAME);
-        //btnPlay.setPosition(VIEWPORT_WIDTH/2-BTN_WIDTH/2,VIEWPORT_HEIGHT*2/3);
+        btnPlay=createButton("Play", Game.GAME);
         buttons.addActor(btnPlay);
 
         table.row().padBottom(Config.PIXELS.PLAYER_DIMEN);
         table.add(btnPlay);
 
-        btnSettings =createButton("Settings",TamaJumperGame.PREFERENCES);
-        //btnSettings.setPosition(VIEWPORT_WIDTH/2-BTN_WIDTH/2,btnPlay.getY()-BTN_HEIGHT);
+        btnSettings =createButton("Settings", Game.PREFERENCES);
         buttons.addActor(btnSettings);
         table.row().padBottom(Config.PIXELS.PLAYER_DIMEN);
         table.add(btnSettings);
 
-        btnHelp =createButton("Help",TamaJumperGame.HELP);
-        //btnHelp.setPosition(VIEWPORT_WIDTH/2-BTN_WIDTH/2,btnSettings.getY()-BTN_HEIGHT);
+        btnHelp =createButton("Help", Game.HELP);
         buttons.addActor(btnHelp);
         table.row().padBottom(Config.PIXELS.PLAYER_DIMEN);
         table.add(btnHelp);
 
 
-        btnHighscores =createButton("Highscores",TamaJumperGame.HIGHSCORES);
-        //btnHighscores.setPosition(VIEWPORT_WIDTH/2-BTN_WIDTH/2,btnHelp.getY()-BTN_HEIGHT);
+        btnHighscores =createButton("Highscores", Game.HIGHSCORES);
         buttons.addActor(btnHighscores);
         table.row().padBottom(Config.PIXELS.PLAYER_DIMEN);
         table.add(btnHighscores);
 
-        btnExit =createButton("Exit",TamaJumperGame.EXIT);
-        //btnExit.setPosition(VIEWPORT_WIDTH/2-BTN_WIDTH/2,btnHighscores.getY()-BTN_HEIGHT);
+        btnExit =createButton("Exit", Game.EXIT);
         buttons.addActor(btnExit);
         table.row().padBottom(Config.PIXELS.PLAYER_DIMEN);
         table.add(btnExit);
 
-
-        //stage.addActor(buttons);
-
-
-
     }
     private TextButton createButton(final String text, final int screen){
         TextButton btn=new TextButton(text, skin);
-        //btn.setWidth(BTN_WIDTH);
-        //btn.setHeight(BTN_HEIGHT);
         btn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                System.out.println("button "+text+" clicked");
                 game.changeScreen(screen);
             }
         });

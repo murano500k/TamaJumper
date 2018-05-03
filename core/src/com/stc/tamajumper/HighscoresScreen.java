@@ -16,7 +16,7 @@ import static com.stc.tamajumper.Config.PIXELS.PLAYER_DIMEN;
 public class HighscoresScreen extends BaseMenuScreen {
 
 
-    public HighscoresScreen(TamaJumperGame game) {
+    public HighscoresScreen(Game game) {
         super(game);
     }
 
@@ -45,7 +45,7 @@ public class HighscoresScreen extends BaseMenuScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.changeScreen(TamaJumperGame.MENU);
+                game.changeScreen(Game.MENU);
             }
         });
         table.add(btnBack).uniformX();

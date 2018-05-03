@@ -11,9 +11,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MyStage extends Stage implements InputProcessor{
 
-    private final TamaJumperGame game;
+    private final Game game;
 
-    public MyStage(Viewport viewport, TamaJumperGame game) {
+    public MyStage(Viewport viewport, Game game) {
         super(viewport);
         this.game=game;
     }
@@ -21,7 +21,7 @@ public class MyStage extends Stage implements InputProcessor{
     @Override
     public boolean keyUp(int keycode) {
         if(keycode == Input.Keys.BACK){
-            game.changeScreen(TamaJumperGame.MENU);
+            game.changeScreen(Game.MENU);
         }
         return false;
     }

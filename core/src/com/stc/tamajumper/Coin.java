@@ -45,7 +45,7 @@ public class Coin extends MyActor{
 
     @Override
     public TextureRegion getTexture() {
-        return Assets2.getCoinAnim(score).getKeyFrame(stateTime,Animation.ANIMATION_LOOPING);
+        return Assets.getCoinAnim(score).getKeyFrame(stateTime,Animation.ANIMATION_LOOPING);
     }
     public void destroy(){
         objectState=ObjectState.DESTROY;

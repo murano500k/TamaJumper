@@ -54,7 +54,7 @@ class GameScreen extends ScreenAdapter {
 
     public GameState gameState;
     private final Skin skin;
-    private final TamaJumperGame game;
+    private final Game game;
     private MyStage stage;
     private BackStage backStage;
     private OrthographicCamera camera;
@@ -70,7 +70,7 @@ class GameScreen extends ScreenAdapter {
 
 
 
-    public GameScreen(TamaJumperGame game, int startScore) {
+    public GameScreen(Game game, int startScore) {
         this.game=game;
         rand = new Random();
         skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
@@ -122,7 +122,7 @@ class GameScreen extends ScreenAdapter {
                     case LEVEL_END:
                     case GAME_OVER:
                     default:
-                        game.changeScreen(TamaJumperGame.MENU);
+                        game.changeScreen(Game.MENU);
                         return;
                 }
         }
@@ -211,7 +211,7 @@ class GameScreen extends ScreenAdapter {
 
         if(checkTamaCollisions(levelEnd,false)!=null){
             gameState=GameState.LEVEL_END;
-            game.changeScreen(TamaJumperGame.WIN);
+            game.changeScreen(Game.GAME);
         }
 
         for(Octopus octopus : octopuses){

@@ -16,7 +16,7 @@ import static com.stc.tamajumper.Config.VIEWPORT_WIDTH;
 public class TestScreen extends ScreenAdapter {
 
 
-    private final TamaJumperGame game;
+    private final Game game;
     private final Random rand;
     private final Skin skin;
 
@@ -24,7 +24,7 @@ public class TestScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    public TestScreen(TamaJumperGame game) {
+    public TestScreen(Game game) {
         this.game=game;
         rand = new Random();
         skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
