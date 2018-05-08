@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
+import java.util.Random;
+
 public class Octopus extends SmartEnemy {
     private static final float MAX_FALL_VELOCITY = 200f;
     private static final float DURATION_MOVE_LEFT_TO_RIGHT = 5f;
@@ -74,6 +76,7 @@ public class Octopus extends SmartEnemy {
     }
      public void hitPlatform(){
         velocity.y=0;
+        reversed= new Random().nextBoolean();
      }
 
 }

@@ -266,13 +266,14 @@ class GameScreen extends ScreenAdapter {
         coins = new Group();
         enemies = new Group();
         octopuses=new ArrayList<>();
+        boolean lastPlatformHasObject=false;
 
-
-    while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
+        while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
         Platform platform = Platform.generatePlatform(y,rand);
         platforms.addActor(platform);
 
-        if (y > WORLD_HEIGHT / 10 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
+        if(lastPlatformHasObject) continue;
+        else if (y > WORLD_HEIGHT / 10 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
             SmartEnemy enemy;
             int enemyType=rand.nextInt(3);
             if(enemyType==0) {
@@ -282,8 +283,10 @@ class GameScreen extends ScreenAdapter {
             }else if(enemyType==1){
                 float seed = rand.nextFloat()*5;
                 enemy = new Ufo(platform.getY(),rand.nextBoolean(), seed);
+                lastPlatformHasObject=true;
             }else {
                 enemy = new Flower(platform);
+                lastPlatformHasObject=true;
             }
             enemies.addActor(enemy);
         }else if (platform.getType()== Platform.Type.NORMAL && rand.nextFloat() > (1-Config.COIN_GENERATION_PROBABILITY)) {
