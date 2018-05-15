@@ -37,7 +37,6 @@ public class Assets {
     public static Sprite texturePlatformBreakable;
     public static Sprite texturePlatformSpring;
     public static Animation animPlatformBreak;
-    public static TextureRegion textureKon6;
     public static Sprite textureMenuBg;
     public static List<Sprite> bgPlanets;
     public static List<Sprite> bgStars;
@@ -144,7 +143,6 @@ public class Assets {
         texturePlatformNormal=atlas.createSprite("platform_normal-");
         texturePlatformSpring=atlas.createSprite("platform_one-off-");
         texturePlatformBreakable=atlas.createSprite("platform_bad");
-        textureKon6=new TextureRegion(new Texture( Gdx.files.internal("data/kon.png")));
         textureMenuBg=new Sprite(new Texture( Gdx.files.internal("data/bg.jpg")));
 
         textureMenuBg.setAlpha(0.5f);
@@ -293,22 +291,6 @@ public class Assets {
     }
 
 
-    private static Music addMusic(String path) {
-        Music music=Gdx.audio.newMusic(Gdx.files.internal(path));
-        music.setLooping(false);
-        music.setVolume(Config.VOLUME_MUSIC);
-        music.setOnCompletionListener(new Music.OnCompletionListener() {
-            @Override
-            public void onCompletion(Music music) {
-                musicSounds.get(random.nextInt(musicSounds.size())).play();
-            }
-        });
-        musicSounds.add(music);
-        return music;
-    }
-
-
-
     private static void loadSounds(){
         highJumpSound = Gdx.audio.newSound(Gdx.files.internal(Sounds.HIGHJUMP));
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal(Sounds.GAME_OVER));
@@ -323,11 +305,9 @@ public class Assets {
                             Sounds.JUMP_PREFIX+i+
                                     Sounds.JUMP_POSTFIX)));
         }
-
-        for (String file :
-                Sounds.MUSIC) {
-            addMusic(file);
-        }
+        Music music=Gdx.audio.newMusic(Gdx.files.internal( "audio/volodia_tamajumper_theme.mp3"));
+        music.setLooping(true);
+        music.play();
 
     }
     static class Sounds {
@@ -339,14 +319,6 @@ public class Assets {
         public static final String JUMP_PREFIX = "audio/jump_0";
         public static final String JUMP_POSTFIX = ".wav";
         public static final int JUMP_SOUNDS_NUMBER=10;
-
-        public static final String[] MUSIC = {
-                "audio/music.mp3",
-                "audio/hhavok_main.mp3",
-                "audio/jumpshot.mp3",
-                "audio/resistors.mp3",
-                "audio/dizzy_spells.mp3",
-        };
     }
 
 }

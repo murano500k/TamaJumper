@@ -272,8 +272,7 @@ class GameScreen extends ScreenAdapter {
         Platform platform = Platform.generatePlatform(y,rand);
         platforms.addActor(platform);
 
-        if(lastPlatformHasObject) continue;
-        else if (y > WORLD_HEIGHT / 10 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
+        if (y > WORLD_HEIGHT / 10 && rand.nextFloat() > (1-Config.ENEMY_GENERATION_PROBABILITY)) {
             SmartEnemy enemy;
             int enemyType=rand.nextInt(3);
             if(enemyType==0) {
